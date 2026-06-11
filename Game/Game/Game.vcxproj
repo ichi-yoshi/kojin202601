@@ -1,0 +1,241 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>16.0</VCProjectVersion>
+    <Keyword>Win32Proj</Keyword>
+    <ProjectGuid>{225a56d2-c751-4dc5-845b-660efbd31dbd}</ProjectGuid>
+    <RootNamespace>Game</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v145</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v145</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v145</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v145</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+    <IncludePath>$(SolutionDir)..\DxLib;..\..\AppFrame\source;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)..\DxLib;$(SolutionDir)$(Platform)\$(Configuration);$(LibraryPath)</LibraryPath>
+    <IntDir>$(Platform)\$(Configuration)\</IntDir>
+    <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\</OutDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+    <IncludePath>$(SolutionDir)..\DxLib;..\..\AppFrame\source;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)..\DxLib;$(SolutionDir)$(Platform)\$(Configuration);$(LibraryPath)</LibraryPath>
+    <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\</OutDir>
+    <IntDir>$(Platform)\$(Configuration)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <LinkIncremental>true</LinkIncremental>
+    <IncludePath>$(SolutionDir)..\DxLib;..\..\AppFrame\source;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)..\DxLib;$(SolutionDir)$(Platform)\$(Configuration);$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <LinkIncremental>false</LinkIncremental>
+    <IncludePath>$(SolutionDir)..\DxLib;..\..\AppFrame\source;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)..\DxLib;$(SolutionDir)$(Platform)\$(Configuration);$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <AdditionalIncludeDirectories>$(ProjectDir)sqlite3;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>$(ProjectDir)sqlite3;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <AdditionalIncludeDirectories>$(ProjectDir)sqlite3;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>$(ProjectDir)sqlite3;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="source\ApplicationMain.cpp" />
+    <ClCompile Include="source\BattleBase.cpp" />
+    <ClCompile Include="source\BattleTimer.cpp" />
+    <ClCompile Include="source\BattleUI.cpp" />
+    <ClCompile Include="source\ButtonUI.cpp" />
+    <ClCompile Include="source\CameraBase.cpp" />
+    <ClCompile Include="source\Chara.cpp" />
+    <ClCompile Include="source\CharaAfterStatus.cpp" />
+    <ClCompile Include="source\CharaBase.cpp" />
+    <ClCompile Include="source\CircleUI.cpp" />
+    <ClCompile Include="source\Gacha.cpp" />
+    <ClCompile Include="source\GachaArmor.cpp" />
+    <ClCompile Include="source\GachaBase.cpp" />
+    <ClCompile Include="source\GachaBasicStatus.cpp" />
+    <ClCompile Include="source\GachaSystem.cpp" />
+    <ClCompile Include="source\GachaUI.cpp" />
+    <ClCompile Include="source\GaugeUI.cpp" />
+    <ClCompile Include="source\main.cpp" />
+    <ClCompile Include="source\ModeGame.cpp" />
+    <ClCompile Include="source\ModeGameBattle.cpp" />
+    <ClCompile Include="source\MouseInput.cpp" />
+    <ClCompile Include="source\SaveCharaStatus.cpp" />
+    <ClCompile Include="source\SaveEquipment.cpp" />
+    <ClCompile Include="source\SqliteArmor.cpp" />
+    <ClCompile Include="source\SqliteBasicStatus.cpp" />
+    <ClCompile Include="source\SqliteCharaStatus.cpp" />
+    <ClCompile Include="source\SqliteCircle.cpp" />
+    <ClCompile Include="source\SqliteGauge.cpp" />
+    <ClCompile Include="source\SqliteSeeder.cpp" />
+    <ClCompile Include="source\SqliteSpeed.cpp" />
+    <ClCompile Include="source\SqliteStatus.cpp" />
+    <ClCompile Include="source\SqliteTableCreator.cpp" />
+    <ClCompile Include="source\SqliteTextUtill.cpp" />
+    <ClCompile Include="source\SqliteUtill.cpp" />
+    <ClCompile Include="source\StatusUI.cpp" />
+    <ClCompile Include="sqlite3\sqlite3.c" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="source\ApplicationMain.h" />
+    <ClInclude Include="source\BattleBase.h" />
+    <ClInclude Include="source\BattleTimer.h" />
+    <ClInclude Include="source\BattleUI.h" />
+    <ClInclude Include="source\ButtonUI.h" />
+    <ClInclude Include="source\CameraBase.h" />
+    <ClInclude Include="source\Chara.h" />
+    <ClInclude Include="source\CharaAfterStatus.h" />
+    <ClInclude Include="source\CharaBase.h" />
+    <ClInclude Include="source\CircleUI.h" />
+    <ClInclude Include="source\Gacha.h" />
+    <ClInclude Include="source\GachaArmor.h" />
+    <ClInclude Include="source\GachaBase.h" />
+    <ClInclude Include="source\GachaBasicStatus.h" />
+    <ClInclude Include="source\GachaSystem.h" />
+    <ClInclude Include="source\GachaUI.h" />
+    <ClInclude Include="source\GaugeUI.h" />
+    <ClInclude Include="source\ModeGame.h" />
+    <ClInclude Include="source\ModeGameBattle.h" />
+    <ClInclude Include="source\MouseInput.h" />
+    <ClInclude Include="source\SaveCharaStatus.h" />
+    <ClInclude Include="source\SaveEquipment.h" />
+    <ClInclude Include="source\SqliteArmor.h" />
+    <ClInclude Include="source\SqliteBasicStatus.h" />
+    <ClInclude Include="source\SqliteCharaStatus.h" />
+    <ClInclude Include="source\SqliteCircle.h" />
+    <ClInclude Include="source\SqliteConfig.h" />
+    <ClInclude Include="source\SqliteGauge.h" />
+    <ClInclude Include="source\SqliteSeeder.h" />
+    <ClInclude Include="source\SqliteSpeed.h" />
+    <ClInclude Include="source\SqliteStatus.h" />
+    <ClInclude Include="source\SqliteTableCreator.h" />
+    <ClInclude Include="source\SqliteTextUtill.h" />
+    <ClInclude Include="source\SqliteUtill.h" />
+    <ClInclude Include="source\StatusUI.h" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
