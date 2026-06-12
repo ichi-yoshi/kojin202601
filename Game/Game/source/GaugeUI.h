@@ -31,6 +31,8 @@ private:
 	bool _isSuccess;
 	bool _hasResult;
 
+	bool _prevKeyF = false;
+
 	SqliteGauge _sqliteGauge;
 };
 

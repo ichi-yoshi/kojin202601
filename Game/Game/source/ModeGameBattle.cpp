@@ -79,6 +79,12 @@ void ModeGameBattle::UpdateAttack(MouseInput& mouse, CharaAfterStatus& afterStat
 		}
 		else
 		{
+			//if(_resultWaitTime > 0.0)
+			//{
+			//	_resultWaitTime -= 5.216;
+			//	return; // 時間が経つまでは以下のリセット処理をスキップ（表示を維持）
+			//}
+
 			if(_gaugeUI.IsSuccess())
 			{
 				// 敵にダメージを与える、などの処理

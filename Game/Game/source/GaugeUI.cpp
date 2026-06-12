@@ -43,6 +43,8 @@ void GaugeUI::Reset()
 	_isSuccess = false;
 	_hasResult = false;
 
+	_prevKeyF = (CheckHitKey(KEY_INPUT_F) == 1);
+
 	// SQLiteからランダムに1件抽選して適用する
 	if (_sqliteGauge.RollrandomGauge())
 	{
@@ -56,6 +58,9 @@ void GaugeUI::Update(MouseInput& mouse)
 {
 	if(!_isMoving) { return; }
 
+	bool currentKeyF = (CheckHitKey(KEY_INPUT_F) == 1);
+	bool isFTrigger = (currentKeyF && !_prevKeyF);
+
 	// ゲージの値を更新
 	_currentValue += _speed;
 
@@ -66,7 +71,7 @@ void GaugeUI::Update(MouseInput& mouse)
 	}
 
 	// 2. ゲージの矩形範囲が左クリックされた時の判定
-	if (mouse.IsLeftTrig() && mouse.IsInRect(_gaugeButton.x, _gaugeButton.y, _gaugeButton.w, _gaugeButton.h))
+	if (mouse.IsLeftTrig() && mouse.IsInRect(_gaugeButton.x, _gaugeButton.y, _gaugeButton.w, _gaugeButton.h)|| isFTrigger)
 	{
 		_isMoving = false; // バーの動きをピタッと止める
 		_hasResult = true;
@@ -84,6 +89,7 @@ void GaugeUI::Update(MouseInput& mouse)
 			_isSuccess = false; 
 		}
 	}
+	_prevKeyF = currentKeyF;
 }
 
 void GaugeUI::Draw() 

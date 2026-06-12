@@ -30,6 +30,8 @@ private:
 	CircleUI _circleUI;
 	GaugeUI _gaugeUI;
 
+	double _resultWaitTime = 0.0;
+
 	bool _isBattleEnd = false;
 };
 
