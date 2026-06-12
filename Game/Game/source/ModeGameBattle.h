@@ -5,6 +5,8 @@
 #include "CircleUI.h"
 #include "GaugeUI.h"
 #include <string>
+#include <functional>
+#include <unordered_map>
 
 class ModeGameBattle
 {
@@ -15,9 +17,19 @@ public:
 	bool IsBattleEnd()const { return _isBattleEnd; }
 	void Reset();
 private:
+	// 各フェーズの処理
+	void UpdateDefense(MouseInput& mouse, CharaAfterStatus& afterStatus);
+	void UpdateAttack(MouseInput& mouse, CharaAfterStatus& afterStatus);
+
+	void SetPhase(BattleTimer::BattlePhase nextPhase);
+
+	using PhaseFunc = std::function<void(MouseInput&, CharaAfterStatus&)>;
+
+	PhaseFunc _phaseUpdateFunc = nullptr;
 	BattleTimer _battleTimer;
 	CircleUI _circleUI;
 	GaugeUI _gaugeUI;
+
 	bool _isBattleEnd = false;
 };
 

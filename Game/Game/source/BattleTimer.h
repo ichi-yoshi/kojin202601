@@ -14,6 +14,7 @@ public:
 
 	void Initialize();
 	void Update(double deltaTime);
+
 	void IsClearCircle(const CharaAfterStatus& afterStatus);
 	double GetTime() const { return _time; }
 	BattlePhase GetCurrentPhase() const { return _currentPhase; }
