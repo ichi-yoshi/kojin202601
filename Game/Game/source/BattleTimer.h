@@ -9,10 +9,10 @@ public:
 		Attack,
 		Defense,
 		Result,
+		Start,
 		_EOT_
 	};
 
-	void Initialize();
 	void Update(double deltaTime);
 
 	void IsClearCircle(const CharaAfterStatus& afterStatus);

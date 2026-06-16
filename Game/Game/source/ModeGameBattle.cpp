@@ -6,14 +6,13 @@ bool ModeGameBattle::Initialize(const std::string& dbPath, std::string* outError
 	if(!_gaugeUI.Initialize(dbPath, outError)) { return false; }
 	if(!_circleUI.Initialize(dbPath, outError)) { return false; }
 	Reset();
-	SetPhase(BattleTimer::BattlePhase::Defense);
+	SetPhase(BattleTimer::BattlePhase::Start);
 	return true;
 }
 
 void ModeGameBattle::Reset()
 {
 	_isBattleEnd = false;
-	_battleTimer.Initialize();
 	_circleUI.Reset();
 	_gaugeUI.Reset();
 }
@@ -37,7 +36,8 @@ void ModeGameBattle::SetPhase(BattleTimer::BattlePhase nextPhase)
 	static const std::unordered_map<BattleTimer::BattlePhase, PhaseFunc> PhaseMap = 
 	{
 		{ BattleTimer::BattlePhase::Defense, [this](MouseInput& m, CharaAfterStatus& s) { UpdateDefense(m, s); } },
-		{ BattleTimer::BattlePhase::Attack,  [this](MouseInput& m, CharaAfterStatus& s) { UpdateAttack(m, s); } }
+		{ BattleTimer::BattlePhase::Attack,  [this](MouseInput& m, CharaAfterStatus& s) { UpdateAttack(m, s); } },
+		{ BattleTimer::BattlePhase::Start,{ [this](MouseInput& m, CharaAfterStatus& s) { UpdateStart(m, s); } }}
 	};
 
 	auto it = PhaseMap.find(nextPhase);
@@ -46,7 +46,17 @@ void ModeGameBattle::SetPhase(BattleTimer::BattlePhase nextPhase)
 
 }
 
-// --- 防御フェーズの個別処理 ---
+// スタートフェーズの処理（必要に応じて実装）
+void ModeGameBattle::UpdateStart(MouseInput& mouse, CharaAfterStatus& afterStatus)
+{
+	// 現状は特に処理は行わず、時間が経過したらフェーズに移行する
+	if(_battleTimer.IsTimeUp())
+	{
+		SetPhase(BattleTimer::BattlePhase::Attack); // フェーズ切り替え
+	}
+}
+
+// 防御フェーズの個別処理
 void ModeGameBattle::UpdateDefense(MouseInput& mouse, CharaAfterStatus& afterStatus)
 {
 	if(!_battleTimer.IsTimeUp())
@@ -68,7 +78,7 @@ void ModeGameBattle::UpdateDefense(MouseInput& mouse, CharaAfterStatus& afterSta
 	}
 }
 
-// --- 攻撃フェーズの個別処理 ---
+// 攻撃フェーズの個別処理
 void ModeGameBattle::UpdateAttack(MouseInput& mouse, CharaAfterStatus& afterStatus)
 {
 	if(!_battleTimer.IsTimeUp())
@@ -107,7 +117,7 @@ void ModeGameBattle::UpdateAttack(MouseInput& mouse, CharaAfterStatus& afterStat
 
 void ModeGameBattle::Render()
 {
-	// 攻撃ターンか防御ターンかによって画面の文字やUIの描画を切り替える
+	// フェーズに応じて画面の文字やUIの描画を切り替える
 	if(_battleTimer.GetCurrentPhase() == BattleTimer::BattlePhase::Defense)
 	{
 		SetFontSize(24);
@@ -127,5 +137,12 @@ void ModeGameBattle::Render()
 		DrawFormatString(100, 80, GetColor(255, 0, 0), "残り消化時間: %.1f 秒", _battleTimer.GetTime());
 
 		_gaugeUI.Draw();
+	}
+	else if(_battleTimer.GetCurrentPhase() == BattleTimer::BattlePhase::Start)
+	{
+		SetFontSize(24);
+		//DrawString(100, 50, "【 戦闘開始！ 】", GetColor(255, 255, 0));
+		// 残り時間の表示（秒数を小数点第1位まで）
+		DrawFormatString(100, 80, GetColor(255, 0, 0), "戦闘開始まで: %.1f 秒", _battleTimer.GetTime());
 	}
 }

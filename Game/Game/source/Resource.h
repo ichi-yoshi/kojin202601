@@ -1,0 +1,8 @@
+#pragma once
+
+namespace mv1 
+{
+	inline constexpr const char* SkySphere = "res/SkySphere/skysphere.mv1";
+	inline constexpr const char* Ground = "res/Ground/ground.mv1";
+	inline constexpr const char* Dungeon = "res/Dungeon/dungeon.mv1";
+}

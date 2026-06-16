@@ -132,6 +132,7 @@
       <ConformanceMode>true</ConformanceMode>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <AdditionalIncludeDirectories>$(ProjectDir)sqlite3;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -150,6 +151,7 @@
       <ConformanceMode>true</ConformanceMode>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <AdditionalIncludeDirectories>$(ProjectDir)sqlite3;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -219,6 +221,7 @@
     <ClInclude Include="source\ModeGame.h" />
     <ClInclude Include="source\ModeGameBattle.h" />
     <ClInclude Include="source\MouseInput.h" />
+    <ClInclude Include="source\Resource.h" />
     <ClInclude Include="source\SaveCharaStatus.h" />
     <ClInclude Include="source\SaveEquipment.h" />
     <ClInclude Include="source\SqliteArmor.h" />

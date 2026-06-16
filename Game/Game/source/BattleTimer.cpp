@@ -1,11 +1,6 @@
 #include "BattleTimer.h"
 #include <unordered_map>
 
-void BattleTimer::Initialize()
-{
-	_currentPhase = BattlePhase::Defense;
-}
-
 void BattleTimer::Update(double deltaTime)
 {
 	// 時間が0秒以上のときのみ減少させる
@@ -43,17 +38,18 @@ void BattleTimer::ChangePhase(BattlePhase nextPhase)
 	{
 		{ BattlePhase::Attack, 20.0 },
 		{ BattlePhase::Defense, 40.0 },
-		{ BattlePhase::Result, 5.0 }
+		{ BattlePhase::Result, 5.0 },
+		{ BattlePhase::Start, 5.0 }
 	};
 
 	auto it = phaseTimes.find(_currentPhase);
 
 	if(it != phaseTimes.end())
 	{
-		_time = it->second; // 例：Attackなら 20.0 が _time に入る
+		_time = it->second; 
 	}
 	else
 	{
-		_time = 0.0; // 万が一見つからなかった場合の安全対策
+		_time = 0.0; 
 	}
 }

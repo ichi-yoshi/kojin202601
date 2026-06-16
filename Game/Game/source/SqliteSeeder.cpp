@@ -43,20 +43,28 @@ bool SeedSqliteData(sqlite3* dbh)
 	int ret = -1;
 	int err = 0;
 
+	char* errorMessage = nullptr;
+
+	// 最初にトランザクションを開始
+	ret = sqlite3_exec(dbh, "BEGIN TRANSACTION;", NULL, NULL, &errorMessage);
+	if(ret != SQLITE_OK)
+	{
+		printf("トランザクション開始失敗\n");
+		if(errorMessage) sqlite3_free(errorMessage);
+		return false;
+	}
+
 	// 既存データ削除
 	if(err == 0)
 	{
-		char* errorMessage = nullptr;
 		const char* sql =
-			"BEGIN;"
 			"DELETE FROM basic_status;"
 			"DELETE FROM status;"
 			"DELETE FROM armor;"
 			"DELETE FROM chara_status;"
 			"DELETE FROM gauge;"
 			"DELETE FROM circle;"
-			"DELETE FROM speed_list;"
-			"COMMIT;";
+			"DELETE FROM speed_list;";
 
 		ret = sqlite3_exec(dbh, sql, NULL, NULL, &errorMessage);
 		if(ret != SQLITE_OK)
@@ -66,7 +74,6 @@ bool SeedSqliteData(sqlite3* dbh)
 		}
 		if(errorMessage) { sqlite3_free(errorMessage); }
 	}
-
 	// メインステータス（ステータス名、確率、値）
 	const std::vector<BasicStatusSeed> basicSeeds =
 	{
@@ -82,18 +89,6 @@ bool SeedSqliteData(sqlite3* dbh)
 		{"運値", 10, 23.0},
 		{"Poop", 14, 1114}
 	};
-
-	if(err == 0)
-	{
-		InsertSeeds(dbh, basicSeeds, "basic_status",
-			[](char* sql, size_t size, const BasicStatusSeed& s)
-			{
-				std::string name = SqliteTextUtill::EscapeSqlString(SqliteTextUtill::ToUtf8(s.name));
-				snprintf(sql, size,
-					"INSERT INTO basic_status (StatusName, probability, Val1) VALUES ('%s', %.3f, %.3f);",
-					name.c_str(), s.probability, s.val1);
-			}, err);
-	}
 
 	// サブステータス（ステータス名、確率、値1～5）
 	const std::vector<StatusSeed> statusSeeds =
@@ -111,19 +106,6 @@ bool SeedSqliteData(sqlite3* dbh)
 		{"Poop", 14, 111, 367, 555, 666, 822}
 	};
 
-	if(err == 0)
-	{
-		InsertSeeds(dbh, statusSeeds, "status",
-			[](char* sql, size_t size, const StatusSeed& s)
-			{
-				std::string name = SqliteTextUtill::EscapeSqlString(SqliteTextUtill::ToUtf8(s.name));
-				snprintf(sql, size,
-					"INSERT INTO status (StatusName, probability, Val1, Val2, Val3, Val4, Val5) "
-					"VALUES ('%s', %.3f, %.3f, %.3f, %.3f, %.3f, %.3f);",
-					name.c_str(), s.probability, s.val1, s.val2, s.val3, s.val4, s.val5);
-			}, err);
-	}
-
 	// 装備（装備名、確率）
 	const std::vector<ArmorSeed> armorSeeds =
 	{
@@ -132,18 +114,6 @@ bool SeedSqliteData(sqlite3* dbh)
 		{"腕", 25},
 		{"靴", 25}
 	};
-
-	if(err == 0)
-	{
-		InsertSeeds(dbh, armorSeeds, "armor",
-			[](char* sql, size_t size, const ArmorSeed& s)
-			{
-				std::string name = SqliteTextUtill::EscapeSqlString(SqliteTextUtill::ToUtf8(s.name));
-				snprintf(sql, size,
-					"INSERT INTO armor (ArmorName, probability) VALUES ('%s', %.3f);",
-					name.c_str(), s.probability);
-			}, err);
-	}
 
 	// キャラの基礎ステータス（ステータス名、値）
 	const std::vector<CharaStatusSeed> charaStatusSeeds =
@@ -159,18 +129,6 @@ bool SeedSqliteData(sqlite3* dbh)
 		{"Poop",0 }
 	};
 
-	if(err == 0)
-	{
-		InsertSeeds(dbh, charaStatusSeeds, "chara_status",
-			[](char* sql, size_t size, const CharaStatusSeed& s)
-			{
-				std::string name = SqliteTextUtill::EscapeSqlString(SqliteTextUtill::ToUtf8(s.name));
-				snprintf(sql, size,
-					"INSERT INTO chara_status (StatusName, Val1) VALUES ('%s', %.3f);",
-					name.c_str(), s.val1);
-			}, err);
-	}
-
 	// ゲージの初期データ（ゲージID、目標X座標、目標幅、移動速度）
 	const std::vector<GaugeSeed> gaugeSeeds =
 	{
@@ -181,18 +139,6 @@ bool SeedSqliteData(sqlite3* dbh)
 		{"gauge5", 300,  35, 20.0}
 	};
 
-	if(err == 0)
-	{
-		InsertSeeds(dbh, gaugeSeeds, "gauge",
-			[](char* sql, size_t size, const GaugeSeed& s)
-			{
-				std::string id = SqliteTextUtill::EscapeSqlString(SqliteTextUtill::ToUtf8(s.id));
-				snprintf(sql, size,
-					"INSERT INTO gauge (id, target_x, target_w, speed) VALUES ('%s', %d, %d, %.3f);",
-					id.c_str(), s.target_x, s.target_w, s.speed);
-			}, err);
-	}
-
 	// サークルの初期データ（サークルID、最小X座標、最大X座標、最小Y座標、最大Y座標、半径、出現数）
 	const std::vector<CircleSeed> circleSeeds =
 	{
@@ -202,18 +148,6 @@ bool SeedSqliteData(sqlite3* dbh)
 		{ "circle4", 560, 840, 160, 440, 60, 10 },
 		{ "circle5", 570, 830, 170, 430, 10, 2 }
 	};
-	
-	if(err==0)
-	{
-		InsertSeeds(dbh, circleSeeds, "circle",
-			[](char* sql, size_t size, const CircleSeed& s)
-			{
-				std::string id = SqliteTextUtill::EscapeSqlString(SqliteTextUtill::ToUtf8(s.id));
-				snprintf(sql, size,
-					"INSERT INTO circle (Id, min_x, max_x, min_y, max_y, radius, count) VALUES ('%s', %d, %d, %d, %d, %d, %d);",
-					id.c_str(), s.minX, s.maxX, s.minY, s.maxY, s.radius, s.count);
-			}, err);
-	}
 
 	// 速度の初期データ（最小速度、最大速度、ボーナスタイム）
 	const std::vector<SpeedSeed> speedSeeds =
@@ -238,14 +172,95 @@ bool SeedSqliteData(sqlite3* dbh)
 
 	if(err == 0)
 	{
-		InsertSeeds(dbh, speedSeeds, "speed_list",
-			[](char* sql, size_t size, const SpeedSeed& s)
+		InsertSeeds(dbh, basicSeeds, "basic_status",
+			[](char* sql, size_t size, const BasicStatusSeed& s) 
 			{
-				snprintf(sql, size,
-					"INSERT INTO speed_list (min_speed, max_speed, BonusTime) VALUES (%.3f, %.3f, %.3f);",
+				std::string name = SqliteTextUtill::EscapeSqlString(SqliteTextUtill::ToUtf8(s.name));
+				snprintf(sql, size, "INSERT INTO basic_status (StatusName, probability, Val1) VALUES ('%s', %.3f, %.3f);",
+					name.c_str(), s.probability, s.val1);
+			}, err);
+	}
+
+	if(err == 0)
+	{
+		InsertSeeds(dbh, statusSeeds, "status",
+			[](char* sql, size_t size, const StatusSeed& s) 
+			{
+				std::string name = SqliteTextUtill::EscapeSqlString(SqliteTextUtill::ToUtf8(s.name));
+				snprintf(sql, size, "INSERT INTO status (StatusName, probability, Val1, Val2, Val3, Val4, Val5) VALUES ('%s', %.3f, %.3f, %.3f, %.3f, %.3f, %.3f);",
+					name.c_str(), s.probability, s.val1, s.val2, s.val3, s.val4, s.val5);
+			}, err);
+	}
+
+	if(err == 0)
+	{
+		InsertSeeds(dbh, armorSeeds, "armor",
+			[](char* sql, size_t size, const ArmorSeed& s) 
+			{
+				std::string name = SqliteTextUtill::EscapeSqlString(SqliteTextUtill::ToUtf8(s.name));
+				snprintf(sql, size, "INSERT INTO armor (ArmorName, probability) VALUES ('%s', %.3f);",
+					name.c_str(), s.probability);
+			}, err);
+	}
+
+	if(err == 0)
+	{
+		InsertSeeds(dbh, charaStatusSeeds, "chara_status",
+			[](char* sql, size_t size, const CharaStatusSeed& s) 
+			{
+				std::string name = SqliteTextUtill::EscapeSqlString(SqliteTextUtill::ToUtf8(s.name));
+				snprintf(sql, size, "INSERT INTO chara_status (StatusName, Val1) VALUES ('%s', %.3f);",
+					name.c_str(), s.val1);
+			}, err);
+	}
+
+	if(err == 0)
+	{
+		InsertSeeds(dbh, gaugeSeeds, "gauge",
+			[](char* sql, size_t size, const GaugeSeed& s) 
+			{
+				std::string id = SqliteTextUtill::EscapeSqlString(SqliteTextUtill::ToUtf8(s.id));
+				snprintf(sql, size, "INSERT INTO gauge (id, target_x, target_w, speed) VALUES ('%s', %d, %d, %.3f);",
+					id.c_str(), s.target_x, s.target_w, s.speed);
+			}, err);
+	}
+
+	if(err == 0)
+	{
+		InsertSeeds(dbh, circleSeeds, "circle",
+			[](char* sql, size_t size, const CircleSeed& s) 
+			{
+				std::string id = SqliteTextUtill::EscapeSqlString(SqliteTextUtill::ToUtf8(s.id));
+				snprintf(sql, size, "INSERT INTO circle (Id, min_x, max_x, min_y, max_y, radius, count) VALUES ('%s', %d, %d, %d, %d, %d, %d);",
+					id.c_str(), s.minX, s.maxX, s.minY, s.maxY, s.radius, s.count);
+			}, err);
+	}
+
+	if(err == 0)
+	{
+		InsertSeeds(dbh, speedSeeds, "speed_list",
+			[](char* sql, size_t size, const SpeedSeed& s) 
+			{
+				snprintf(sql, size, "INSERT INTO speed_list (min_speed, max_speed, BonusTime) VALUES (%.3f, %.3f, %.3f);", 
 					s.minSpeed, s.maxSpeed, s.bonusTime);
 			}, err);
 	}
 
+	if(err == 0)
+	{
+		ret = sqlite3_exec(dbh, "COMMIT;", NULL, NULL, &errorMessage);
+		if(ret != SQLITE_OK) 
+		{
+			printf("コミット失敗\n");
+			err = 1;
+		}
+	}
+	else
+	{
+		// 途中でエラーがあった場合はロールバック
+		sqlite3_exec(dbh, "ROLLBACK;", NULL, NULL, nullptr);
+	}
+
+	if(errorMessage) { sqlite3_free(errorMessage); }
 	return err == 0;
 }

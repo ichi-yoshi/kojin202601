@@ -6,6 +6,7 @@
 #include "SqliteSeeder.h"
 #include "SqliteCharaStatus.h"
 #include "Chara.h"
+#include "Resource.h"
 #include <random>
 
 static int prevMouseX = -1, prevMouseY = -1;
@@ -23,14 +24,14 @@ bool ModeGame::Initialize()
 	_vDir = VGet(0, 0, -1);		// キャラモデルはデフォルトで-Z方向を向いている
 
 	// マップ
-	_handleSkySphere = MV1LoadModel("res/SkySphere/skysphere.mv1");
+	_handleSkySphere = MV1LoadModel(mv1::SkySphere);
 #if 0
 	// ダンジョン
-	_handleMap = MV1LoadModel("res/Dungeon/Dungeon.mv1");
+	_handleMap = MV1LoadModel(mv1::Dungeon);
 	_frameMapCollision = MV1SearchFrame(_handleMap, "dungeon_collision");
 #else
 	// フィールド
-	_handleMap = MV1LoadModel("res/Ground/Ground.mv1");
+	_handleMap = MV1LoadModel(mv1::Ground);
 	_frameMapCollision = MV1SearchFrame(_handleMap, "ground_navmesh");
 #endif
 	// コリジョン情報の生成

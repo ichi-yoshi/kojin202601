@@ -20,6 +20,7 @@ private:
 	// 各フェーズの処理
 	void UpdateDefense(MouseInput& mouse, CharaAfterStatus& afterStatus);
 	void UpdateAttack(MouseInput& mouse, CharaAfterStatus& afterStatus);
+	void UpdateStart(MouseInput& mouse, CharaAfterStatus& afterStatus);
 
 	void SetPhase(BattleTimer::BattlePhase nextPhase);
 
