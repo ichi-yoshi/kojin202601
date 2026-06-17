@@ -17,6 +17,7 @@
 #include "CircleUI.h"
 #include "BattleTimer.h"
 #include "ModeGameBattle.h"
+#include "SaveData.h" 
 
 
 // 計算用マクロ
@@ -109,4 +110,6 @@ protected:
 	BattleUI _battleUI;
 
 	ModeGameBattle _battleSystem;
+
+	SaveData _saveData;
 }; 

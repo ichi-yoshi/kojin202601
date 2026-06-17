@@ -1,32 +1,32 @@
-﻿#pragma once
+#pragma once
 #include <string>
 #include <vector>
-#include "CharaAfterStatus.h"
 
-class SaveCharaStatus
+class SaveData
 {
 public:
-	struct StatusRow 
+	struct AccountData
 	{
-		std::string name;
-		double value;
+		int uid;
+		int level;
+		int exp;
+		int coin;
+		int enemylevel;
 	};
 
-	void SetFromAfterStatus(const CharaAfterStatus& afterStatus);
-	const std::vector<StatusRow>& GetRows()const;
+	const std::vector<AccountData>& GetRows()const;
 
 	bool SaveToSqlite(std::string* outError = nullptr) const;
 	bool LoadFromSqlite(std::string* outError = nullptr);
 
-	void ClearStatus();
 	bool HasResult() const;
-
+	bool IncrementEnemyLevelAndSave(std::string* outError = nullptr);
 private:
-	std::vector<StatusRow> _rows;
+	std::vector<AccountData> _accountData;
 
 	struct LoadContext
 	{
-		SaveCharaStatus* self = nullptr;
+		std::vector<AccountData>* accountData = nullptr;
 	};
 
 	static int LoadCallback(void* param, int col_cnt, char** row_txt, char** col_name);

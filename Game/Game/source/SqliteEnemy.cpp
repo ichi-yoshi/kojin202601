@@ -42,3 +42,17 @@ bool SqliteEnemy::LoadEnemyBaseSqlite(std::vector<EnemyBaseRow>& outRows, std::s
 	sqlite3_close(dbh);
 	return ret == SQLITE_OK;
 }
+
+// 以下の関数が丸ごと抜けていたため、エラーになっていました。これを追加します。
+bool SqliteEnemy::GetEnemyBase(EnemyBaseRow& outRow)
+{
+	// 溜め込んだデータ (_rows) が空っぽなら false を返す
+	if(_rows.empty())
+	{
+		return false;
+	}
+
+	// 今回は最初の1件（ドラゴンなど）をそのまま outRow にコピーして渡す
+	outRow = _rows[0];
+	return true;
+}

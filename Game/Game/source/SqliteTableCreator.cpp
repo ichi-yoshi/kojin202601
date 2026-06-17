@@ -258,5 +258,28 @@ bool CreateSqliteTables(sqlite3* dbh)
 			//err = 1;
 		}
 	}
+
+	if(err == 0)
+	{
+		char* errorMessage;
+		ret=sqlite3_exec(dbh,
+			"CREATE TABLE IF NOT EXISTS AccountData("
+			"UID INTEGER PRIMARY KEY,"
+			"Level INTEGER,"
+			"Exp INTEGER,"
+			"Coin INTEGER,"
+			"ClearCount INTEGER"
+			");",
+			NULL, NULL, &errorMessage);
+		if(ret == SQLITE_OK)
+		{
+			printf("AccountData生成：成功\n");
+		}
+		else
+		{
+			printf("AccountData生成：失敗(%d)\n", ret);
+			//err = 1;
+		}
+	}
 	return err == 0;
 }

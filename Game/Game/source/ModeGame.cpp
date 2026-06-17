@@ -110,7 +110,8 @@ bool ModeGame::Process()
 		if (battleClicked)
 		{
 			// クリックされたら戦闘フェーズへ遷移
-			_battleSystem.Reset();
+			_saveData.LoadFromSqlite();
+			_battleSystem.Reset(_saveData);
 			_gamePhase = GamePhase::Battle;
 		}
 	}
@@ -119,7 +120,7 @@ bool ModeGame::Process()
 		float deltaTime = 1.0f / 60.0f; // お使いのフレームデルタタイム
 
 		// バトルクラスへ丸投げして処理させる
-		_battleSystem.Process(_mouse, _afterStatus, deltaTime);
+		_battleSystem.Process(_mouse, _afterStatus, _saveData, deltaTime);
 
 		//// もしバトル終了フラグなどが立てば、ここでガチャフェーズに戻すなどの処理
 		//if(_battleSystem.IsBattleEnd())

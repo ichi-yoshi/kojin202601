@@ -1,25 +1,52 @@
 ﻿#include "ModeGameBattle.h"
 #include "Dxlib.h"
+#include <algorithm>
 
 bool ModeGameBattle::Initialize(const std::string& dbPath, std::string* outError)
 {
 	if(!_gaugeUI.Initialize(dbPath, outError)) { return false; }
 	if(!_circleUI.Initialize(dbPath, outError)) { return false; }
-	Reset();
+	if(!_sqliteEnemy.Initialize(dbPath, outError)) { return false; }
+	//Reset();
 	SetPhase(BattleTimer::BattlePhase::Start);
 	return true;
 }
 
-void ModeGameBattle::Reset()
+void ModeGameBattle::Reset(const SaveData& saveData)
 {
 	_isBattleEnd = false;
 	_circleUI.Reset();
 	_gaugeUI.Reset();
+
+	if(_enemy != nullptr)
+	{
+		delete _enemy;
+		_enemy = nullptr;
+	}
+
+	_enemy = new Enemy("ドラゴン");
+
+	if(_enemy != nullptr)
+	{
+		if(_enemy->LoadEnemy(_sqliteEnemy, saveData))
+		{
+			// 敵の初期HPを満タンにする
+			_enemyCurrentHP = _enemy->GetHP();
+		}
+	}
+
+	if(_enemy->LoadEnemy(_sqliteEnemy, saveData))
+	{
+		// 敵の初期HPを満タンにする
+		_enemyCurrentHP = _enemy->GetHP();
+	}
 }
 	
 
-void ModeGameBattle::Process(MouseInput& mouse, CharaAfterStatus& afterStatus, double deltaTime)
+void ModeGameBattle::Process(MouseInput& mouse, CharaAfterStatus& afterStatus, SaveData& saveData, double deltaTime)
 {
+	if(_enemy == nullptr) { return; }
+
 	_battleTimer.Update(deltaTime);
 
 	if(_phaseUpdateFunc != nullptr)
@@ -117,6 +144,8 @@ void ModeGameBattle::UpdateAttack(MouseInput& mouse, CharaAfterStatus& afterStat
 
 void ModeGameBattle::Render()
 {
+	if(_enemy == nullptr) { return; }
+
 	// フェーズに応じて画面の文字やUIの描画を切り替える
 	if(_battleTimer.GetCurrentPhase() == BattleTimer::BattlePhase::Defense)
 	{
@@ -144,5 +173,33 @@ void ModeGameBattle::Render()
 		//DrawString(100, 50, "【 戦闘開始！ 】", GetColor(255, 255, 0));
 		// 残り時間の表示（秒数を小数点第1位まで）
 		DrawFormatString(100, 80, GetColor(255, 0, 0), "戦闘開始まで: %.1f 秒", _battleTimer.GetTime());
+	}
+
+	// 敵が存在すれば、画面上部に敵の情報とHPバーを表示する
+	if(_enemy)
+	{
+		// 敵の名前とレベルを描画
+		SetFontSize(20);
+		DrawFormatString(200, 140, GetColor(100, 100, 100), "%s  (Lv.%d)", _enemy->GetName().c_str(), _enemy->GetLevel());
+
+		// HPバーの枠を描画
+		DrawBox(200, 170, 600, 190, GetColor(100, 100, 100), FALSE);
+
+		// 敵の残りHPの割合に応じて緑色のバーを描画
+		double hpRate = _enemyCurrentHP / max(1.0, _enemy->GetHP());
+		int barWidth = static_cast<int>(400 * hpRate);
+		DrawBox(200, 170, 200 + barWidth, 190, GetColor(0, 255, 0), TRUE);
+
+		// HPの数値テキスト表示
+		DrawFormatString(200, 200, GetColor(200, 200, 200), "HP: %.0f / %.0f", _enemyCurrentHP, _enemy->GetHP());
+	}
+
+	if(_isEnemyDefeated)
+	{
+		SetFontSize(40);
+		DrawString(300, 250, "ENEMY DEFEATED!", GetColor(255, 215, 0));
+		SetFontSize(20);
+		DrawString(300, 310, "次に出現する敵のレベルが上がった！", GetColor(255, 255, 255));
+		return;
 	}
 }
