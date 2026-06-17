@@ -173,6 +173,7 @@
     <ClCompile Include="source\CharaAfterStatus.cpp" />
     <ClCompile Include="source\CharaBase.cpp" />
     <ClCompile Include="source\CircleUI.cpp" />
+    <ClCompile Include="source\Enemy.cpp" />
     <ClCompile Include="source\Gacha.cpp" />
     <ClCompile Include="source\GachaArmor.cpp" />
     <ClCompile Include="source\GachaBase.cpp" />
@@ -190,6 +191,7 @@
     <ClCompile Include="source\SqliteBasicStatus.cpp" />
     <ClCompile Include="source\SqliteCharaStatus.cpp" />
     <ClCompile Include="source\SqliteCircle.cpp" />
+    <ClCompile Include="source\SqliteEnemy.cpp" />
     <ClCompile Include="source\SqliteGauge.cpp" />
     <ClCompile Include="source\SqliteSeeder.cpp" />
     <ClCompile Include="source\SqliteSpeed.cpp" />
@@ -211,6 +213,7 @@
     <ClInclude Include="source\CharaAfterStatus.h" />
     <ClInclude Include="source\CharaBase.h" />
     <ClInclude Include="source\CircleUI.h" />
+    <ClInclude Include="source\Enemy.h" />
     <ClInclude Include="source\Gacha.h" />
     <ClInclude Include="source\GachaArmor.h" />
     <ClInclude Include="source\GachaBase.h" />
@@ -229,6 +232,7 @@
     <ClInclude Include="source\SqliteCharaStatus.h" />
     <ClInclude Include="source\SqliteCircle.h" />
     <ClInclude Include="source\SqliteConfig.h" />
+    <ClInclude Include="source\SqliteEnemy.h" />
     <ClInclude Include="source\SqliteGauge.h" />
     <ClInclude Include="source\SqliteSeeder.h" />
     <ClInclude Include="source\SqliteSpeed.h" />

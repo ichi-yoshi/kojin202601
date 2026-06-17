@@ -59,11 +59,31 @@ struct CircleSeed
 	int count;
 };
 
+//速度の初期データ
 struct SpeedSeed
 {
 	double minSpeed;
 	double maxSpeed;
 	double bonusTime;
+};
+
+//敵の基礎データ
+struct EnemyBaseSeed
+{
+	const char* enemyName;	// 敵の名前
+	double hp;				// HP
+	double attack;			// 攻撃
+	const char* lv;			// レベル表記
+	int startLevel;			// 開始レベル
+	double levelBonus;		// レベルボーナス倍率
+};
+
+struct FormulasSeed 
+{
+	const char* formulaName;	// 式の名前
+	const char* formula;		// 式の内容
+	double gaugeSuccess;		// ゲージ成功時の値
+	double gaugeFail;			// ゲージ失敗時の値
 };
 
 // SQLiteに初期データを投入する

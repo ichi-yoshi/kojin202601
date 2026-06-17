@@ -188,6 +188,7 @@ bool CreateSqliteTables(sqlite3* dbh)
 		}
 	}
 
+	// 速度とボーナスタイムの対応表
 	if(err == 0) 
 	{
 		char* errorMessage;
@@ -205,6 +206,55 @@ bool CreateSqliteTables(sqlite3* dbh)
 		else
 		{
 			printf("speed_list生成：失敗(%d)\n", ret);
+			//err = 1;
+		}
+	}
+
+	// 敵の基礎データ
+	if(err == 0) 
+	{
+		char* errorMessage;
+		ret=sqlite3_exec(dbh,
+			"CREATE TABLE IF NOT EXISTS enemybase("
+			"EnemyName TEXT PRIMARY KEY,"
+			"HP REAL,"
+			"Attack REAL,"
+			"Lv TEXT,"
+			"StartLevel INTEGER,"
+			"LevelBonus REAL"
+			");",
+			NULL, NULL, &errorMessage);
+		if (ret == SQLITE_OK)
+		{
+			printf("enemybase生成：成功\n");
+		}
+		else
+		{
+			printf("enemybase生成：失敗(%d)\n", ret);
+			//err = 1;
+		}
+
+	}
+
+	if(err == 0) 
+	{
+		char* errorMessage;
+		ret=sqlite3_exec(dbh,
+			"CREATE TABLE IF NOT EXISTS Formulas("
+			"FormulaName TEXT PRIMARY KEY,"
+			"Formula TEXT,"
+			"gaugeSuccess REAL,"
+			"gaugeFail REAL"
+			");",
+			NULL, NULL, &errorMessage);
+		if(ret == SQLITE_OK) 
+		{
+			printf("Formulas生成：成功\n");
+
+		}
+		else
+		{
+			printf("Formulas生成：失敗(%d)\n", ret);
 			//err = 1;
 		}
 	}

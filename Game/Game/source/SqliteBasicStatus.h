@@ -5,8 +5,8 @@
 struct BasicStatusRow
 {
 	std::string name;
-	double probability = 1.0;
-	double value = 0.0;
+	double probability;
+	double value;
 };
 
 bool LoadBasicStatusSqlite(std::vector<BasicStatusRow>& outRows, std::string* outError = nullptr);

@@ -64,7 +64,9 @@ bool SeedSqliteData(sqlite3* dbh)
 			"DELETE FROM chara_status;"
 			"DELETE FROM gauge;"
 			"DELETE FROM circle;"
-			"DELETE FROM speed_list;";
+			"DELETE FROM speed_list;"
+			"DELETE FROM enemybase;"
+			"DELETE FROM Formulas;";
 
 		ret = sqlite3_exec(dbh, sql, NULL, NULL, &errorMessage);
 		if(ret != SQLITE_OK)
@@ -74,6 +76,7 @@ bool SeedSqliteData(sqlite3* dbh)
 		}
 		if(errorMessage) { sqlite3_free(errorMessage); }
 	}
+
 	// メインステータス（ステータス名、確率、値）
 	const std::vector<BasicStatusSeed> basicSeeds =
 	{
@@ -145,8 +148,8 @@ bool SeedSqliteData(sqlite3* dbh)
 		{ "circle1", 530, 870, 130, 470, 30, 5 },
 		{ "circle2", 540, 860, 140, 460, 40, 7 },
 		{ "circle3", 550, 850, 150, 450, 50, 3 },
-		{ "circle4", 560, 840, 160, 440, 60, 10 },
-		{ "circle5", 570, 830, 170, 430, 10, 2 }
+		{ "circle4", 560, 840, 160, 440, 60, 8 },
+		{ "circle5", 570, 830, 170, 430, 20, 4 }
 	};
 
 	// 速度の初期データ（最小速度、最大速度、ボーナスタイム）
@@ -170,6 +173,23 @@ bool SeedSqliteData(sqlite3* dbh)
 		{ 341.0, 350.0, 4.4 }
 	};
 
+	// 敵の基礎データ（敵の名前、HP、攻撃、防御、レベル表記、開始レベル、レベルボーナス倍率）
+	const std::vector<EnemyBaseSeed> enemybaseSeeds =
+	{
+		{"ドラゴン", 20000.0, 1000.0, "Lv.", 10, 1.1}
+	};
+
+	// 式の初期データ（式の名前、式の内容、ゲージ成功時の値、ゲージ失敗時の値）
+	const std::vector<FormulasSeed> formulasSeeds =
+	{
+		{"会心倍率", "1+(会心率/100*(会心ダメージ/100-1))",0.0,0.0},
+		{"敵防御倍率", "(100+キャラレベル)/((100+キャラレベル)+(99+敵レベル))",0.0,0.0},
+		{"ダメージ減衰率","5000/(5000+Poop)",0.0,0.0},
+		{"運値期待値","(運値/1000)/2+1",0.0,0.0},
+		{"最終ダメージ","(攻撃*会心倍率*敵防御倍率*ダメージ減衰率*運値期待値)",1.3,0.5}
+	};
+
+	// データ挿入
 	if(err == 0)
 	{
 		InsertSeeds(dbh, basicSeeds, "basic_status",
@@ -243,6 +263,29 @@ bool SeedSqliteData(sqlite3* dbh)
 			{
 				snprintf(sql, size, "INSERT INTO speed_list (min_speed, max_speed, BonusTime) VALUES (%.3f, %.3f, %.3f);", 
 					s.minSpeed, s.maxSpeed, s.bonusTime);
+			}, err);
+	}
+
+	if(err == 0) 
+	{
+		InsertSeeds(dbh, enemybaseSeeds, "enemybase",
+			[](char* sql, size_t size, const EnemyBaseSeed& s)
+			{
+				std::string name = SqliteTextUtill::EscapeSqlString(SqliteTextUtill::ToUtf8(s.enemyName));
+				snprintf(sql, size, "INSERT INTO enemybase (EnemyName, HP, Attack, Lv, StartLevel, LevelBonus) VALUES ('%s', %.3f, %.3f, '%s', %d, %.3f);",
+					name.c_str(), s.hp, s.attack, s.lv, s.startLevel, s.levelBonus);
+			}, err);
+	}
+
+	if(err==0)
+	{
+		InsertSeeds(dbh, formulasSeeds, "Formulas",
+			[](char* sql, size_t size, const FormulasSeed& s)
+			{
+				std::string name = SqliteTextUtill::EscapeSqlString(SqliteTextUtill::ToUtf8(s.formulaName));
+				std::string formula = SqliteTextUtill::EscapeSqlString(SqliteTextUtill::ToUtf8(s.formula));
+				snprintf(sql, size, "INSERT INTO Formulas (FormulaName, Formula, gaugeSuccess, gaugeFail) VALUES ('%s', '%s', %.3f, %.3f);",
+					name.c_str(), formula.c_str(), s.gaugeSuccess, s.gaugeFail);
 			}, err);
 	}
 
