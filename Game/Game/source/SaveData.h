@@ -21,6 +21,7 @@ public:
 
 	bool HasResult() const;
 	bool IncrementEnemyLevelAndSave(std::string* outError = nullptr);
+
 private:
 	std::vector<AccountData> _accountData;
 

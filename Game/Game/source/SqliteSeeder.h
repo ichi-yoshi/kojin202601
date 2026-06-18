@@ -78,7 +78,7 @@ struct EnemyBaseSeed
 	double levelBonus;		// レベルボーナス倍率
 };
 
-struct FormulasSeed 
+struct CharaFormulasSeed 
 {
 	const char* formulaName;	// 式の名前
 	const char* formula;		// 式の内容

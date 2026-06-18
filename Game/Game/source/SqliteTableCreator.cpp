@@ -240,7 +240,7 @@ bool CreateSqliteTables(sqlite3* dbh)
 	{
 		char* errorMessage;
 		ret=sqlite3_exec(dbh,
-			"CREATE TABLE IF NOT EXISTS Formulas("
+			"CREATE TABLE IF NOT EXISTS charaFormulas("
 			"FormulaName TEXT PRIMARY KEY,"
 			"Formula TEXT,"
 			"gaugeSuccess REAL,"
@@ -249,12 +249,12 @@ bool CreateSqliteTables(sqlite3* dbh)
 			NULL, NULL, &errorMessage);
 		if(ret == SQLITE_OK) 
 		{
-			printf("Formulas生成：成功\n");
+			printf("charaFormulas生成：成功\n");
 
 		}
 		else
 		{
-			printf("Formulas生成：失敗(%d)\n", ret);
+			printf("charaFormulas生成：失敗(%d)\n", ret);
 			//err = 1;
 		}
 	}

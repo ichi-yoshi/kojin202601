@@ -66,7 +66,7 @@ bool SeedSqliteData(sqlite3* dbh)
 			"DELETE FROM circle;"
 			"DELETE FROM speed_list;"
 			"DELETE FROM enemybase;"
-			"DELETE FROM Formulas;";
+			"DELETE FROM CharaFormulas;";
 
 		ret = sqlite3_exec(dbh, sql, NULL, NULL, &errorMessage);
 		if(ret != SQLITE_OK)
@@ -180,7 +180,7 @@ bool SeedSqliteData(sqlite3* dbh)
 	};
 
 	// 式の初期データ（式の名前、式の内容、ゲージ成功時の値、ゲージ失敗時の値）
-	const std::vector<FormulasSeed> formulasSeeds =
+	const std::vector<CharaFormulasSeed> charaFormulasSeeds =
 	{
 		{"会心倍率", "1+(会心率/100*(会心ダメージ/100-1))",0.0,0.0},
 		{"敵防御倍率", "(100+キャラレベル)/((100+キャラレベル)+(99+敵レベル))",0.0,0.0},
@@ -279,12 +279,12 @@ bool SeedSqliteData(sqlite3* dbh)
 
 	if(err==0)
 	{
-		InsertSeeds(dbh, formulasSeeds, "Formulas",
-			[](char* sql, size_t size, const FormulasSeed& s)
+		InsertSeeds(dbh, charaFormulasSeeds, "charaFormulas",
+			[](char* sql, size_t size, const CharaFormulasSeed& s)
 			{
 				std::string name = SqliteTextUtill::EscapeSqlString(SqliteTextUtill::ToUtf8(s.formulaName));
 				std::string formula = SqliteTextUtill::EscapeSqlString(SqliteTextUtill::ToUtf8(s.formula));
-				snprintf(sql, size, "INSERT INTO Formulas (FormulaName, Formula, gaugeSuccess, gaugeFail) VALUES ('%s', '%s', %.3f, %.3f);",
+				snprintf(sql, size, "INSERT INTO charaFormulas (FormulaName, Formula, gaugeSuccess, gaugeFail) VALUES ('%s', '%s', %.3f, %.3f);",
 					name.c_str(), formula.c_str(), s.gaugeSuccess, s.gaugeFail);
 			}, err);
 	}
