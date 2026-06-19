@@ -21,13 +21,15 @@ public:
 	void Process(MouseInput& mouse, CharaAfterStatus& afterStatus, SaveData& saveData, double deltaTime);
 	void Render(CharaAfterStatus& afterStatus);
 	bool IsBattleEnd()const { return _isBattleEnd; }
-	void Reset(const SaveData& saveData);
+	void Reset(const SaveData& saveData, CharaAfterStatus& afterStatus);
 private:
 	// 各フェーズの処理
 	void UpdateDefense(MouseInput& mouse, CharaAfterStatus& afterStatus);
 	void UpdateAttack(MouseInput& mouse, CharaAfterStatus& afterStatus);
 	void UpdateStart(MouseInput& mouse, CharaAfterStatus& afterStatus);
+	void UpdateResult(MouseInput& mouse, CharaAfterStatus& afterStatus, SaveData& saveData);
 
+	void ProcessBattleResult(SaveData& saveData);
 	void SetPhase(BattleTimer::BattlePhase nextPhase);
 
 	using PhaseFunc = std::function<void(MouseInput&, CharaAfterStatus&)>;
@@ -63,5 +65,8 @@ private:
 	double _charaCurrentHP;
 	bool _isHPInitialized ;
 	double _nextDamageTime;
+
+	bool _isResultProcessed = false;     // リザルト処理が完了したかどうかのフラグ
+	double _maxDamageDealt = 0.0;
 };
 

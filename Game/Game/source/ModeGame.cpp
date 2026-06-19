@@ -7,6 +7,7 @@
 #include "SqliteCharaStatus.h"
 #include "Chara.h"
 #include "Resource.h"
+#include "SaveData.h"
 #include <random>
 
 static int prevMouseX = -1, prevMouseY = -1;
@@ -45,6 +46,8 @@ bool ModeGame::Initialize()
 
 	// 保存済み装備をロード（なければ無視）
 	_saveEquipment.LoadFromSqlite();
+
+	_saveData.LoadFromSqlite();
 
 	// SQLite初期化
 	{
@@ -111,7 +114,7 @@ bool ModeGame::Process()
 		{
 			// クリックされたら戦闘フェーズへ遷移
 			_saveData.LoadFromSqlite();
-			_battleSystem.Reset(_saveData);
+			_battleSystem.Reset(_saveData, _afterStatus);
 			_gamePhase = GamePhase::Battle;
 		}
 	}
@@ -122,11 +125,11 @@ bool ModeGame::Process()
 		// バトルクラスへ丸投げして処理させる
 		_battleSystem.Process(_mouse, _afterStatus, _saveData, deltaTime);
 
-		//// もしバトル終了フラグなどが立てば、ここでガチャフェーズに戻すなどの処理
-		//if(_battleSystem.IsBattleEnd())
-		//{
-		//	_gamePhase = GamePhase::Gacha;
-		//}
+		// もしバトル終了フラグなどが立てば、ここでガチャフェーズに戻すなどの処理
+		if(_battleSystem.IsBattleEnd())
+		{
+			_gamePhase = GamePhase::Gacha;
+		}
 
 		// 【デバッグ用】例えばBキーなどを押したらガチャ画面に戻る処理があるとテストしやすいです
 		if (CheckHitKey(KEY_INPUT_B) == 1)

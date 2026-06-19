@@ -78,6 +78,7 @@ struct EnemyBaseSeed
 	double levelBonus;		// レベルボーナス倍率
 };
 
+// キャラのダメージ計算式の初期データ
 struct CharaFormulasSeed 
 {
 	const char* formulaName;	// 式の名前

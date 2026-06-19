@@ -9,6 +9,16 @@ const std::vector<SaveData::AccountData>& SaveData::GetRows() const
 	return _accountData;
 }
 
+bool SaveData::UpdateAccountAndSave(const AccountData& data, std::string* outError)
+{
+	// 内部の _accountData をクリアして、ModeGameBattleでまとめた新しいデータに入れ替える
+	_accountData.clear();
+	_accountData.push_back(data);
+
+	// 入れ替えた最新のデータをそのままSQLiteへ保存する
+	return SaveToSqlite(outError);
+}
+
 bool SaveData::SaveToSqlite(std::string* outError) const
 {
 	sqlite3* dbh = nullptr;
@@ -27,7 +37,7 @@ bool SaveData::SaveToSqlite(std::string* outError) const
 		{
 			char sql[256];
 			snprintf(sql, sizeof(sql),
-				"INSERT INTO AccountData(uid, level, exp, coin, enemylevel) VALUES (%d, %d, %d, %d, %d);",
+				"INSERT INTO AccountData(uid, level, exp, coin, ClearCount) VALUES (%d, %d, %d, %d, %d);",
 				row.uid, row.level, row.exp, row.coin, row.enemylevel);
 			char* errorMessage;
 			ret = sqlite3_exec(dbh, sql, NULL, NULL, &errorMessage);
@@ -52,7 +62,7 @@ bool SaveData::LoadFromSqlite(std::string* outError)
 	LoadContext ctx{ &_accountData };
 	char* errorMessage;
 	int ret = sqlite3_exec(dbh,
-		"SELECT uid, level, exp, coin, enemylevel FROM AccountData;",
+		"SELECT uid, level, exp, coin, ClearCount FROM AccountData;",
 		LoadCallback, &ctx, &errorMessage);
 	if(ret != SQLITE_OK && outError)
 	{
@@ -96,4 +106,16 @@ bool SaveData::IncrementEnemyLevelAndSave(std::string* outError)
 
 	// そのままデータベースに保存する
 	return SaveToSqlite(outError);
+}
+
+int SaveData::GetPlayerLevel() const
+{
+	// セーブデータが空でなければ、先頭レコードのレベルを返す
+	if(!_accountData.empty())
+	{
+		return _accountData[0].level;
+	}
+
+	// データがない場合は初期値として 1 を返す安全ガード
+	return 1;
 }

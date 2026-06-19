@@ -21,7 +21,10 @@ public:
 
 	bool HasResult() const;
 	bool IncrementEnemyLevelAndSave(std::string* outError = nullptr);
+	
+	bool UpdateAccountAndSave(const AccountData& data, std::string* outError = nullptr);
 
+	int GetPlayerLevel() const;
 private:
 	std::vector<AccountData> _accountData;
 

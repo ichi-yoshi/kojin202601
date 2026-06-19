@@ -38,7 +38,7 @@ double CharaFormula::GetLiveCriticalMultiplier(const CharaAfterStatus& afterstat
 	if((rand() % 10000) < (charaCritRate * 100))
 	{
 		// 当選したら「会心ダメージ / 100」の倍率（例: 1.78倍）を返す
-		return afterstatus.GetAfterStatus().critDamage / 100.0;
+		return 100+afterstatus.GetAfterStatus().critDamage / 100.0;
 	}
 
 	// 外れたら等倍（1.0倍）
@@ -69,7 +69,8 @@ double CharaFormula::GetDefenseMultiplier(const CharaAfterStatus& afterstatus, c
 {
 	CharaFormulasRow row;
 	if(!_charaFormula.GetCharaFormula("敵防御倍率", row))return 1.0;
-	std::string expr = ReplaceVar(row.formula, "キャラレベル", 10);
+	int playerLevel = _saveData.GetPlayerLevel();
+	std::string expr = ReplaceVar(row.formula, "キャラレベル", playerLevel);
 	expr = ReplaceVar(expr, "敵レベル", enemy.GetLevel());
 	return EvaluateFormula::Evaluate(expr);
 }

@@ -23,7 +23,7 @@ int main()
     sqlite3* dbh = NULL;
 
     //データベース名
-    const char* dbname = "newyoshi.sqlite3";
+    const char* dbname = "newyosh.sqlite3";
 
     //実行結果
     int ret = -1;
