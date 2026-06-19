@@ -19,7 +19,7 @@ class ModeGameBattle
 public:
 	bool Initialize(const std::string& dbPath, std::string* outError = nullptr);
 	void Process(MouseInput& mouse, CharaAfterStatus& afterStatus, SaveData& saveData, double deltaTime);
-	void Render();
+	void Render(CharaAfterStatus& afterStatus);
 	bool IsBattleEnd()const { return _isBattleEnd; }
 	void Reset(const SaveData& saveData);
 private:
@@ -59,5 +59,9 @@ private:
 	std::string _debugFormulaRaw;      // DBから読み込んだ生の計算式
 	std::string _debugFormulaReplaced; // 数値が代入された状態の計算式
 	double _debugLastCalculatedDamage = 0.0; // 最後に計算されたダメージ
+
+	double _charaCurrentHP;
+	bool _isHPInitialized ;
+	double _nextDamageTime;
 };
 

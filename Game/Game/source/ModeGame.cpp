@@ -195,7 +195,7 @@ bool ModeGame::Render()
 	}
 	else if (_gamePhase == GamePhase::Battle)
 	{
-		_battleSystem.Render();
+		_battleSystem.Render(_afterStatus);
 	}
 
 	return true;

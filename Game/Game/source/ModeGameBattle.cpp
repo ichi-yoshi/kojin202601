@@ -3,9 +3,10 @@
 #include <algorithm>
 #include <sstream> // （文字列結合用）
 #include <iomanip> // （小数点桁数固定用）
+#include <iostream>
+#include <algorithm>
 #include "EvaluateFormula.h"
 
-extern std::string g_debugFormulaRaw = "(未計算)";
 extern std::string g_debugFormulaReplaced = "(未計算)";
 
 bool ModeGameBattle::Initialize(const std::string& dbPath, std::string* outError)
@@ -24,6 +25,7 @@ void ModeGameBattle::Reset(const SaveData& saveData)
 	_isBattleEnd = false;
 	_circleUI.Reset();
 	_gaugeUI.Reset();
+	_isHPInitialized = false;
 
 	if(_enemy != nullptr)
 	{
@@ -42,11 +44,11 @@ void ModeGameBattle::Reset(const SaveData& saveData)
 		}
 	}
 
-	if(_enemy->LoadEnemy(_sqliteEnemy, saveData))
-	{
-		// 敵の初期HPを満タンにする
-		_enemyCurrentHP = _enemy->GetHP();
-	}
+	//if(_enemy->LoadEnemy(_sqliteEnemy, saveData))
+	//{
+	//	// 敵の初期HPを満タンにする
+	//	_enemyCurrentHP = _enemy->GetHP();
+	//}
 }
 	
 void ModeGameBattle::Process(MouseInput& mouse, CharaAfterStatus& afterStatus, SaveData& saveData, double deltaTime)
@@ -66,6 +68,12 @@ void ModeGameBattle::SetPhase(BattleTimer::BattlePhase nextPhase)
 	// タイマーのフェーズを切り替え
 	_battleTimer.ChangePhase(nextPhase);
 
+	// 防御フェーズが始まったら、最初の5秒後（残り35秒）にターゲットをリセット
+	if(nextPhase == BattleTimer::BattlePhase::Defense)
+	{
+		_nextDamageTime = 35.0;
+	}
+
 	static const std::unordered_map<BattleTimer::BattlePhase, PhaseFunc> PhaseMap = 
 	{
 		{ BattleTimer::BattlePhase::Defense, [this](MouseInput& m, CharaAfterStatus& s) { UpdateDefense(m, s); } },
@@ -83,6 +91,11 @@ void ModeGameBattle::UpdateStart(MouseInput& mouse, CharaAfterStatus& afterStatu
 	// 現状は特に処理は行わず、時間が経過したらフェーズに移行する
 	if(_battleTimer.IsTimeUp())
 	{
+		if(!_isHPInitialized)
+		{
+			_charaCurrentHP = afterStatus.GetAfterStatus().hp;
+			_isHPInitialized = true;
+		}
 		SetPhase(BattleTimer::BattlePhase::Attack); // フェーズ切り替え
 	}
 }
@@ -90,8 +103,25 @@ void ModeGameBattle::UpdateStart(MouseInput& mouse, CharaAfterStatus& afterStatu
 // 防御フェーズの個別処理
 void ModeGameBattle::UpdateDefense(MouseInput& mouse, CharaAfterStatus& afterStatus)
 {
+	
+
 	if(!_battleTimer.IsTimeUp())
 	{
+		// バトルタイマーの残り時間を監視して5秒ごとにダメージを発生
+		double currentTimer = _battleTimer.GetTime();
+		if(currentTimer <= _nextDamageTime)
+		{
+			// 敵の攻撃ダメージを計算して適用
+			double enemyDamage = _charaFormula.CalculateEnemyDamage(afterStatus, *_enemy);
+			_charaCurrentHP -= enemyDamage;
+			if(_charaCurrentHP < 0.0) { _charaCurrentHP = 0.0; }
+
+			std::cout << "【敵の攻撃】残り " << _nextDamageTime << " 秒ライン通過! " << enemyDamage << " の被ダメージ" << std::endl;
+
+			// 次の5秒刻みの閾値に更新（例：35.0 → 30.0）
+			_nextDamageTime -= 5.0;
+		}
+
 		if(_circleUI.Update(mouse))
 		{
 			_battleTimer.IsClearCircle(afterStatus);
@@ -130,70 +160,6 @@ void ModeGameBattle::UpdateAttack(MouseInput& mouse, CharaAfterStatus& afterStat
 				// ※何度も同じダメージが適用されないように、この攻撃ターンで1度だけ処理するための判定
 				bool isSuccess = _gaugeUI.IsSuccess();
 
-				//CharaFormulasRow formulaRow;
-				//if(_SqliteCharaFormula.GetCharaFormula("最終ダメージ", formulaRow))
-				//{
-				//	g_debugFormulaRaw = formulaRow.formula; // 生の公式を保存
-
-				//	// A. データベースから基本の数式を置換
-				//	std::string finalExpr = formulaRow.formula;
-				//	finalExpr = _charaFormula.ReplaceVar(finalExpr, "攻撃", afterStatus.GetAfterStatus().attack);
-				//	finalExpr = _charaFormula.ReplaceVar(finalExpr, "敵防御倍率", _charaFormula.GetDefenseMultiplier(afterStatus, *_enemy));
-				//	finalExpr = _charaFormula.ReplaceVar(finalExpr, "ダメージ減衰率", _charaFormula.GetDecayRate(afterStatus));
-
-				//	finalExpr = _charaFormula.ReplaceVar(finalExpr, "会心倍率", _charaFormula.GetLiveCriticalMultiplier(afterStatus));
-				//	finalExpr = _charaFormula.ReplaceVar(finalExpr, "運値倍率", _charaFormula.GetLiveLuckMultiplier(afterStatus));
-
-				//	g_debugFormulaReplaced = finalExpr; // 画面表示用にまずは基本部分を保存
-
-				//	// B. 評価エンジンでベースのダメージを計算
-				//	double calculatedDamage = EvaluateFormula::Evaluate(finalExpr);
-
-				//	// D. ゲージ目押しの倍率（成功なら 1.3、失敗なら 0.5 など）
-				//	double gaugeBonus = isSuccess ? formulaRow.successValue : formulaRow.failureValue;
-				//	g_debugFormulaReplaced += " * [ゲージ: " + std::to_string(gaugeBonus) + "]";
-
-
-				//	// 最終計算結果を CharaFormula 側にセットして固定関数での上書きを有効にする
-				//	double damage = calculatedDamage * gaugeBonus;
-				//	//_charaFormula.SetFinalDamage(damage);
-
-				//	// 右側用の履歴に追加
-				//	_damageHistory.push_back(damage);
-
-				//	// HP減少処理
-				//	_enemyCurrentHP -= damage;
-				//	if(_enemyCurrentHP < 0) { _enemyCurrentHP = 0; }
-
-				//	_gaugeUI.Reset();
-				//}
-
-				// もし前回の「ログ用数式文字列」をBattleCalculator側から取得できるメンバ関数（GetLastCriticalExpr等）を作ってあれば、
-				// ここで `_logCriticalExpr = _calculator.GetLastCriticalExpr();` のように同期させると左側が完全に連動します。
-				//double damage = _charaFormula.CalculateFinalDamage(afterStatus, *_enemy, isSuccess);
-
-				//// 右側用の履歴に追加
-				//_damageHistory.push_back(damage);
-
-				//if(isSuccess)
-				//{
-				//	// 敵のHPを実際に減らす
-				//	_enemyCurrentHP -= damage;
-				//	if(_enemyCurrentHP < 0) { _enemyCurrentHP = 0; }
-
-				//	_gaugeUI.Reset();
-				//}
-				//else
-				//{
-				//	// 失敗時のペナルティ処理など（必要であれば）
-				//	_enemyCurrentHP -= damage; // 失敗でも一応低ダメージが入る仕様なら
-				//	if(_enemyCurrentHP < 0) { _enemyCurrentHP = 0; }
-
-				//	_gaugeUI.Reset();
-				//}
-				
-
-				// 🌟 修正された関数を今まで通り1回呼び出すだけ！
 				// この中で SQLiteの読み込み、確率抽選、ゲージ補正がすべて完結します。
 				double damage = _charaFormula.CalculateFinalDamage(afterStatus, *_enemy, isSuccess);
 
@@ -215,7 +181,7 @@ void ModeGameBattle::UpdateAttack(MouseInput& mouse, CharaAfterStatus& afterStat
 	}
 }
 
-void ModeGameBattle::Render()
+void ModeGameBattle::Render(CharaAfterStatus& afterStatus)
 {
 	if(_enemy == nullptr) { return; }
 
@@ -271,21 +237,17 @@ void ModeGameBattle::Render()
 	const int RIGHT_X = 800; // 右側座標（画面サイズに合わせて調整してください）
 
 	// ----------------------------------------------------------------
-	// 🌟 【左側】数式展開デバッグ表示（確率抽選・Poop減衰 対応版）
+	// 【左側】数式展開デバッグ表示（確率抽選・Poop減衰 対応版）
 	// ----------------------------------------------------------------
 	int leftY = 300;
-	DrawString(LEFT_X, leftY, "--- [左側] 数式展開デバッグ ---", GetColor(255, 255, 255));
-
-	leftY += 25;
-	std::string rawStr = "［元の公式］: " + g_debugFormulaRaw;
-	DrawString(LEFT_X, leftY, rawStr.c_str(), GetColor(180, 180, 180));
+	DrawString(LEFT_X, leftY, "--- [左側] 数式展開デバッグ ---", GetColor(100, 100, 100));
 
 	leftY += 25;
 	std::string repStr = "［代入状態］: " + g_debugFormulaReplaced;
-	DrawString(LEFT_X, leftY, repStr.c_str(), GetColor(100, 255, 100)); // リアルタイムな計算履歴を緑色で展開
+	DrawString(LEFT_X, leftY, repStr.c_str(), GetColor(100, 100, 100)); // リアルタイムな計算履歴を緑色で展開
 
 	leftY += 25;
-	DrawFormatString(LEFT_X, leftY, GetColor(140, 200, 255), "・ダメージ減衰率の仕様: Poop / 5000");
+	DrawFormatString(LEFT_X, leftY, GetColor(100, 100, 100), "・ダメージ減衰率の仕様: Poop / 5000");
 
 	leftY += 25;
 	// 外枠の公式のガイドラインを今回の最新仕様に書き換え
@@ -293,8 +255,8 @@ void ModeGameBattle::Render()
 
 
 	// 👉 右側：最終ダメージ（新しいものが古いものの下へ追加される）
-	int rightY = 300;
-	DrawString(RIGHT_X, rightY, "--- [右側] 最終ダメージ履歴 ---", GetColor(255, 255, 255));
+	int rightY = 100;
+	DrawString(RIGHT_X, rightY, "--- [右側] 最終ダメージ履歴 ---", GetColor(100, 100, 100));
 	rightY += 25;
 
 	for(size_t i = 0; i < _damageHistory.size(); ++i)
@@ -322,5 +284,30 @@ void ModeGameBattle::Render()
 		SetFontSize(20);
 		DrawString(300, 310, "次に出現する敵のレベルが上がった！", GetColor(255, 255, 255));
 		return;
+	}
+
+	{
+		double maxHp = afterStatus.GetAfterStatus().hp;
+
+		if(maxHp < 1.0)
+		{
+			maxHp = 1.0;
+		}
+
+		// プレイヤーの名前とHPバーの枠を描画（敵のバーの下側に配置 X=200, Y=240付近）
+		SetFontSize(20);
+		DrawString(200, 240, "プレイヤー (あなた)", GetColor(120, 200, 255));
+		DrawBox(200, 270, 600, 290, GetColor(100, 100, 100), FALSE);
+
+		// プレイヤーの残りHPの割合に応じて青色（または緑）のバーを描画
+		double playerHpRate = _charaCurrentHP / maxHp;
+		int playerBarWidth = static_cast<int>(400 * playerHpRate);
+
+		// HPが低くなったらバーの色を赤に変える演出（お好みで）
+		unsigned int barColor = (playerHpRate > 0.2) ? GetColor(50, 150, 255) : GetColor(255, 50, 50);
+		DrawBox(200, 270, 200 + playerBarWidth, 290, barColor, TRUE);
+
+		// プレイヤーのHP数値テキスト表示
+		DrawFormatString(200, 300, GetColor(200, 200, 200), "HP: %.0f / %.0f", _charaCurrentHP, maxHp);
 	}
 }

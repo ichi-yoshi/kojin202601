@@ -106,9 +106,7 @@ double CharaFormula::CalculateFinalDamage(const CharaAfterStatus& afterstatus, c
 	exprFinal = ReplaceVar(exprFinal, "会心倍率", res_critical);
 	exprFinal = ReplaceVar(exprFinal, "運値倍率", res_luck);
 
-	extern std::string g_debugFormulaRaw;
 	extern std::string g_debugFormulaReplaced;
-	g_debugFormulaRaw = rowFinal.formula;
 	g_debugFormulaReplaced = exprFinal;
 
 	// 5. 確率抽選を含んだ数式を一発で評価計算（ここが本来のルートです！）
@@ -121,6 +119,26 @@ double CharaFormula::CalculateFinalDamage(const CharaAfterStatus& afterstatus, c
 	std::cout << "[最終ダメージ計算式]: " << exprFinal << " * 補正(" << gaugeBonus << ") = " << totalDamage << std::endl;
 
 	return totalDamage;
+}
+
+double CharaFormula::CalculateEnemyDamage(const CharaAfterStatus& afterstatus, const Enemy& enemy)
+{
+	CharaFormulasRow row;
+	if(!_charaFormula.GetCharaFormula("敵の攻撃ダメージ", row)) return 0.0;
+
+	std::string expr = row.formula; // "(キャラ最大HP*0.02)+敵攻撃力*(敵攻撃力/キャラ防御力)"
+
+	// 長いキーワードから順番に完全置換（文字被りバグ防止）
+	expr = ReplaceVar(expr, "キャラ最大HP", afterstatus.GetAfterStatus().hp);
+	expr = ReplaceVar(expr, "キャラ防御力", afterstatus.GetAfterStatus().defense);
+	expr = ReplaceVar(expr, "敵攻撃力", enemy.GetAttack());
+
+	// 数式エンジンで評価（今度は純粋な足し算として完璧に計算されます）
+	double enemyDamage = EvaluateFormula::Evaluate(expr);
+
+	std::cout << "[敵の攻撃ダメージ（2%＋防御計算）]: " << expr << " = " << enemyDamage << std::endl;
+
+	return enemyDamage;
 }
 
 void CharaFormula::SetFinalDamage(double damage)
