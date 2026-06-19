@@ -15,6 +15,14 @@ double EvaluateFormula::Evaluate(const std::string& expression)
 		double subResult = EvaluateSimpleFormula(match[1].str());
 		// カッコで囲まれた部分を計算結果の文字列に置換
 		expr = std::regex_replace(expr, std::regex("\\(" + std::regex_replace(match[1].str(), std::regex("[\\+\\-\\*\\/]"), "\\$&") + "\\)"), std::to_string(subResult));
+		//std::string target = match[0].str(); // カッコを含んだ全体の文字列（例: "(2561.5000*敵防御倍率*ダメージ減衰率)"）
+		//std::string replacement = std::to_string(subResult); // 計算結果の数値文字列
+
+		//size_t pos = expr.find(target);
+		//if(pos != std::string::npos)
+		//{
+		//	expr.replace(pos, target.length(), replacement);
+		//}
 	}
 
 	// カッコがすべて消えたら、残った四則演算を計算する

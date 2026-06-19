@@ -5,8 +5,8 @@
 #include <iomanip> // （小数点桁数固定用）
 #include "EvaluateFormula.h"
 
-static std::string g_debugFormulaRaw = "(未計算)";
-static std::string g_debugFormulaReplaced = "(未計算)";
+extern std::string g_debugFormulaRaw = "(未計算)";
+extern std::string g_debugFormulaReplaced = "(未計算)";
 
 bool ModeGameBattle::Initialize(const std::string& dbPath, std::string* outError)
 {
@@ -130,56 +130,81 @@ void ModeGameBattle::UpdateAttack(MouseInput& mouse, CharaAfterStatus& afterStat
 				// ※何度も同じダメージが適用されないように、この攻撃ターンで1度だけ処理するための判定
 				bool isSuccess = _gaugeUI.IsSuccess();
 
-				CharaFormulasRow formulaRow;
-				if(_SqliteCharaFormula.GetCharaFormula("最終ダメージ", formulaRow))
-				{
-					g_debugFormulaRaw = formulaRow.formula; // 生の公式を保存
+				//CharaFormulasRow formulaRow;
+				//if(_SqliteCharaFormula.GetCharaFormula("最終ダメージ", formulaRow))
+				//{
+				//	g_debugFormulaRaw = formulaRow.formula; // 生の公式を保存
 
-					std::string finalExpr = formulaRow.formula;
-					// 各ステータスワードを数値文字列に置換
-					finalExpr = _charaFormula.ReplaceVar(finalExpr, "攻撃", afterStatus.GetAfterStatus().attack);
-					finalExpr = _charaFormula.ReplaceVar(finalExpr, "会心倍率", _charaFormula.GetCriticalMultiplier(afterStatus));
-					finalExpr = _charaFormula.ReplaceVar(finalExpr, "敵防御倍率", _charaFormula.GetDefenseMultiplier(afterStatus, *_enemy));
-					finalExpr = _charaFormula.ReplaceVar(finalExpr, "ダメージ減衰率", _charaFormula.GetDecayRate(afterStatus));
-					finalExpr = _charaFormula.ReplaceVar(finalExpr, "運値期待値", _charaFormula.GetLuckExpectation(afterStatus));
+				//	// A. データベースから基本の数式を置換
+				//	std::string finalExpr = formulaRow.formula;
+				//	finalExpr = _charaFormula.ReplaceVar(finalExpr, "攻撃", afterStatus.GetAfterStatus().attack);
+				//	finalExpr = _charaFormula.ReplaceVar(finalExpr, "敵防御倍率", _charaFormula.GetDefenseMultiplier(afterStatus, *_enemy));
+				//	finalExpr = _charaFormula.ReplaceVar(finalExpr, "ダメージ減衰率", _charaFormula.GetDecayRate(afterStatus));
 
-					// ゲージ倍率を末尾に掛け算
-					double gaugeBonus = isSuccess ? formulaRow.successValue : formulaRow.failureValue;
-					std::ostringstream ss;
-					ss << "*" << std::fixed << std::setprecision(4) << gaugeBonus;
-					finalExpr += ss.str();
+				//	finalExpr = _charaFormula.ReplaceVar(finalExpr, "会心倍率", _charaFormula.GetLiveCriticalMultiplier(afterStatus));
+				//	finalExpr = _charaFormula.ReplaceVar(finalExpr, "運値倍率", _charaFormula.GetLiveLuckMultiplier(afterStatus));
 
-					g_debugFormulaReplaced = finalExpr; // 画面表示用に保存
+				//	g_debugFormulaReplaced = finalExpr; // 画面表示用にまずは基本部分を保存
 
-					double calculatedResult = EvaluateFormula::Evaluate(finalExpr);
+				//	// B. 評価エンジンでベースのダメージを計算
+				//	double calculatedDamage = EvaluateFormula::Evaluate(finalExpr);
 
-					// 計算した結果を一時保存する（CharaFormula側に値を渡す）
-					_charaFormula.SetFinalDamage(calculatedResult);
-				}
+				//	// D. ゲージ目押しの倍率（成功なら 1.3、失敗なら 0.5 など）
+				//	double gaugeBonus = isSuccess ? formulaRow.successValue : formulaRow.failureValue;
+				//	g_debugFormulaReplaced += " * [ゲージ: " + std::to_string(gaugeBonus) + "]";
+
+
+				//	// 最終計算結果を CharaFormula 側にセットして固定関数での上書きを有効にする
+				//	double damage = calculatedDamage * gaugeBonus;
+				//	//_charaFormula.SetFinalDamage(damage);
+
+				//	// 右側用の履歴に追加
+				//	_damageHistory.push_back(damage);
+
+				//	// HP減少処理
+				//	_enemyCurrentHP -= damage;
+				//	if(_enemyCurrentHP < 0) { _enemyCurrentHP = 0; }
+
+				//	_gaugeUI.Reset();
+				//}
 
 				// もし前回の「ログ用数式文字列」をBattleCalculator側から取得できるメンバ関数（GetLastCriticalExpr等）を作ってあれば、
 				// ここで `_logCriticalExpr = _calculator.GetLastCriticalExpr();` のように同期させると左側が完全に連動します。
+				//double damage = _charaFormula.CalculateFinalDamage(afterStatus, *_enemy, isSuccess);
+
+				//// 右側用の履歴に追加
+				//_damageHistory.push_back(damage);
+
+				//if(isSuccess)
+				//{
+				//	// 敵のHPを実際に減らす
+				//	_enemyCurrentHP -= damage;
+				//	if(_enemyCurrentHP < 0) { _enemyCurrentHP = 0; }
+
+				//	_gaugeUI.Reset();
+				//}
+				//else
+				//{
+				//	// 失敗時のペナルティ処理など（必要であれば）
+				//	_enemyCurrentHP -= damage; // 失敗でも一応低ダメージが入る仕様なら
+				//	if(_enemyCurrentHP < 0) { _enemyCurrentHP = 0; }
+
+				//	_gaugeUI.Reset();
+				//}
+				
+
+				// 🌟 修正された関数を今まで通り1回呼び出すだけ！
+				// この中で SQLiteの読み込み、確率抽選、ゲージ補正がすべて完結します。
 				double damage = _charaFormula.CalculateFinalDamage(afterStatus, *_enemy, isSuccess);
 
-				// 右側用の履歴に追加
+				// 履歴に追加
 				_damageHistory.push_back(damage);
 
-				if(isSuccess)
-				{
-					// 敵のHPを実際に減らす
-					_enemyCurrentHP -= damage;
-					if(_enemyCurrentHP < 0) { _enemyCurrentHP = 0; }
+				// HP減少処理
+				_enemyCurrentHP -= damage;
+				if(_enemyCurrentHP < 0) { _enemyCurrentHP = 0; }
 
-					_gaugeUI.Reset();
-				}
-				else
-				{
-					// 失敗時のペナルティ処理など（必要であれば）
-					_enemyCurrentHP -= damage; // 失敗でも一応低ダメージが入る仕様なら
-					if(_enemyCurrentHP < 0) { _enemyCurrentHP = 0; }
-
-					_gaugeUI.Reset();
-				}
+				_gaugeUI.Reset();
 			}
 		}
 	}
@@ -218,7 +243,6 @@ void ModeGameBattle::Render()
 	else if(_battleTimer.GetCurrentPhase() == BattleTimer::BattlePhase::Start)
 	{
 		SetFontSize(24);
-		//DrawString(100, 50, "【 戦闘開始！ 】", GetColor(255, 255, 0));
 		// 残り時間の表示（秒数を小数点第1位まで）
 		DrawFormatString(100, 80, GetColor(255, 0, 0), "戦闘開始まで: %.1f 秒", _battleTimer.GetTime());
 	}
@@ -247,7 +271,7 @@ void ModeGameBattle::Render()
 	const int RIGHT_X = 800; // 右側座標（画面サイズに合わせて調整してください）
 
 	// ----------------------------------------------------------------
-	// 🌟 【左側】数式展開デバッグ表示のリアルタイム書き換え
+	// 🌟 【左側】数式展開デバッグ表示（確率抽選・Poop減衰 対応版）
 	// ----------------------------------------------------------------
 	int leftY = 300;
 	DrawString(LEFT_X, leftY, "--- [左側] 数式展開デバッグ ---", GetColor(255, 255, 255));
@@ -258,10 +282,14 @@ void ModeGameBattle::Render()
 
 	leftY += 25;
 	std::string repStr = "［代入状態］: " + g_debugFormulaReplaced;
-	DrawString(LEFT_X, leftY, repStr.c_str(), GetColor(100, 255, 100)); // 置き換わった数字を緑色で分かりやすく
+	DrawString(LEFT_X, leftY, repStr.c_str(), GetColor(100, 255, 100)); // リアルタイムな計算履歴を緑色で展開
 
 	leftY += 25;
-	DrawFormatString(LEFT_X, leftY, GetColor(255, 200, 0), "最終公式: (攻撃 * 会心倍率 * 敵防御倍率 * ダメージ減衰率 * 運値期待値) * ゲージ倍率");
+	DrawFormatString(LEFT_X, leftY, GetColor(140, 200, 255), "・ダメージ減衰率の仕様: Poop / 5000");
+
+	leftY += 25;
+	// 外枠の公式のガイドラインを今回の最新仕様に書き換え
+	DrawFormatString(LEFT_X, leftY, GetColor(255, 200, 0), "最終公式: (ベース計算) * 会心倍率(抽選) * ゲージ倍率 * 運値2倍(抽選)");
 
 
 	// 👉 右側：最終ダメージ（新しいものが古いものの下へ追加される）

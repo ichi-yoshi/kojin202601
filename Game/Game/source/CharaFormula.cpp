@@ -30,19 +30,45 @@ std::string CharaFormula::ReplaceVar(std::string sourceStr, const std::string& s
 	return sourceStr;
 }
 
-double CharaFormula::GetCriticalMultiplier(const CharaAfterStatus& afterstatus)
+double CharaFormula::GetLiveCriticalMultiplier(const CharaAfterStatus& afterstatus)
 {
-	CharaFormulasRow row;
-	if(!_charaFormula.GetCharaFormula("会心倍率", row))return 1.0;
-	std::string expr = ReplaceVar(row.formula, "会心率", afterstatus.GetAfterStatus().critRate); 
-	expr = ReplaceVar(expr, "会心ダメージ", afterstatus.GetAfterStatus().critDamage); 
-	return EvaluateFormula::Evaluate(expr);
+	double charaCritRate = afterstatus.GetAfterStatus().critRate;
+
+	// 0〜9999のサイコロを振り、会心率(%)未満なら当選
+	if((rand() % 10000) < (charaCritRate * 100))
+	{
+		// 当選したら「会心ダメージ / 100」の倍率（例: 1.78倍）を返す
+		return afterstatus.GetAfterStatus().critDamage / 100.0;
+	}
+
+	// 外れたら等倍（1.0倍）
+	return 1.0;
+}
+
+double CharaFormula::GetLiveLuckMultiplier(const CharaAfterStatus& afterstatus)
+{
+	double charaLuck = afterstatus.GetAfterStatus().luck;
+	// ご指定の数式で『発動確率(%)』を算出する (例: 114.0 -> 5.7%)
+	double luckProbability = (charaLuck / 10.0) / 2.0;
+
+	// 100% を超えないように上限キャップ
+	if(luckProbability > 100.0) { luckProbability = 100.0; }
+
+	// 算出した確率（%）でサイコロを振る
+	if((rand() % 10000) < (luckProbability * 100))
+	{
+		// 当選したら2倍！
+		return 2.0;
+	}
+
+	// 外れたら等倍（1.0倍）
+	return 1.0;
 }
 
 double CharaFormula::GetDefenseMultiplier(const CharaAfterStatus& afterstatus, const Enemy& enemy)
 {
 	CharaFormulasRow row;
-	if(!_charaFormula.GetCharaFormula("防御倍率", row))return 1.0;
+	if(!_charaFormula.GetCharaFormula("敵防御倍率", row))return 1.0;
 	std::string expr = ReplaceVar(row.formula, "キャラレベル", 10);
 	expr = ReplaceVar(expr, "敵レベル", enemy.GetLevel());
 	return EvaluateFormula::Evaluate(expr);
@@ -56,14 +82,6 @@ double CharaFormula::GetDecayRate(const CharaAfterStatus& afterstatus)
 	return EvaluateFormula::Evaluate(expr);
 }
 
-double CharaFormula::GetLuckExpectation(const CharaAfterStatus& afterstatus)
-{
-	CharaFormulasRow row;
-	if(!_charaFormula.GetCharaFormula("運値期待値", row))return 1.0;
-	std::string expr = ReplaceVar(row.formula, "運値", afterstatus.GetAfterStatus().luck);
-	return EvaluateFormula::Evaluate(expr);
-}
-
 double CharaFormula::CalculateFinalDamage(const CharaAfterStatus& afterstatus, const Enemy& enemy, bool isGaugeSuccess)
 {
 	if(_evaluatedDamage > 0.0)
@@ -73,22 +91,30 @@ double CharaFormula::CalculateFinalDamage(const CharaAfterStatus& afterstatus, c
 		return temp;
 	}
 
-	double res_critical = GetCriticalMultiplier(afterstatus);
 	double res_defense = GetDefenseMultiplier(afterstatus, enemy);
 	double res_decay = GetDecayRate(afterstatus);
-	double res_luck = GetLuckExpectation(afterstatus);
+	double res_critical = GetLiveCriticalMultiplier(afterstatus);
+	double res_luck = GetLiveLuckMultiplier(afterstatus);
 
 	CharaFormulasRow rowFinal;
 	if(!_charaFormula.GetCharaFormula("最終ダメージ", rowFinal)) return 0.0;
 
 	std::string exprFinal = rowFinal.formula;
 	exprFinal = ReplaceVar(exprFinal, "攻撃", afterstatus.GetAfterStatus().attack);
-	exprFinal = ReplaceVar(exprFinal, "会心倍率", res_critical);
 	exprFinal = ReplaceVar(exprFinal, "敵防御倍率", res_defense);
 	exprFinal = ReplaceVar(exprFinal, "ダメージ減衰率", res_decay);
-	exprFinal = ReplaceVar(exprFinal, "運値期待値", res_luck);
+	exprFinal = ReplaceVar(exprFinal, "会心倍率", res_critical);
+	exprFinal = ReplaceVar(exprFinal, "運値倍率", res_luck);
 
+	extern std::string g_debugFormulaRaw;
+	extern std::string g_debugFormulaReplaced;
+	g_debugFormulaRaw = rowFinal.formula;
+	g_debugFormulaReplaced = exprFinal;
+
+	// 5. 確率抽選を含んだ数式を一発で評価計算（ここが本来のルートです！）
 	double baseFinalDamage = EvaluateFormula::Evaluate(exprFinal);
+
+	// 6. 今まで通り、ゲージ倍率を最後に掛け合わせる
 	double gaugeBonus = isGaugeSuccess ? rowFinal.successValue : rowFinal.failureValue;
 	double totalDamage = baseFinalDamage * gaugeBonus;
 
