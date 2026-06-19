@@ -38,7 +38,7 @@ double CharaFormula::GetLiveCriticalMultiplier(const CharaAfterStatus& afterstat
 	if((rand() % 10000) < (charaCritRate * 100))
 	{
 		// 当選したら「会心ダメージ / 100」の倍率（例: 1.78倍）を返す
-		return 100+afterstatus.GetAfterStatus().critDamage / 100.0;
+		return afterstatus.GetAfterStatus().critDamage / 100.0;
 	}
 
 	// 外れたら等倍（1.0倍）
