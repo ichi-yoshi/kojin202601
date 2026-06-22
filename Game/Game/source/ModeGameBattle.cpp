@@ -41,11 +41,6 @@ void ModeGameBattle::Reset(const SaveData& saveData, CharaAfterStatus& afterStat
 
 	if(_enemy != nullptr)
 	{
-		//if(_enemy->LoadEnemy(_sqliteEnemy, saveData))
-		//{
-		//	// 敵の初期HPを満タンにする
-		//	_enemyCurrentHP = _enemy->GetHP();
-		//}
 		_enemy->LoadEnemy(_sqliteEnemy, saveData);
 		_enemyCurrentHP = _enemy->GetHP();
 		SetPhase(BattleTimer::BattlePhase::Start);
@@ -63,9 +58,9 @@ void ModeGameBattle::Process(MouseInput& mouse, CharaAfterStatus& afterStatus, S
 {
 	if(_enemy == nullptr) { return; }
 
-	if(_battleTimer.GetCurrentPhase() != BattleTimer::BattlePhase::Result) //
+	if(_battleTimer.GetCurrentPhase() != BattleTimer::BattlePhase::Result) 
 	{
-		if(_enemyCurrentHP <= 0.0 || _charaCurrentHP <= 0.0) //
+		if(_enemyCurrentHP <= 0.0 || _charaCurrentHP <= 0.0) 
 		{
 			SetPhase(BattleTimer::BattlePhase::Result); // リザルトフェーズへ移行
 		}
@@ -205,14 +200,7 @@ void ModeGameBattle::UpdateAttack(MouseInput& mouse, CharaAfterStatus& afterStat
 
 void ModeGameBattle::UpdateResult(MouseInput& mouse, CharaAfterStatus& afterStatus, SaveData& saveData)
 {
-	//// 1. リザルトフェーズに入った最初の1フレームだけセーブデータを保存する
-	//if(!_isResultProcessed) //
-	//{
-	//	ProcessBattleResult(saveData); // 情報をまとめて保存
-	//	_isResultProcessed = true; // 二重保存を防止
-	//}
-
-	// 2. リザルトの表示時間（5秒）が終了したら、自動的にバトルを終了して次の画面へ
+	// リザルトの表示時間（5秒）が終了したら、自動的にバトルを終了して次の画面へ
 	if(_battleTimer.IsTimeUp())
 	{
 		_isBattleEnd = true;
@@ -287,10 +275,12 @@ void ModeGameBattle::ProcessBattleResult(SaveData& saveData)
 
 	success = saveData.UpdateAccountAndSave(account, &errStr);
 
-	if(!success) {
+	if(!success) 
+	{
 		std::cout << "セーブ失敗: " << errStr << std::endl;
 	}
-	else {
+	else 
+	{
 		std::cout << "セーブ成功！ データをSQLiteへ同期しました。" << std::endl;
 	}
 }
@@ -329,18 +319,20 @@ void ModeGameBattle::Render(CharaAfterStatus& afterStatus)
 	else if(_battleTimer.GetCurrentPhase() == BattleTimer::BattlePhase::Result)
 	{
 		SetFontSize(36);
-		if(_enemyCurrentHP <= 0.0) { //
+		if(_enemyCurrentHP <= 0.0) 
+		{ 
 			DrawString(200, 150, "【 BATTLE VICTORY! 】", GetColor(255, 215, 0));
 		}
-		else {
+		else 
+		{
 			DrawString(200, 150, "【 BATTLE DEFEATED... 】", GetColor(255, 50, 50));
 		}
 
 		SetFontSize(24);
 		DrawFormatString(200, 230, GetColor(100, 100, 100), "今回の最大一撃ダメージ: %.0f DMG", _maxDamageDealt);
-		DrawFormatString(200, 270, GetColor(100, 100, 100), "敵の残りHPボーナス: %.0f", (std::max)(0.0, _enemyCurrentHP)); //
+		DrawFormatString(200, 270, GetColor(100, 100, 100), "残りHPボーナス: %.0f", (std::max)(0.0, _charaCurrentHP)); //
 
-		int finalGain = static_cast<int>((std::max)(0.0, _enemyCurrentHP) + _maxDamageDealt); //
+		int finalGain = static_cast<int>((std::max)(0.0, _charaCurrentHP) + _maxDamageDealt); //
 		DrawFormatString(200, 320, GetColor(255, 200, 0), "獲得コイン: + %d COIN !", finalGain);
 
 		SetFontSize(18);
@@ -389,7 +381,7 @@ void ModeGameBattle::Render(CharaAfterStatus& afterStatus)
 	//DrawFormatString(LEFT_X, leftY, GetColor(255, 200, 0), "最終公式: (ベース計算) * 会心倍率(抽選) * ゲージ倍率 * 運値2倍(抽選)");
 
 
-	// 👉 右側：最終ダメージ（新しいものが古いものの下へ追加される）
+	// 右側：最終ダメージ（新しいものが古いものの下へ追加される）
 	int rightY = 100;
 	DrawString(RIGHT_X, rightY, "--- [右側] 最終ダメージ履歴 ---", GetColor(100, 100, 100));
 	rightY += 25;
@@ -444,7 +436,5 @@ void ModeGameBattle::Render(CharaAfterStatus& afterStatus)
 
 		// プレイヤーのHP数値テキスト表示
 		DrawFormatString(200, 300, GetColor(200, 200, 200), "HP: %.0f / %.0f", _charaCurrentHP, maxHp);
-	}
-
-	
+	}	
 }

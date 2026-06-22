@@ -135,8 +135,8 @@ bool SeedSqliteData(sqlite3* dbh)
 	// ゲージの初期データ（ゲージID、目標X座標、目標幅、移動速度）
 	const std::vector<GaugeSeed> gaugeSeeds =
 	{
-		{"gauge1", 100, 200, 50.0},
-		{"gauge2", 150, 150, 60.0},
+		{"gauge1", 100, 200, 20.0},
+		{"gauge2", 150, 150, 20.0},
 		{"gauge3", 200, 100, 30.0},
 		{"gauge4", 250,  50, 10.0},
 		{"gauge5", 300,  35, 20.0}
@@ -176,7 +176,7 @@ bool SeedSqliteData(sqlite3* dbh)
 	// 敵の基礎データ（敵の名前、HP、攻撃、レベル表記、開始レベル、レベルボーナス倍率）
 	const std::vector<EnemyBaseSeed> enemybaseSeeds =
 	{
-		{"ドラゴン", 200000.0, 100.0, "Lv.", 10, 12.0}
+		{"ドラゴン", 200000.0, 100.0, "Lv.", 99, 2.0}
 	};
 
 	// 式の初期データ（式の名前、式の内容、ゲージ成功時の値、ゲージ失敗時の値）

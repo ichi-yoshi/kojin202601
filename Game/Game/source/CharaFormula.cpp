@@ -38,7 +38,7 @@ double CharaFormula::GetLiveCriticalMultiplier(const CharaAfterStatus& afterstat
 	if((rand() % 10000) < (charaCritRate * 100))
 	{
 		// 当選したら「会心ダメージ / 100」の倍率（例: 1.78倍）を返す
-		return afterstatus.GetAfterStatus().critDamage / 100.0;
+		return 1.0 + afterstatus.GetAfterStatus().critDamage / 100.0;
 	}
 
 	// 外れたら等倍（1.0倍）
@@ -110,10 +110,10 @@ double CharaFormula::CalculateFinalDamage(const CharaAfterStatus& afterstatus, c
 	extern std::string g_debugFormulaReplaced;
 	g_debugFormulaReplaced = exprFinal;
 
-	// 5. 確率抽選を含んだ数式を一発で評価計算（ここが本来のルートです！）
+	// 確率抽選を含んだ数式を一発で評価計算（ここが本来のルートです！）
 	double baseFinalDamage = EvaluateFormula::Evaluate(exprFinal);
 
-	// 6. 今まで通り、ゲージ倍率を最後に掛け合わせる
+	// 今まで通り、ゲージ倍率を最後に掛け合わせる
 	double gaugeBonus = isGaugeSuccess ? rowFinal.successValue : rowFinal.failureValue;
 	double totalDamage = baseFinalDamage * gaugeBonus;
 
