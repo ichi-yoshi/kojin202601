@@ -1,4 +1,4 @@
-#include "GaugeUI.h"
+﻿#include "GaugeUI.h"
 #include "ButtonUI.h"
 #include "DxLib.h"
 
@@ -10,7 +10,7 @@ const ButtonUI::ButtonRect& GaugeUI::GetGaugeButtonRect() const
 bool GaugeUI::Initialize(const std::string& dbPath, std::string* outError)
 {
 	// ゲージのマスターデータをロード
-	if (!_sqliteGauge.Initialize(dbPath, outError))
+	if(!_sqliteGauge.Initialize(dbPath, outError))
 	{
 		return false;
 	}
@@ -46,7 +46,7 @@ void GaugeUI::Reset()
 	_prevKeyF = (CheckHitKey(KEY_INPUT_F) == 1);
 
 	// SQLiteからランダムに1件抽選して適用する
-	if (_sqliteGauge.RollrandomGauge())
+	if(_sqliteGauge.RollrandomGauge())
 	{
 		GaugeRow row;
 		_sqliteGauge.GetGauge(row);
@@ -70,8 +70,8 @@ void GaugeUI::Update(MouseInput& mouse)
 		_currentValue = 0.0;
 	}
 
-	// 2. ゲージの矩形範囲が左クリックされた時の判定
-	if (mouse.IsLeftTrig() && mouse.IsInRect(_gaugeButton.x, _gaugeButton.y, _gaugeButton.w, _gaugeButton.h)|| isFTrigger)
+	// ゲージの矩形範囲が左クリックされた時の判定
+	if(mouse.IsLeftTrig() && mouse.IsInRect(_gaugeButton.x, _gaugeButton.y, _gaugeButton.w, _gaugeButton.h)|| isFTrigger)
 	{
 		_isMoving = false; // バーの動きをピタッと止める
 		_hasResult = true;
@@ -80,7 +80,7 @@ void GaugeUI::Update(MouseInput& mouse)
 		int currentX = static_cast<int>(_gaugeButton.w * _currentValue);
 
 		// バーのX座標が、ターゲットの赤枠範囲内（左端 ～ 右端）に収まっているか判定
-		if (currentX >= _targetX && currentX <= (_targetX + _targetW))
+		if(currentX >= _targetX && currentX <= (_targetX + _targetW))
 		{
 			_isSuccess = true;  
 		}
@@ -99,7 +99,6 @@ void GaugeUI::Draw()
 	int by = _gaugeButton.y;
 	int bw = _gaugeButton.w;
 	int bh = _gaugeButton.h;
-
 	DrawBox(bx, by, bx + bw, by + bh, GetColor(255, 255, 255), false);
 
 	int targetLeft = bx + _targetX;
@@ -109,15 +108,15 @@ void GaugeUI::Draw()
 	int barX = bx + static_cast<int>(bw * _currentValue);
 	DrawBox(barX - 1, by - 2, barX + 2, by + bh + 2, GetColor(255, 255, 255), true);
 
-	if (_hasResult) 
+	if(_hasResult) 
 	{
 		if (_isSuccess) 
 		{
-			DrawString(bx,by-20, "Success!", GetColor(0, 255, 0));
+			DrawString(bx,by-20, "成功", GetColor(0, 255, 0));
 		}
 		else 
 		{
-			DrawString(bx,by-20, "Failed!", GetColor(255, 0, 0));
+			DrawString(bx,by-20, "失敗", GetColor(255, 0, 0));
 		}
 	}
 }

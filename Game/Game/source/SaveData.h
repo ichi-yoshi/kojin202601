@@ -25,6 +25,7 @@ public:
 	bool UpdateAccountAndSave(const AccountData& data, std::string* outError = nullptr);
 
 	int GetPlayerLevel() const;
+	std::vector<std::string> ToLines() const;
 private:
 	std::vector<AccountData> _accountData;
 

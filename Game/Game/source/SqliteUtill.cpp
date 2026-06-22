@@ -4,7 +4,7 @@
 // SQLiteのデータベースに接続する
 bool OpenSqliteConnection(sqlite3** outDb, std::string* outError)
 {
-	if (!outDb) { return false; }
+	if(!outDb) { return false; }
 	*outDb = nullptr;
 
 	// データベースに接続
@@ -15,11 +15,10 @@ bool OpenSqliteConnection(sqlite3** outDb, std::string* outError)
 		nullptr);
 
 	// 接続失敗
-	if (ret != SQLITE_OK)
+	if(ret != SQLITE_OK)
 	{
-		if (outError) { *outError = "SQLite open failed"; }
+		if(outError) { *outError = "SQLite open failed"; }
 		return false;
 	}
-
 	return true;
 }

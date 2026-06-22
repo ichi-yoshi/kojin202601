@@ -8,7 +8,7 @@ bool CreateSqliteTables(sqlite3* dbh)
 	int err = 0;
 
 	// メインステータス
-	if (err == 0)
+	if(err == 0)
 	{
 		char* errorMessage;
 		ret = sqlite3_exec(dbh,
@@ -18,7 +18,7 @@ bool CreateSqliteTables(sqlite3* dbh)
 			"Val1 REAL"
 			");",
 			NULL, NULL, &errorMessage);
-		if (ret == SQLITE_OK) 
+		if(ret == SQLITE_OK) 
 		{
 			printf("basic_status生成：成功\n");
 		}
@@ -30,7 +30,7 @@ bool CreateSqliteTables(sqlite3* dbh)
 	}
 
 	// サブステータス
-	if (err == 0)
+	if(err == 0)
 	{
 		char* errorMessage;
 		ret = sqlite3_exec(dbh,
@@ -40,7 +40,7 @@ bool CreateSqliteTables(sqlite3* dbh)
 			"Val1 REAL, Val2 REAL, Val3 REAL, Val4 REAL, Val5 REAL"
 			");",
 			NULL, NULL, &errorMessage);
-		if (ret == SQLITE_OK)
+		if(ret == SQLITE_OK)
 		{
 			printf("status生成：成功\n");
 		}
@@ -52,7 +52,7 @@ bool CreateSqliteTables(sqlite3* dbh)
 	}
 
 	// 装備
-	if (err == 0)
+	if(err == 0)
 	{
 		char* errorMessage;
 		ret = sqlite3_exec(dbh,
@@ -61,7 +61,7 @@ bool CreateSqliteTables(sqlite3* dbh)
 			"probability REAL"
 			");",
 			NULL, NULL, &errorMessage);
-		if (ret == SQLITE_OK) 
+		if(ret == SQLITE_OK) 
 		{
 			printf("armor生成：成功\n");
 		}
@@ -73,7 +73,7 @@ bool CreateSqliteTables(sqlite3* dbh)
 	}
 
 	// 保存された装備
-	if (err == 0)
+	if(err == 0)
 	{
 		char* errorMessage;
 		ret = sqlite3_exec(dbh,
@@ -85,7 +85,7 @@ bool CreateSqliteTables(sqlite3* dbh)
 			"statusLines TEXT"
 			");",
 			NULL, NULL, &errorMessage);
-		if (ret == SQLITE_OK) 
+		if(ret == SQLITE_OK) 
 		{
 			printf("save_equipment生成：成功\n");
 		}
@@ -97,7 +97,7 @@ bool CreateSqliteTables(sqlite3* dbh)
 	}
 
 	// キャラの基礎ステータス
-	if (err == 0)
+	if(err == 0)
 	{
 		char* errorMessage;
 		ret = sqlite3_exec(dbh,
@@ -106,7 +106,7 @@ bool CreateSqliteTables(sqlite3* dbh)
 			"Val1 REAL"
 			");",
 			NULL, NULL, &errorMessage);
-		if (ret == SQLITE_OK)
+		if(ret == SQLITE_OK)
 		{
 			printf("chara_status生成：成功\n");
 		}
@@ -117,7 +117,7 @@ bool CreateSqliteTables(sqlite3* dbh)
 	}
 
 	//キャラの装備後最終ステータス
-	if (err == 0)
+	if(err == 0)
 	{
 		char* errorMessage;
 		ret = sqlite3_exec(dbh,
@@ -127,7 +127,7 @@ bool CreateSqliteTables(sqlite3* dbh)
 			"hasResult INTEGER"
 			");",
 			NULL, NULL, &errorMessage);
-		if (ret == SQLITE_OK)
+		if(ret == SQLITE_OK)
 		{
 			printf("chara_afterstatus生成：成功\n");
 		}
@@ -139,7 +139,7 @@ bool CreateSqliteTables(sqlite3* dbh)
 	}
 
 	// ゲージの初期データ
-	if (err == 0) 
+	if(err == 0) 
 	{
 		char* errorMessage;
 		ret=sqlite3_exec(dbh,
@@ -151,7 +151,7 @@ bool CreateSqliteTables(sqlite3* dbh)
 			"speed REAL"
 			");",
 			NULL, NULL, &errorMessage);
-		if (ret == SQLITE_OK)
+		if(ret == SQLITE_OK)
 		{
 			printf("gauge生成：成功\n");
 		}
@@ -163,7 +163,7 @@ bool CreateSqliteTables(sqlite3* dbh)
 	}
 
 	// 円の初期データ
-	if (err == 0)
+	if(err == 0)
 	{
 		char* errorMessage;
 		ret = sqlite3_exec(dbh,
@@ -177,7 +177,7 @@ bool CreateSqliteTables(sqlite3* dbh)
 			"count INTEGER"
 			");",
 			NULL, NULL, &errorMessage);
-		if (ret == SQLITE_OK)
+		if(ret == SQLITE_OK)
 		{
 			printf("circle生成：成功\n");
 		}

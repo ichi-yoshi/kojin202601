@@ -18,12 +18,7 @@
 #include "BattleTimer.h"
 #include "ModeGameBattle.h"
 #include "SaveData.h" 
-
-
-// 計算用マクロ
-#define	PI	(3.1415926535897932386f)
-#define	DEG2RAD(x)			( ((x) / 180.0f ) * PI )
-#define	RAD2DEG(x)			( ((x) * 180.0f ) / PI )
+#include "SaveDataUI.h"
 
 // モード
 class ModeGame : public ModeBase
@@ -36,28 +31,9 @@ public:
 	virtual bool Render();
 
 protected:
+	float deltaTime;
 
-	// カメラ
-	CameraBase	_cam;
-
-	// 3Dモデル描画用
-	int _handle;
-	int _attach_index;
-	float _total_time;
-	float _play_time;
-	VECTOR _vPos;	// 位置
-	VECTOR _vDir;	// 向き
-	float _colSubY;	// コリジョン判定時のY補正(腰位置）
-
-	enum class STATUS
-	{
-		NONE,
-		WAIT,
-		WALK,
-		_EOT_
-	};
-	STATUS _status;
-
+	// ゲームフェーズ
 	enum class GamePhase
 	{
 		Gacha,
@@ -71,14 +47,12 @@ protected:
 	int _handleSkySphere;
 	int _frameMapCollision;
 
-	// デバッグ用
-	bool _bViewCollision;
-
+	CharaBase _charaBase;
 	Gacha _gacha;
 	GachaBasicStatus _gachaBasic;
 	GachaArmor _gachaArmor;
 	GachaSystem _gachaSystem;
-
+	GachaUI _gachaUI;
 	GachaContext gachaCtx
 	{
 		_mouse,
@@ -92,24 +66,20 @@ protected:
 		_afterStatus,
 		_charaBase
 	};
-
-	SaveEquipment _saveEquipment;
-	SaveCharaStatus _saveCharaStatus;
-
-	MouseInput _mouse;
-
-	GachaUI _gachaUI;
 	PendingGachaResult _pendingResult;
-
 	StatusUI _statusUI;
 	CharaAfterStatus _afterStatus;
 	bool _showCharaStatus = false;
 
-	CharaBase _charaBase;
-
+	MouseInput _mouse;
+	CameraBase	_cam;
+	
 	BattleUI _battleUI;
-
 	ModeGameBattle _battleSystem;
 
 	SaveData _saveData;
+	SaveDataUI _saveDataUI;
+	bool _showSaveData = false;
+	SaveEquipment _saveEquipment;
+	SaveCharaStatus _saveCharaStatus;
 }; 

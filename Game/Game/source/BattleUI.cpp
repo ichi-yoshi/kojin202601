@@ -10,12 +10,7 @@ void BattleUI::Update(MouseInput& mouse)
 {
 	// バトルボタンのクリック判定
 	const auto& btn = GetBattleButtonRect();
-	const bool battleClicked = mouse.IsLeftTrig() && mouse.IsInRect(btn.x, btn.y, btn.w, btn.h);
-
-	if (battleClicked)
-	{
-		//戦闘画面に遷移
-	}
+	_isBattleClicked = mouse.IsLeftTrig() && mouse.IsInRect(btn.x, btn.y, btn.w, btn.h);
 }
 
 void BattleUI::Draw() const
@@ -27,5 +22,3 @@ void BattleUI::DrawBattleButton() const
 {
 	ButtonUI::DrawButton(_battleButton, "バトル");
 }
-
-

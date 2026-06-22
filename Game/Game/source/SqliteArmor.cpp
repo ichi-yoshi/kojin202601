@@ -11,7 +11,7 @@ struct ArmorContext
 // SQLiteのコールバック関数
 static int ArmorCallback(void* param, int col_cnt, char** row_txt, char**)
 {
-	if (!param || col_cnt < 2) { return 0; }
+	if(!param || col_cnt < 2) { return 0; }
 	auto* ctx = static_cast<ArmorContext*>(param);
 
 	ArmorRow row;
@@ -28,7 +28,7 @@ bool LoadArmorSqlite(std::vector<ArmorRow>& outRows, std::string* outError)
 	outRows.clear();
 
 	sqlite3* dbh = nullptr;
-	if (!OpenSqliteConnection(&dbh, outError)) { return false; }
+	if(!OpenSqliteConnection(&dbh, outError)) { return false; }
 
 	ArmorContext ctx{ &outRows };
 
@@ -37,7 +37,7 @@ bool LoadArmorSqlite(std::vector<ArmorRow>& outRows, std::string* outError)
 		"SELECT ArmorName, probability FROM armor;",
 		ArmorCallback, &ctx, &errorMessage);
 
-	if (ret != SQLITE_OK && outError)
+	if(ret != SQLITE_OK && outError)
 	{
 		*outError = errorMessage ? errorMessage : "SQLite query failed";
 	}

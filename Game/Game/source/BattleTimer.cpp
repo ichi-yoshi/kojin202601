@@ -26,7 +26,6 @@ void BattleTimer::IsClearCircle(const CharaAfterStatus& afterStatus)
 	{
 		_time = 0.0;
 	}
-
 }
 
 void BattleTimer::ChangePhase(BattlePhase nextPhase)

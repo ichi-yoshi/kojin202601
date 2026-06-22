@@ -10,7 +10,7 @@ struct StatusContext
 
 static int StatusCallback(void* param, int col_cnt, char** row_txt, char**)
 {
-	if (!param || col_cnt < 7) { return 0; }
+	if(!param || col_cnt < 7) { return 0; }
 	auto* ctx = static_cast<StatusContext*>(param);
 
 	StatusRow row;
@@ -41,7 +41,7 @@ bool LoadStatusSqlite(std::vector<StatusRow>& outRows, std::string* outError)
 		"SELECT StatusName, probability, Val1, Val2, Val3, Val4, Val5 FROM status;",
 		StatusCallback, &ctx, &errorMessage);
 
-	if (ret != SQLITE_OK && outError)
+	if(ret != SQLITE_OK && outError)
 	{
 		*outError = errorMessage ? errorMessage : "SQLite query failed";
 	}

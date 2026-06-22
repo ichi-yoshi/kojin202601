@@ -189,6 +189,7 @@
     <ClCompile Include="source\MouseInput.cpp" />
     <ClCompile Include="source\SaveCharaStatus.cpp" />
     <ClCompile Include="source\SaveData.cpp" />
+    <ClCompile Include="source\SaveDataUI.cpp" />
     <ClCompile Include="source\SaveEquipment.cpp" />
     <ClCompile Include="source\SqliteArmor.cpp" />
     <ClCompile Include="source\SqliteBasicStatus.cpp" />
@@ -233,6 +234,7 @@
     <ClInclude Include="source\Resource.h" />
     <ClInclude Include="source\SaveCharaStatus.h" />
     <ClInclude Include="source\SaveData.h" />
+    <ClInclude Include="source\SaveDataUI.h" />
     <ClInclude Include="source\SaveEquipment.h" />
     <ClInclude Include="source\SqliteArmor.h" />
     <ClInclude Include="source\SqliteBasicStatus.h" />

@@ -17,7 +17,7 @@ bool GachaBase<TRow>::Roll(int count)
 	_resultLines.clear();
 
 	// 行がない場合はエラー
-	if (_rows.empty())
+	if(_rows.empty())
 	{
 		_resultLines.push_back("SQLite empty");
 		_hasResult = true;
@@ -31,7 +31,7 @@ bool GachaBase<TRow>::Roll(int count)
 	std::discrete_distribution<size_t> distRow(probability.begin(), probability.end());
 
 	// 指定された回数だけ行を選んで結果を作る
-	for (int i = 0; i < count; ++i)
+	for(int i = 0; i < count; ++i)
 	{
 		const auto& row = _rows[distRow(_rng)];
 		_resultLines.push_back(MakeResultLine(row, _rng));

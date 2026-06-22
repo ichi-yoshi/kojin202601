@@ -33,20 +33,20 @@ const std::vector<SaveCharaStatus::StatusRow>& SaveCharaStatus::GetRows() const
 bool SaveCharaStatus::SaveToSqlite(std::string* outError) const
 {
 	sqlite3* dbh = nullptr;
-	if (!OpenSqliteConnection(&dbh, outError)) { return false; }
+	if(!OpenSqliteConnection(&dbh, outError)) { return false; }
 
 	int ret = -1;
 	int err = 0;
 
-	if (err == 0)
+	if(err == 0)
 	{
 		char* errorMessage;
 		ret = sqlite3_exec(dbh, "DELETE FROM chara_afterstatus;", NULL, NULL, &errorMessage);
-		if (ret != SQLITE_OK) { err = 1; }
+		if(ret != SQLITE_OK) { err = 1; }
 	}
-	if (err == 0)
+	if(err == 0)
 	{
-		for (const auto& row : _rows)
+		for(const auto& row : _rows)
 		{
 			std::string utf8Name = SqliteTextUtill::ToUtf8(row.name);
 			std::string name = SqliteTextUtill::EscapeSqlString(utf8Name);
@@ -56,7 +56,7 @@ bool SaveCharaStatus::SaveToSqlite(std::string* outError) const
 				name.c_str(), row.value, _hasResult ? 1 : 0);
 			char* errorMessage;
 			ret = sqlite3_exec(dbh, sql, NULL, NULL, &errorMessage);
-			if (ret != SQLITE_OK) { err = 1; break; }
+			if(ret != SQLITE_OK) { err = 1; break; }
 		}
 	}
 	sqlite3_close(dbh);
@@ -65,7 +65,7 @@ bool SaveCharaStatus::SaveToSqlite(std::string* outError) const
 
 int SaveCharaStatus::LoadCallback(void* param, int col_cnt, char** row_txt, char** ) 
 {
-	if (!param || col_cnt < 3) { return 0; }
+	if(!param || col_cnt < 3) { return 0; }
 	auto* ctx = static_cast<LoadContext*>(param);
 	auto* self = ctx->self;
 
@@ -75,7 +75,7 @@ int SaveCharaStatus::LoadCallback(void* param, int col_cnt, char** row_txt, char
 	const double value = row_txt[1] ? std::atof(row_txt[1]) : 0.0;
 	const bool hasResult = (row_txt[2] ? std::atoi(row_txt[2]) : 0) == 1;
 
-	if (!hasResult) { return 0; }
+	if(!hasResult) { return 0; }
 
 	self->_rows.push_back({ name, value });
 	self->_hasResult = true;
@@ -97,7 +97,7 @@ bool SaveCharaStatus::LoadFromSqlite(std::string* outError)
 		"SELECT StatusName, Val, 1 AS hasResult FROM chara_afterstatus;",
 		LoadCallback, &ctx, &errorMessage);
 
-	if (ret != SQLITE_OK && outError)
+	if(ret != SQLITE_OK && outError)
 	{
 		*outError = errorMessage ? errorMessage : "SQLite query failed";
 	}

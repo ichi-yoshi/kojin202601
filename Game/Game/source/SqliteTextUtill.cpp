@@ -6,21 +6,21 @@ namespace
 {
 	std::string ConvertCodePage(const std::string& text, UINT fromCP, UINT toCP)
 	{
-		if (text.empty()) { return {}; }
+		if(text.empty()) { return {}; }
 
 		int wlen = MultiByteToWideChar(fromCP, 0, text.c_str(), -1, nullptr, 0);
-		if (wlen <= 0) { return {}; }
+		if(wlen <= 0) { return {}; }
 
 		std::wstring wbuf(static_cast<size_t>(wlen), L'\0');
 		MultiByteToWideChar(fromCP, 0, text.c_str(), -1, &wbuf[0], wlen);
 
 		int blen = WideCharToMultiByte(toCP, 0, wbuf.c_str(), -1, nullptr, 0, nullptr, nullptr);
-		if (blen <= 0) { return {}; }
+		if(blen <= 0) { return {}; }
 
 		std::string buf(static_cast<size_t>(blen), '\0');
 		WideCharToMultiByte(toCP, 0, wbuf.c_str(), -1, &buf[0], blen, nullptr, nullptr);
 
-		if (!buf.empty() && buf.back() == '\0') { buf.pop_back(); }
+		if(!buf.empty() && buf.back() == '\0') { buf.pop_back(); }
 		return buf;
 	}
 }
@@ -29,7 +29,7 @@ namespace
 std::string SqliteTextUtill::JoinLines(const std::vector<std::string>& lines) 
 {
 	std::ostringstream os;
-	for (size_t i = 0; i < lines.size(); ++i) 
+	for(size_t i = 0; i < lines.size(); ++i) 
 	{
 		if (i > 0) { os << "|"; }
 		os << lines[i];
@@ -41,10 +41,10 @@ std::string SqliteTextUtill::JoinLines(const std::vector<std::string>& lines)
 void SqliteTextUtill::SplitLines(const std::string& text, std::vector<std::string>& outLines)
 {
 	outLines.clear();
-	if (text.empty()) { return; }
+	if(text.empty()) { return; }
 	std::istringstream ss(text);
 	std::string token;
-	while (std::getline(ss, token, '|')) { outLines.push_back(token); }
+	while(std::getline(ss, token, '|')) { outLines.push_back(token); }
 }
 
 // SQLの文字列リテラルとしてtextをエスケープする（シングルクォートを2つにする）

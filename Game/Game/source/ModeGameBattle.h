@@ -43,7 +43,7 @@ private:
 
 	SqliteEnemy _sqliteEnemy;
 	SaveData saveData;
-	Enemy* _enemy;              // 動的に生成する敵のポインタ
+	Enemy* _enemy;             
 
 	CharaFormula _charaFormula;
 	SqliteCharaFormula _SqliteCharaFormula;

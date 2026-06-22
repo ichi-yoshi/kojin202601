@@ -6,10 +6,16 @@ const ButtonUI::ButtonRect& StatusUI::GetCharaButtonRect() const
 	return _charaButton;
 }
 
+void StatusUI::Update(MouseInput& mouse)
+{
+	const auto& charaBtn = GetCharaButtonRect();
+	_isCharaClicked = mouse.IsLeftTrig() && mouse.IsInRect(_charaButton.x, _charaButton.y, _charaButton.w, _charaButton.h);
+}
+
 void StatusUI::Draw(const CharaAfterStatus& afterStatus, bool visible) const
 {
 	DrawCharaButton();
-	if (visible)
+	if(visible)
 	{
 		DrawStatusBox(afterStatus);
 	}
@@ -23,7 +29,7 @@ void StatusUI::DrawCharaButton() const
 void StatusUI::DrawStatusBox(const CharaAfterStatus& afterStatus) const
 {
 	const auto lines = afterStatus.ToLines();
-	if (lines.empty()) { return; }
+	if(lines.empty()) { return; }
 
 	int fontSize = 18;
 	int lineHeight = fontSize + 2;
@@ -38,7 +44,7 @@ void StatusUI::DrawStatusBox(const CharaAfterStatus& afterStatus) const
 	SetFontSize(fontSize);
 
 	int textY = y + padding;
-	for (const auto& line : lines)
+	for(const auto& line : lines)
 	{
 		DrawString(x + padding, textY, line.c_str(), GetColor(0, 0, 0));
 		textY += lineHeight;

@@ -13,7 +13,7 @@ bool SqliteGauge::Initialize(const std::string& Path, std::string* outError)
 
 static int GaugeCallback(void* param, int col_cnt, char** row_txt, char**)
 {
-	if (!param || col_cnt < 4) { return 0; }
+	if(!param || col_cnt < 4) { return 0; }
 	auto* ctx = static_cast<GaugeContext*>(param);
 
 	GaugeRow row;
@@ -41,7 +41,7 @@ bool SqliteGauge::LoadGaugeSqlite(std::vector<GaugeRow>& outRows, std::string* o
         "SELECT id, target_x, target_w, speed FROM gauge;",
         GaugeCallback, &ctx, &errorMessage);
 
-    if (ret != SQLITE_OK && outError)
+    if(ret != SQLITE_OK && outError)
     {
         *outError = errorMessage ? errorMessage : "SQLite query failed";
     }
@@ -53,7 +53,7 @@ bool SqliteGauge::LoadGaugeSqlite(std::vector<GaugeRow>& outRows, std::string* o
 
 bool SqliteGauge::RollrandomGauge() 
 {
-    if (_rows.empty())
+    if(_rows.empty())
     {
         _hasGauge = false;
         return false;
@@ -68,7 +68,7 @@ bool SqliteGauge::RollrandomGauge()
 
 bool SqliteGauge::GetGauge(GaugeRow& outRow)
 {
-	if (!_hasGauge) { return false; }
+	if(!_hasGauge) { return false; }
 	outRow = _currentGauge;
 	return true;
 }

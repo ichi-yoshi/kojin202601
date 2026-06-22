@@ -4,6 +4,7 @@
 #include <string>
 #include "SqliteTableCreator.h"
 #include "SqliteSeeder.h"
+#include "SqliteConfig.h"
 
 // sqlite3_exec()のコールバック関数
 int select_response(
@@ -23,7 +24,7 @@ int main()
     sqlite3* dbh = NULL;
 
     //データベース名
-    const char* dbname = "newyosh.sqlite3";
+    const char* dbname = kSqliteDbPath;
 
     //実行結果
     int ret = -1;
@@ -38,7 +39,7 @@ int main()
         SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE,
         nullptr
     );
-    if (ret == SQLITE_OK) 
+    if(ret == SQLITE_OK) 
     {
         printf("接続：成功\n");
     }
@@ -49,9 +50,9 @@ int main()
     }
 
     // テーブルの生成
-    if (err == 0)
+    if(err == 0)
     {
-        if (CreateSqliteTables(dbh)) 
+        if(CreateSqliteTables(dbh)) 
         {
             printf("テーブル生成：成功\n");
         }
@@ -63,9 +64,9 @@ int main()
     }
 
     // テーブルにデータを追加
-    if (err == 0)
+    if(err == 0)
     {
-        if (SeedSqliteData(dbh)) 
+        if(SeedSqliteData(dbh)) 
         {
             printf("データ追加：成功\n");
         }
@@ -77,13 +78,13 @@ int main()
     }
 
     // テーブルのデータを取得する（callback）
-    if (err == 0) 
+    if(err == 0) 
     {
         char* errorMessage;
         ret = sqlite3_exec(dbh
             , "select * from book;"
             , select_response, NULL, &errorMessage);
-        if (ret == SQLITE_OK) 
+        if(ret == SQLITE_OK) 
         {
             printf("データ取得：成功\n");
         }
@@ -96,7 +97,7 @@ int main()
 
     //接続を切断
     ret = sqlite3_close(dbh);
-    if (ret == SQLITE_OK) 
+    if(ret == SQLITE_OK) 
     {
         printf("切断：成功\n");
     }

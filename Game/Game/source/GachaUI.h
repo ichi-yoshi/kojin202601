@@ -19,7 +19,6 @@ struct PendingGachaResult
 class GachaUI
 {
 public:
-	// ボタンの矩形を取得する
 	const ButtonUI::ButtonRect& GetGachaButtonRect() const;
 	const ButtonUI::ButtonRect& GetSaveButtonRect() const;
 	const ButtonUI::ButtonRect& GetKeepButtonRect() const;

@@ -41,30 +41,30 @@ struct CharaStatusSeed
 //ゲージの初期データ
 struct GaugeSeed 
 {
-	const char* id;		// ゲージID
-	int target_x;		// ゲージの目標X座標
-	int target_w;		// ゲージの目標幅
-	double speed;		// ゲージの移動速度
+	const char* id;		// ID
+	int target_x;		// 目標X座標
+	int target_w;		// 目標幅
+	double speed;		// 移動速度
 };
 
 //円の初期データ
 struct CircleSeed 
 {
-	const char* id;			// 円ID
-	int minX;
-	int maxX;
-	int minY;
-	int maxY;
-	int radius;
-	int count;
+	const char* id;		// ID
+	int minX;			// 生成範囲の最小X座標
+	int maxX;			//			 最大X座標
+	int minY;			//			 最小Y座標
+	int maxY;			//			 最大Y座標
+	int radius;			// 半径
+	int count;			// 生成する円の数
 };
 
 //速度の初期データ
 struct SpeedSeed
 {
-	double minSpeed;
-	double maxSpeed;
-	double bonusTime;
+	double minSpeed;	// 最小速度
+	double maxSpeed;	// 最大速度
+	double bonusTime;	// ボーナスタイム
 };
 
 //敵の基礎データ

@@ -49,11 +49,11 @@ void CharaAfterStatus::UpdateFrom(const CharaBase& base, const SaveEquipment& sa
 {
 	CharaStatus equipTotal{};
 
-	for (int i = 0; i < static_cast<int>(SaveEquipment::EquipPart::_EOT_); ++i)
+	for(int i = 0; i < static_cast<int>(SaveEquipment::EquipPart::_EOT_); ++i)
 	{
 		const auto part = static_cast<SaveEquipment::EquipPart>(i);
 		const auto& result = saveEquipment.GetResult(part);
-		if (!result.hasResult) { continue; }
+		if(!result.hasResult) { continue; }
 
 		const auto basic = Chara::ParseStatusLines(result.basicStatusLines);
 		const auto sub = Chara::ParseStatusLines(result.statusLines);

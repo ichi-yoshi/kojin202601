@@ -7,7 +7,6 @@ Enemy::Enemy(const std::string& name)
 {
 	_enemyName = name;
 	_currentLevel = 0;
-
 	_finalHP = 0.0;
 	_finalAttack = 0.0;
 }

@@ -3,6 +3,8 @@
 #include "SqliteTextUtill.h"
 #include <cstdio>
 #include <cstdlib>
+#include <sstream>
+#include <iomanip>
 
 const std::vector<SaveData::AccountData>& SaveData::GetRows() const
 {
@@ -118,4 +120,25 @@ int SaveData::GetPlayerLevel() const
 
 	// データがない場合は初期値として 1 を返す安全ガード
 	return 1;
+}
+
+std::vector<std::string> SaveData::ToLines() const
+{
+	std::vector<std::string> lines;
+
+	// ラベルと値を行に追加するラムダ
+	auto push = [&lines](const char* label, double value)
+		{
+			std::ostringstream os;
+			os << label << ":" << std::fixed << std::setprecision(1) << value;
+			lines.push_back(os.str());
+		};
+
+	push("uid", _accountData[0].uid);
+	push("level", _accountData[0].level);
+	push("exp", _accountData[0].exp);
+	push("coin", _accountData[0].coin);
+	push("ClearCount", _accountData[0].enemylevel);
+
+	return lines;
 }

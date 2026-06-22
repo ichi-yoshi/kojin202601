@@ -28,7 +28,7 @@ struct CharaStatusContext
 
 static int CharaStatusCallback(void* param, int col_cnt, char** row_txt, char**)
 {
-	if (!param || col_cnt < 2) { return 0; }
+	if(!param || col_cnt < 2) { return 0; }
 	auto* ctx = static_cast<CharaStatusContext*>(param);
 
 	const std::string rawName = row_txt[0] ? row_txt[0] : "";
@@ -53,7 +53,7 @@ bool LoadCharaBaseStatusSqlite(CharaStatus& outStatus, std::string* outError)
 		"SELECT StatusName, Val1 FROM chara_status;",
 		CharaStatusCallback, &ctx, &errorMessage);
 
-	if (ret != SQLITE_OK && outError)
+	if(ret != SQLITE_OK && outError)
 	{
 		*outError = errorMessage ? errorMessage : "SQLite query failed";
 	}

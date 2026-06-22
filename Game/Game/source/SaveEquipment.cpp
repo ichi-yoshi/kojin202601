@@ -78,18 +78,15 @@ bool SaveEquipment::SaveToSqlite(std::string* outError) const
 		{
 			const auto& result = _results[i];
 
+			// CP932 -> UTF-8 に変換する
 			std::string armorUtf8 = SqliteTextUtill::ToUtf8(result.armorName);
 			std::string basicUtf8 = SqliteTextUtill::ToUtf8(SqliteTextUtill::JoinLines(result.basicStatusLines));
 			std::string statusUtf8 = SqliteTextUtill::ToUtf8(SqliteTextUtill::JoinLines(result.statusLines));
 
-			// 2. UTF-8 にした文字列をエスケープする
+			// UTF-8 にした文字列をエスケープする
 			std::string armor = SqliteTextUtill::EscapeSqlString(armorUtf8);
 			std::string basic = SqliteTextUtill::EscapeSqlString(basicUtf8);
 			std::string status = SqliteTextUtill::EscapeSqlString(statusUtf8);
-
-			/*std::string armor = SqliteTextUtill::EscapeSqlString(result.armorName);
-			std::string basic = SqliteTextUtill::EscapeSqlString(SqliteTextUtill::JoinLines(result.basicStatusLines));
-			std::string status = SqliteTextUtill::EscapeSqlString(SqliteTextUtill::JoinLines(result.statusLines));*/
 
 			char sql[1024];
 			snprintf(sql, sizeof(sql),
@@ -134,9 +131,6 @@ int SaveEquipment::LoadCallback(void* param, int col_cnt, char** row_txt, char**
 
 	std::string statusSjis = SqliteTextUtill::FromUtf8(statusUtf8);
 	SqliteTextUtill::SplitLines(statusSjis, result.statusLines);
-	/*result.armorName = row_txt[2] ? row_txt[2] : "";
-	SqliteTextUtill::SplitLines(row_txt[3] ? row_txt[3] : "", result.basicStatusLines);
-	SqliteTextUtill::SplitLines(row_txt[4] ? row_txt[4] : "", result.statusLines);*/
 	return 0;
 }
 

@@ -15,14 +15,14 @@ void GachaSystem::ProcessRoll(GachaContext& ctx)
 	const bool gachaClicked = ctx.mouse.IsLeftTrig() && ctx.mouse.IsInRect(btn.x, btn.y, btn.w, btn.h);
 
 	// ガチャ結果が未表示でガチャボタンがクリックされた場合は抽選を行う
-	if (!ctx.pendingResult.hasPending && gachaClicked)
+	if(!ctx.pendingResult.hasPending && gachaClicked)
 	{
 		ctx.gacha.Roll();
 		ctx.gachaBasic.Roll();
 		ctx.gachaArmor.Roll();
 
 		// ガチャ結果の装備名を取得して、保存待ち状態にする
-		if (ctx.gachaArmor.HasResult() && !ctx.gachaArmor.GetResultLines().empty())
+		if(ctx.gachaArmor.HasResult() && !ctx.gachaArmor.GetResultLines().empty())
 		{
 			const std::string& armorName = ctx.gachaArmor.GetResultLines().front();
 			const std::vector<std::string> Empty;
@@ -42,7 +42,7 @@ void GachaSystem::ProcessRoll(GachaContext& ctx)
 void GachaSystem::ProcessPendingSelection(GachaContext& ctx)
 {
 	// ガチャ結果の保存・破棄ボタンのクリック判定
-	if (!ctx.pendingResult.hasPending) { return; }
+	if(!ctx.pendingResult.hasPending) { return; }
 
 	// ガチャ結果の保存・破棄ボタンは、保存待ち状態でのみ表示されるため、ここでボタンの有効/無効を更新する
 	ctx.gachaUI.UpdatePendingButtons(ctx.gacha, ctx.gachaBasic, ctx.gachaArmor, ctx.pendingResult);
@@ -56,7 +56,7 @@ void GachaSystem::ProcessPendingSelection(GachaContext& ctx)
 	// 保存ボタンがクリックされた場合は装備を保存して最終ステータスを更新
 	// 破棄ボタンがクリックされた場合はガチャ結果をクリア
 	// どちらもクリックされた場合はガチャ結果の表示をクリア
-	if (saveClicked)
+	if(saveClicked)
 	{
 		ctx.saveEquipment.SaveResult(ctx.pendingResult.armorName,
 			ctx.pendingResult.basicStatusLines,
@@ -73,7 +73,7 @@ void GachaSystem::ProcessPendingSelection(GachaContext& ctx)
 		ctx.gachaArmor.ClearResult();
 		ctx.pendingResult = PendingGachaResult{};
 	}
-	else if (keepClicked)
+	else if(keepClicked)
 	{
 		ctx.gacha.ClearResult();
 		ctx.gachaBasic.ClearResult();

@@ -48,7 +48,7 @@ double EvaluateFormula::EvaluateSimpleFormula(const std::string& expr)
 
 	if(values.empty()) return 0.0;
 
-	// 1. 掛け算（*）と割り算（/）を先に処理
+	// 掛け算（*）と割り算（/）を先に処理
 	for(size_t i = 0; i < ops.size(); )
 	{
 		if(ops[i] == '*' || ops[i] == '/')
@@ -65,7 +65,7 @@ double EvaluateFormula::EvaluateSimpleFormula(const std::string& expr)
 		}
 	}
 
-	// 2. 足し算（+）と引き算（-）を処理
+	// 足し算（+）と引き算（-）を処理
 	double result = values[0];
 	for(size_t i = 0; i < ops.size(); i++)
 	{

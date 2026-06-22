@@ -40,7 +40,6 @@ bool CameraBase::Initialize()
     _camPitch = 0.0f;
 
     SetMouseDispFlag(FALSE);
-
     return true;
 }
 
@@ -58,29 +57,29 @@ void CameraBase::Update(VECTOR playerPos, int& key)
 
 void CameraBase::HandleMouseInput()
 {
-    //// マウス移動量取得
-    //int mouseX, mouseY;
-    //GetMousePoint(&mouseX, &mouseY);
+    // マウス移動量取得
+    int mouseX, mouseY;
+    GetMousePoint(&mouseX, &mouseY);
 
-    //// 初回時の前回位置設定
-    //if (_prevMouseX == -1)
-    //{
-    //    _prevMouseX = mouseX;
-    //    _prevMouseY = mouseY;
-    //}
+    // 初回時の前回位置設定
+    if(_prevMouseX == -1)
+    {
+        _prevMouseX = mouseX;
+        _prevMouseY = mouseY;
+    }
 
-    //int deltaX = mouseX - _prevMouseX;
-    //int deltaY = mouseY - _prevMouseY;
-    //_prevMouseX = mouseX;
-    //_prevMouseY = mouseY;
+    int deltaX = mouseX - _prevMouseX;
+    int deltaY = mouseY - _prevMouseY;
+    _prevMouseX = mouseX;
+    _prevMouseY = mouseY;
 
-    //// カメラ回転(マウス移動で制御)FPS視点用
-    //_camYaw += deltaX * _mouseSensitivity;
-    //_camPitch -= deltaY * _mouseSensitivity;
+    // カメラ回転(マウス移動で制御)FPS視点用
+    _camYaw += deltaX * _mouseSensitivity;
+    _camPitch -= deltaY * _mouseSensitivity;
 
-    //// ピッチ制限
-    //if (_camPitch < -1.2f) _camPitch = -1.2f;
-    //if (_camPitch > 1.2f) _camPitch = 1.2f;
+    // ピッチ制限
+    if(_camPitch < -1.2f) _camPitch = -1.2f;
+    if(_camPitch > 1.2f) _camPitch = 1.2f;
 }
 
 void CameraBase::UpdateFPSCamera(VECTOR playerPos)
@@ -93,16 +92,15 @@ void CameraBase::UpdateFPSCamera(VECTOR playerPos)
         sin(_camPitch),
         cos(_camPitch) * cos(_camYaw)
     );
-
     _vTarget = VAdd(_vPos, forward); // 視線方向
 }
 
 void CameraBase::ResetMouseToCenter()
 {
-    //// 毎フレーム中央に戻す
-    //SetMousePoint(SCREEN_CENTER_X, SCREEN_CENTER_Y);
-    //_prevMouseX = SCREEN_CENTER_X;
-    //_prevMouseY = SCREEN_CENTER_Y;
+    // 毎フレーム中央に戻す
+    SetMousePoint(SCREEN_CENTER_X, SCREEN_CENTER_Y);
+    _prevMouseX = SCREEN_CENTER_X;
+    _prevMouseY = SCREEN_CENTER_Y;
 }
 
 void CameraBase::ApplyCamera()
