@@ -38,7 +38,7 @@ bool ModeGame::Initialize()
 	// 保存済みデータをロード（なければ無視）
 	_saveEquipment.LoadFromSqlite();
 	_saveData.LoadFromSqlite();
-
+	
 	// SQLite初期化
 	{
 		sqlite3* dbh = nullptr;

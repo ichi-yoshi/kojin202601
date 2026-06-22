@@ -1,2 +1,2 @@
 #pragma once
-inline constexpr const char* kSqliteDbPath = "newyosh.sqlite3";
+inline constexpr const char* kSqliteDbPath = "newy.sqlite3";

@@ -252,7 +252,7 @@ void ModeGameBattle::ProcessBattleResult(SaveData& saveData)
 			std::cout << ">> LEVEL UP! 現在レベル: " << account.level << " <<" << std::endl;
 		}
 	}
-	else if(_charaCurrentHP <= 0.0) // プレイヤーが倒された場合
+	else // プレイヤーが倒された場合
 	{
 		std::cout << "★ 敗北... レベルや敵レベルは維持されます。" << std::endl;
 	}

@@ -126,6 +126,11 @@ std::vector<std::string> SaveData::ToLines() const
 {
 	std::vector<std::string> lines;
 
+	if(_accountData.empty())
+	{
+		return lines;
+	}
+
 	// ラベルと値を行に追加するラムダ
 	auto push = [&lines](const char* label, double value)
 		{
