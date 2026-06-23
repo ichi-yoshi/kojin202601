@@ -64,7 +64,8 @@ protected:
 		_saveCharaStatus,
 		_pendingResult,
 		_afterStatus,
-		_charaBase
+		_charaBase,
+		_saveData
 	};
 	PendingGachaResult _pendingResult;
 	StatusUI _statusUI;

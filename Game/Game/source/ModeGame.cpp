@@ -35,17 +35,25 @@ bool ModeGame::Initialize()
 
 	SetMouseDispFlag(TRUE);	// マウスポインタを表示する
 
-	// 保存済みデータをロード（なければ無視）
-	_saveEquipment.LoadFromSqlite();
-	_saveData.LoadFromSqlite();
 	
+
 	// SQLite初期化
 	{
 		sqlite3* dbh = nullptr;
 		std::string error;
 		if (!OpenSqliteConnection(&dbh, &error)) { return false; }
 		if (!CreateSqliteTables(dbh)) { sqlite3_close(dbh); return false; }
-		if (!SeedSqliteData(dbh)) { sqlite3_close(dbh); return false; }
+		_saveData.LoadFromSqlite();
+		if(_saveData.GetRows().empty())
+		{
+			if(!SeedSqliteData(dbh)) { sqlite3_close(dbh); return false; }
+			printf("新規データベースのため、初期値を投入しました。\n");
+		}
+		else
+		{
+			printf("既存のセーブデータを発見したため、初期化をスキップしました。\n");
+		}
+		//if (!SeedSqliteData(dbh)) { sqlite3_close(dbh); return false; }
 		sqlite3_close(dbh);
 
 		if (!_gacha.Initialize("", &error)) { return false; }
@@ -59,6 +67,10 @@ bool ModeGame::Initialize()
 		if(!_battleSystem.Initialize("", &error)) { return false; }
 		if(!_afterStatus.InitializeSpeedTable("", &error)) { return false; }
 	}
+	
+	// 保存済みデータをロード（なければ無視）
+	_saveEquipment.LoadFromSqlite();
+	_saveData.LoadFromSqlite();
 
 	// 最終ステータス計算
 	_afterStatus.UpdateFrom(_charaBase, _saveEquipment);
@@ -92,6 +104,24 @@ bool ModeGame::Process()
 		_battleUI.Update(_mouse);
 		_statusUI.Update(_mouse);
 		_saveDataUI.Update(_mouse);
+
+		auto constRows = _saveData.GetRows();
+		SaveData::AccountData account;
+
+		if(constRows.empty())
+		{
+			// データベースが万が一空だった場合の初期化ガード
+			account.uid = 1;
+			account.level = 1;
+			account.exp = 0;
+			account.coin = 30000; // ガチャ突入時のデフォルトコイン（任意に調整してください）
+			account.enemylevel = 0;
+		}
+		else
+		{
+			// 既存のデータをベースにする
+			account = constRows[0];
+		}
 
 		if (_statusUI.IsCharaClicked())
 		{

@@ -220,8 +220,8 @@ void ModeGameBattle::ProcessBattleResult(SaveData& saveData)
 		account.uid = 0;
 		account.level = 1;
 		account.exp = 0;
-		account.coin = 0;
-		account.enemylevel = 1;
+		account.coin = 30000;
+		account.enemylevel = 0;
 	}
 	else
 	{
@@ -229,7 +229,7 @@ void ModeGameBattle::ProcessBattleResult(SaveData& saveData)
 		account = constRows[0];
 	}
 
-	std::cout << "=== 戦藤決着（リザルト情報まとめ開始） ===" << std::endl;
+	std::cout << "=== 決着（リザルト情報まとめ開始） ===" << std::endl;
 
 	// 勝敗に応じたステータスの計算
 	if(_enemyCurrentHP <= 0.0) // 敵を倒した場合
@@ -249,12 +249,7 @@ void ModeGameBattle::ProcessBattleResult(SaveData& saveData)
 		{
 			account.exp -= (account.level * 100);
 			account.level += 1;
-			std::cout << ">> LEVEL UP! 現在レベル: " << account.level << " <<" << std::endl;
 		}
-	}
-	else // プレイヤーが倒された場合
-	{
-		std::cout << "★ 敗北... レベルや敵レベルは維持されます。" << std::endl;
 	}
 
 	// コインの計算（条件：残りHP ＋ 与えた最大ダメージ）
@@ -262,27 +257,13 @@ void ModeGameBattle::ProcessBattleResult(SaveData& saveData)
 	int gainCoin = static_cast<int>(RemainingHP + _maxDamageDealt);
 
 	account.coin += gainCoin;
-	std::cout << "味方の残りHP(" << RemainingHP << ") + 最大一撃ダメージ(" << _maxDamageDealt << ") = 獲得コイン: " << gainCoin << std::endl;
-
 
 	std::vector<SaveData::AccountData> updatedVector;
 	updatedVector.push_back(account); // 編集し終わったデータを格納
 
 	std::string errStr;
-	std::cout << "SQLiteへアカウント情報をまとめて保存中..." << std::endl;
-
 	bool success = false;
-
 	success = saveData.UpdateAccountAndSave(account, &errStr);
-
-	if(!success) 
-	{
-		std::cout << "セーブ失敗: " << errStr << std::endl;
-	}
-	else 
-	{
-		std::cout << "セーブ成功！ データをSQLiteへ同期しました。" << std::endl;
-	}
 }
 
 void ModeGameBattle::Render(CharaAfterStatus& afterStatus)
@@ -293,10 +274,8 @@ void ModeGameBattle::Render(CharaAfterStatus& afterStatus)
 	if(_battleTimer.GetCurrentPhase() == BattleTimer::BattlePhase::Defense)
 	{
 		SetFontSize(24);
-		DrawString(100, 50, "【 敵の攻撃ターン！ 丸を消して時間を進めろ！ 】", GetColor(255, 255, 0));
-
-		// 残り時間の表示（秒数を小数点第1位まで）
-		DrawFormatString(100, 80, GetColor(255, 0, 0), "残り消化時間: %.1f 秒", _battleTimer.GetTime());
+		DrawString(100, 50, "【 敵の防御ターン！ 丸を消して時間を進めろ！ 】", GetColor(255, 255, 0));
+		DrawFormatString(100, 80, GetColor(255, 0, 0), "攻撃フェーズまで: %.1f 秒", _battleTimer.GetTime());
 
 		_circleUI.Draw();
 	}
@@ -304,16 +283,13 @@ void ModeGameBattle::Render(CharaAfterStatus& afterStatus)
 	{
 		SetFontSize(24);
 		DrawString(100, 50, "【 自分の攻撃ターン！ ゲージを合わせてダメージを与えろ！ 】", GetColor(255, 50, 50));
-
-		// 残り時間の表示（秒数を小数点第1位まで）
-		DrawFormatString(100, 80, GetColor(255, 0, 0), "残り消化時間: %.1f 秒", _battleTimer.GetTime());
+		DrawFormatString(100, 80, GetColor(255, 0, 0), "防御フェーズまで: %.1f 秒", _battleTimer.GetTime());
 
 		_gaugeUI.Draw();
 	}
 	else if(_battleTimer.GetCurrentPhase() == BattleTimer::BattlePhase::Start)
 	{
 		SetFontSize(24);
-		// 残り時間の表示（秒数を小数点第1位まで）
 		DrawFormatString(100, 80, GetColor(255, 0, 0), "戦闘開始まで: %.1f 秒", _battleTimer.GetTime());
 	}
 	else if(_battleTimer.GetCurrentPhase() == BattleTimer::BattlePhase::Result)
@@ -321,23 +297,23 @@ void ModeGameBattle::Render(CharaAfterStatus& afterStatus)
 		SetFontSize(36);
 		if(_enemyCurrentHP <= 0.0) 
 		{ 
-			DrawString(200, 150, "【 BATTLE VICTORY! 】", GetColor(255, 215, 0));
+			DrawString(200, 150, "【 勝利!!! 】", GetColor(255, 215, 0));
 		}
 		else 
 		{
-			DrawString(200, 150, "【 BATTLE DEFEATED... 】", GetColor(255, 50, 50));
+			DrawString(200, 150, "【 敗北... 】", GetColor(255, 50, 50));
 		}
 
 		SetFontSize(24);
 		DrawFormatString(200, 230, GetColor(100, 100, 100), "今回の最大一撃ダメージ: %.0f DMG", _maxDamageDealt);
-		DrawFormatString(200, 270, GetColor(100, 100, 100), "残りHPボーナス: %.0f", (std::max)(0.0, _charaCurrentHP)); //
+		DrawFormatString(200, 270, GetColor(100, 100, 100), "残りHPボーナス: %.0f", (std::max)(0.0, _charaCurrentHP)); 
 
-		int finalGain = static_cast<int>((std::max)(0.0, _charaCurrentHP) + _maxDamageDealt); //
-		DrawFormatString(200, 320, GetColor(255, 200, 0), "獲得コイン: + %d COIN !", finalGain);
+		int finalGain = static_cast<int>((std::max)(0.0, _charaCurrentHP) + _maxDamageDealt); 
+		DrawFormatString(200, 320, GetColor(100, 100, 100), "獲得コイン: + %d COIN !", finalGain);
 
 		SetFontSize(18);
-		DrawFormatString(200, 400, GetColor(150, 150, 150), "間もなく次の画面へ移動します... (%.1f)", _battleTimer.GetTime()); //
-		return; // リザルト中は通常のUIやデバッグを非表示にしてスッキリさせるためここでreturn
+		DrawFormatString(200, 400, GetColor(150, 150, 150), "間もなく次の画面へ移動します... (%.1f)", _battleTimer.GetTime()); 
+		return;
 	}
 
 	// 敵が存在すれば、画面上部に敵の情報とHPバーを表示する
@@ -361,7 +337,7 @@ void ModeGameBattle::Render(CharaAfterStatus& afterStatus)
 
 	SetFontSize(16);
 	const int LEFT_X = 50;   // 左側座標
-	const int RIGHT_X = 800; // 右側座標（画面サイズに合わせて調整してください）
+	const int RIGHT_X = 900; // 右側座標（画面サイズに合わせて調整してください）
 
 	//// ----------------------------------------------------------------
 	//// 【左側】数式展開デバッグ表示（確率抽選・Poop減衰 対応版）
@@ -374,7 +350,7 @@ void ModeGameBattle::Render(CharaAfterStatus& afterStatus)
 	//DrawString(LEFT_X, leftY, repStr.c_str(), GetColor(100, 100, 100)); // リアルタイムな計算履歴を緑色で展開
 
 	//leftY += 25;
-	//DrawFormatString(LEFT_X, leftY, GetColor(100, 100, 100), "・ダメージ減衰率の仕様: Poop / 5000");
+	//DrawFormatString(LEFT_X, leftY, GetColor(100, 100, 100), "・ダメージ減衰率の仕様: 1+(Poop / 5000)");
 
 	//leftY += 25;
 	//// 外枠の公式のガイドラインを今回の最新仕様に書き換え
@@ -404,15 +380,7 @@ void ModeGameBattle::Render(CharaAfterStatus& afterStatus)
 		if(rightY > 650) { break; }
 	}
 
-	if(_isEnemyDefeated)
-	{
-		SetFontSize(40);
-		DrawString(300, 250, "ENEMY DEFEATED!", GetColor(255, 215, 0));
-		SetFontSize(20);
-		DrawString(300, 310, "次に出現する敵のレベルが上がった！", GetColor(255, 255, 255));
-		return;
-	}
-
+	// プレイヤーのHPバーを描画する
 	{
 		double maxHp = afterStatus.GetAfterStatus().hp;
 
@@ -430,11 +398,11 @@ void ModeGameBattle::Render(CharaAfterStatus& afterStatus)
 		double playerHpRate = _charaCurrentHP / maxHp;
 		int playerBarWidth = static_cast<int>(400 * playerHpRate);
 
-		// HPが低くなったらバーの色を赤に変える演出（お好みで）
+		// HPが低くなったらバーの色を赤に変える演出
 		unsigned int barColor = (playerHpRate > 0.2) ? GetColor(50, 150, 255) : GetColor(255, 50, 50);
 		DrawBox(200, 270, 200 + playerBarWidth, 290, barColor, TRUE);
 
 		// プレイヤーのHP数値テキスト表示
-		DrawFormatString(200, 300, GetColor(200, 200, 200), "HP: %.0f / %.0f", _charaCurrentHP, maxHp);
+		DrawFormatString(200, 300, GetColor(100, 100, 100), "HP: %.0f / %.0f", _charaCurrentHP, maxHp);
 	}	
 }

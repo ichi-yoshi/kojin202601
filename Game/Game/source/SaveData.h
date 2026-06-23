@@ -1,4 +1,5 @@
 #pragma once
+#include "SqliteUtill.h"
 #include <string>
 #include <vector>
 
@@ -12,10 +13,10 @@ public:
 		int exp;
 		int coin;
 		int enemylevel;
+		int gachaCount;
 	};
 
 	const std::vector<AccountData>& GetRows()const;
-
 	bool SaveToSqlite(std::string* outError = nullptr) const;
 	bool LoadFromSqlite(std::string* outError = nullptr);
 
@@ -25,6 +26,8 @@ public:
 	bool UpdateAccountAndSave(const AccountData& data, std::string* outError = nullptr);
 
 	int GetPlayerLevel() const;
+	/*int GetGachaCount(AccountData& accountData) const;
+	int GetGachaCost(AccountData& accountData) const;*/
 	std::vector<std::string> ToLines() const;
 private:
 	std::vector<AccountData> _accountData;

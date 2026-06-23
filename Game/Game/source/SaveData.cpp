@@ -5,6 +5,7 @@
 #include <cstdlib>
 #include <sstream>
 #include <iomanip>
+#include <iostream>
 
 const std::vector<SaveData::AccountData>& SaveData::GetRows() const
 {
@@ -39,8 +40,8 @@ bool SaveData::SaveToSqlite(std::string* outError) const
 		{
 			char sql[256];
 			snprintf(sql, sizeof(sql),
-				"INSERT INTO AccountData(uid, level, exp, coin, ClearCount) VALUES (%d, %d, %d, %d, %d);",
-				row.uid, row.level, row.exp, row.coin, row.enemylevel);
+				"INSERT INTO AccountData(uid, level, exp, coin, ClearCount, gachaCount) VALUES (%d, %d, %d, %d, %d, %d);",
+				row.uid, row.level, row.exp, row.coin, row.enemylevel, row.gachaCount);
 			char* errorMessage;
 			ret = sqlite3_exec(dbh, sql, NULL, NULL, &errorMessage);
 			if(ret != SQLITE_OK) { err = 1; break; }
@@ -64,7 +65,7 @@ bool SaveData::LoadFromSqlite(std::string* outError)
 	LoadContext ctx{ &_accountData };
 	char* errorMessage;
 	int ret = sqlite3_exec(dbh,
-		"SELECT uid, level, exp, coin, ClearCount FROM AccountData;",
+		"SELECT uid, level, exp, coin, ClearCount, gachaCount FROM AccountData;",
 		LoadCallback, &ctx, &errorMessage);
 	if(ret != SQLITE_OK && outError)
 	{
@@ -77,7 +78,7 @@ bool SaveData::LoadFromSqlite(std::string* outError)
 
 int SaveData::LoadCallback(void* param, int col_cnt, char** row_txt, char**)
 {
-	if(!param || col_cnt < 5) { return 0; }
+	if(!param || col_cnt < 6) { return 0; }
 	auto* ctx = static_cast<LoadContext*>(param);
 	SaveData::AccountData data;
 	data.uid = row_txt[0] ? std::atoi(row_txt[0]) : 0;
@@ -85,6 +86,7 @@ int SaveData::LoadCallback(void* param, int col_cnt, char** row_txt, char**)
 	data.exp = row_txt[2] ? std::atoi(row_txt[2]) : 0;
 	data.coin = row_txt[3] ? std::atoi(row_txt[3]) : 0;
 	data.enemylevel = row_txt[4] ? std::atoi(row_txt[4]) : 0;
+	data.gachaCount = (row_txt[5]) ? std::atoi(row_txt[5]) : 0;
 	ctx->accountData->push_back(data);
 	return 0;
 }
@@ -144,6 +146,7 @@ std::vector<std::string> SaveData::ToLines() const
 	push("exp", _accountData[0].exp);
 	push("coin", _accountData[0].coin);
 	push("ClearCount", _accountData[0].enemylevel);
+	push("gachaCount", _accountData[0].gachaCount);
 
 	return lines;
 }

@@ -268,7 +268,8 @@ bool CreateSqliteTables(sqlite3* dbh)
 			"Level INTEGER,"
 			"Exp INTEGER,"
 			"Coin INTEGER,"
-			"ClearCount INTEGER"
+			"ClearCount INTEGER,"
+			"gachaCount INTEGER"
 			");",
 			NULL, NULL, &errorMessage);
 		if(ret == SQLITE_OK)
@@ -281,5 +282,6 @@ bool CreateSqliteTables(sqlite3* dbh)
 			//err = 1;
 		}
 	}
+
 	return err == 0;
 }

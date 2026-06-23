@@ -87,6 +87,16 @@ struct CharaFormulasSeed
 	double gaugeFail;			// ゲージ失敗時の値
 };
 
+struct AccountDataSeed
+{
+	int uid;			// ユーザーID
+	int level;			// プレイヤーレベル
+	int exp;			// 経験値
+	int coin;			// コイン
+	int clearcount;		// 敵レベル
+	int gachaCount;		// ガチャ回数
+};
+
 // SQLiteに初期データを投入する
 bool SeedSqliteData(sqlite3* dbh);
 

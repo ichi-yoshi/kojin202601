@@ -14,8 +14,22 @@ void GachaSystem::ProcessRoll(GachaContext& ctx)
 	const auto& btn = ctx.gachaUI.GetGachaButtonRect();
 	const bool gachaClicked = ctx.mouse.IsLeftTrig() && ctx.mouse.IsInRect(btn.x, btn.y, btn.w, btn.h);
 
+	ctx.saveData.LoadFromSqlite();
+
+	auto constRows = ctx.saveData.GetRows();
+	SaveData::AccountData account{};
+	if(constRows.empty())
+	{
+	
+	}
+	else
+	{
+		// 既存のデータをベースにする
+		account = constRows[0];
+	}
+
 	// ガチャ結果が未表示でガチャボタンがクリックされた場合は抽選を行う
-	if(!ctx.pendingResult.hasPending && gachaClicked)
+	if(!ctx.pendingResult.hasPending && gachaClicked&& account.coin >= 3000)
 	{
 		ctx.gacha.Roll();
 		ctx.gachaBasic.Roll();
@@ -35,6 +49,15 @@ void GachaSystem::ProcessRoll(GachaContext& ctx)
 			ctx.pendingResult.basicStatusLines = basicLines;
 			ctx.pendingResult.statusLines = statusLines;
 		}
+
+		account.coin -= 3000; // ガチャコストを引く
+		account.gachaCount += 1;
+		std::vector<SaveData::AccountData> updatedVector;
+		updatedVector.push_back(account); // 編集し終わったデータを格納
+		std::string errStr;
+		bool success = false;
+
+		success = ctx.saveData.UpdateAccountAndSave(account, &errStr);
 	}
 }
 

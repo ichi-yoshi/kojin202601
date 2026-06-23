@@ -8,6 +8,7 @@
 #include "MouseInput.h"
 #include "CharaAfterStatus.h"
 #include "CharaBase.h"
+#include "SaveData.h"
 
 // 引数リスト
 struct GachaContext
@@ -22,14 +23,17 @@ struct GachaContext
 	PendingGachaResult& pendingResult;
 	CharaAfterStatus& afterStatus;
 	const CharaBase& charaBase;
+	SaveData& saveData;
 };
 
 class GachaSystem
 {
 public:
 	void Process(GachaContext& ctx);
-
 private:
+	//SaveData saveData;
+	int gachaCount;
+	int gachaCost;
 	// ガチャの抽選処理
 	void ProcessRoll(GachaContext& ctx);
 

@@ -66,7 +66,8 @@ bool SeedSqliteData(sqlite3* dbh)
 			"DELETE FROM circle;"
 			"DELETE FROM speed_list;"
 			"DELETE FROM enemybase;"
-			"DELETE FROM CharaFormulas;";
+			"DELETE FROM CharaFormulas;"
+			"DELETE FROM AccountData;";
 
 		ret = sqlite3_exec(dbh, sql, NULL, NULL, &errorMessage);
 		if(ret != SQLITE_OK)
@@ -183,9 +184,15 @@ bool SeedSqliteData(sqlite3* dbh)
 	const std::vector<CharaFormulasSeed> charaFormulasSeeds =
 	{
 		{"敵防御倍率", "(100+キャラレベル)/((100+キャラレベル)+(99+敵レベル))",0.0,0.0},
-		{"ダメージ減衰率","1-Poop/5000",0.0,0.0},
+		{"ダメージ減衰率","1+(Poop/5000)",0.0,0.0},
 		{"最終ダメージ","(攻撃*敵防御倍率*ダメージ減衰率)*会心倍率*運値倍率",1.3,0.2},
 		{"敵の攻撃ダメージ","(キャラ最大HP*0.02)+敵攻撃力*(敵攻撃力/キャラ防御力)",0.0,0.0}
+	};
+
+	// デフォルトのアカウントデータ（uid、level、exp、coin、ClearCount、GachaCount）
+	const std::vector<AccountDataSeed> accountDataSeeds =
+	{
+		{ 0, 1, 0, 30000, 0, 0 }
 	};
 
 	// データ挿入
@@ -285,6 +292,16 @@ bool SeedSqliteData(sqlite3* dbh)
 				std::string formula = SqliteTextUtill::EscapeSqlString(SqliteTextUtill::ToUtf8(s.formula));
 				snprintf(sql, size, "INSERT INTO charaFormulas (FormulaName, Formula, gaugeSuccess, gaugeFail) VALUES ('%s', '%s', %.3f, %.3f);",
 					name.c_str(), formula.c_str(), s.gaugeSuccess, s.gaugeFail);
+			}, err);
+	}
+
+	if(err == 0) 
+	{
+		InsertSeeds(dbh, accountDataSeeds, "AccountData",
+			[](char* sql, size_t size, const AccountDataSeed& s)
+			{
+				snprintf(sql, size, "INSERT OR IGNORE INTO AccountData(uid, level, exp, coin, ClearCount) VALUES (%d, %d, %d, %d, %d);",
+					s.uid, s.level, s.exp, s.coin, s.clearcount);
 			}, err);
 	}
 
