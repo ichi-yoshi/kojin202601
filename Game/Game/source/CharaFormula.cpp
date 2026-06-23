@@ -117,8 +117,6 @@ double CharaFormula::CalculateFinalDamage(const CharaAfterStatus& afterstatus, c
 	double gaugeBonus = isGaugeSuccess ? rowFinal.successValue : rowFinal.failureValue;
 	double totalDamage = baseFinalDamage * gaugeBonus;
 
-	std::cout << "[最終ダメージ計算式]: " << exprFinal << " * 補正(" << gaugeBonus << ") = " << totalDamage << std::endl;
-
 	return totalDamage;
 }
 
@@ -136,8 +134,6 @@ double CharaFormula::CalculateEnemyDamage(const CharaAfterStatus& afterstatus, c
 
 	// 数式エンジンで評価（今度は純粋な足し算として完璧に計算されます）
 	double enemyDamage = EvaluateFormula::Evaluate(expr);
-
-	std::cout << "[敵の攻撃ダメージ（2%＋防御計算）]: " << expr << " = " << enemyDamage << std::endl;
 
 	return enemyDamage;
 }

@@ -64,6 +64,7 @@ private:
 	double _charaCurrentHP;
 	bool _isHPInitialized ;
 	double _nextDamageTime;
+	double _damageFlashTimer;
 
 	bool _isResultProcessed = false;     // リザルト処理が完了したかどうかのフラグ
 	double _maxDamageDealt = 0.0;

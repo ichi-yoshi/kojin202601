@@ -35,8 +35,6 @@ bool ModeGame::Initialize()
 
 	SetMouseDispFlag(TRUE);	// マウスポインタを表示する
 
-	
-
 	// SQLite初期化
 	{
 		sqlite3* dbh = nullptr;

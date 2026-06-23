@@ -1,4 +1,5 @@
 ﻿#include "GachaSystem.h"
+#include "DxLib.h"
 
 // ガチャシステムの処理
 void GachaSystem::Process(GachaContext& ctx)
@@ -29,7 +30,7 @@ void GachaSystem::ProcessRoll(GachaContext& ctx)
 	}
 
 	// ガチャ結果が未表示でガチャボタンがクリックされた場合は抽選を行う
-	if(!ctx.pendingResult.hasPending && gachaClicked&& account.coin >= 3000)
+	if(!ctx.pendingResult.hasPending && (CheckHitKey(KEY_INPUT_R) || gachaClicked) && account.coin >= 3000)
 	{
 		ctx.gacha.Roll();
 		ctx.gachaBasic.Roll();

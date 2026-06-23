@@ -203,5 +203,5 @@ void GachaUI::DrawSavedEquipment(const SaveEquipment& saveEquipment) const
 
 void GachaUI::DrawGachaButton() const
 {
-	ButtonUI::DrawButton(_gachaButton, "錬成");
+	ButtonUI::DrawButton(_gachaButton, "錬成[R]");
 }

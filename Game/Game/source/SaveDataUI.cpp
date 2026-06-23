@@ -22,7 +22,7 @@ void SaveDataUI::Draw(const SaveData& saveData, bool visible) const
 
 void SaveDataUI::DrawSaveDataButton() const
 {
-	ButtonUI::DrawButton(_saveDataButton, "セーブデータ");
+	ButtonUI::DrawButton(_saveDataButton, "セーブデータ[S]");
 }
 
 void SaveDataUI::DrawSaveDataBox(const SaveData& saveData) const

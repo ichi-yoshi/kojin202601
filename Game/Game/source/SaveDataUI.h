@@ -15,5 +15,6 @@ private:
 	void DrawSaveDataBox(const SaveData& saveData) const;
 	ButtonUI::ButtonRect _saveDataButton{ 530, 40, 160, 40 };
 	bool _isSaveDataClicked = false;
+	bool _prevKeyS = false;
 };
 

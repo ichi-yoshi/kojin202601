@@ -6,6 +6,7 @@
 #include <iostream>
 #include <algorithm>
 #include "EvaluateFormula.h"
+#include "Resource.h"
 
 extern std::string g_debugFormulaReplaced = "(未計算)";
 
@@ -28,6 +29,7 @@ void ModeGameBattle::Reset(const SaveData& saveData, CharaAfterStatus& afterStat
 	_isHPInitialized = false;
 	_isResultProcessed = false; 
 	_maxDamageDealt = 0.0;
+	_damageFlashTimer = 0.0;
 
 	_damageHistory.clear();
 
@@ -43,6 +45,7 @@ void ModeGameBattle::Reset(const SaveData& saveData, CharaAfterStatus& afterStat
 	{
 		_enemy->LoadEnemy(_sqliteEnemy, saveData);
 		_enemyCurrentHP = _enemy->GetHP();
+		_enemy->SetupModel(mv1::Tanuki);
 		SetPhase(BattleTimer::BattlePhase::Start);
 	}
 
@@ -57,6 +60,13 @@ void ModeGameBattle::Reset(const SaveData& saveData, CharaAfterStatus& afterStat
 void ModeGameBattle::Process(MouseInput& mouse, CharaAfterStatus& afterStatus, SaveData& saveData, double deltaTime)
 {
 	if(_enemy == nullptr) { return; }
+
+	_enemy->UpdateAnimation(deltaTime);
+
+	if(_damageFlashTimer > 0.0)
+	{
+		_damageFlashTimer -= deltaTime;
+	}
 
 	if(_battleTimer.GetCurrentPhase() != BattleTimer::BattlePhase::Result) 
 	{
@@ -86,10 +96,27 @@ void ModeGameBattle::SetPhase(BattleTimer::BattlePhase nextPhase)
 	// タイマーのフェーズを切り替え
 	_battleTimer.ChangePhase(nextPhase);
 
-	// 防御フェーズが始まったら、リセット
 	if(nextPhase == BattleTimer::BattlePhase::Defense)
 	{
-		_nextDamageTime = 35.0;
+		_nextDamageTime = 0.0;
+		if(_enemy) _enemy->SetStatus(EnemyStatus::attack); // 敵が攻撃してくるフェーズ
+	}
+	else if(nextPhase == BattleTimer::BattlePhase::Attack)
+	{
+		if(_enemy) _enemy->SetStatus(EnemyStatus::defend); // 敵が防御（プレイヤーが攻撃）するフェーズ
+	}
+	else if(nextPhase == BattleTimer::BattlePhase::Result)
+	{
+		if(_enemy)
+		{
+			// 敵のHPが0以下ならプレイヤーの勝ち（敵の負け）、そうでなければ敵の勝ち
+			if(_enemyCurrentHP <= 0.0) {
+				_enemy->SetStatus(EnemyStatus::idle); // 負けモーションがなければidleなど
+			}
+			else {
+				_enemy->SetStatus(EnemyStatus::winner); // 敵の勝利
+			}
+		}
 	}
 
 	// フェーズに応じた処理関数を設定
@@ -122,17 +149,21 @@ void ModeGameBattle::UpdateDefense(MouseInput& mouse, CharaAfterStatus& afterSta
 	{
 		// バトルタイマーの残り時間を監視して秒ごとにダメージを発生
 		double currentTimer = _battleTimer.GetTime();
-		if(currentTimer <= _nextDamageTime)
+		_nextDamageTime += 1.0 / 60;
+		if(_nextDamageTime >= 5.0) 
 		{
 			// 敵の攻撃ダメージを計算して適用
 			double enemyDamage = _charaFormula.CalculateEnemyDamage(afterStatus, *_enemy);
 			_charaCurrentHP -= enemyDamage;
 			if(_charaCurrentHP < 0.0) { _charaCurrentHP = 0.0; }
 
+			_damageFlashTimer = 0.2;
+
 			// 次の秒刻みの閾値に更新
 			_nextDamageTime -= 5.0;
 		}
 
+		// 円UIの更新と、成功したかどうかの判定
 		if(_circleUI.Update(mouse))
 		{
 			_battleTimer.IsClearCircle(afterStatus);
@@ -262,6 +293,8 @@ void ModeGameBattle::Render(CharaAfterStatus& afterStatus)
 {
 	if(_enemy == nullptr) { return; }
 
+	_enemy->DrawModel();
+
 	// フェーズに応じて画面の文字やUIの描画を切り替える
 	if(_battleTimer.GetCurrentPhase() == BattleTimer::BattlePhase::Defense)
 	{
@@ -297,11 +330,11 @@ void ModeGameBattle::Render(CharaAfterStatus& afterStatus)
 		}
 
 		SetFontSize(24);
-		DrawFormatString(200, 230, GetColor(100, 100, 100), "今回の最大一撃ダメージ: %.0f DMG", _maxDamageDealt);
-		DrawFormatString(200, 270, GetColor(100, 100, 100), "残りHPボーナス: %.0f", (std::max)(0.0, _charaCurrentHP)); 
+		DrawFormatString(200, 230, GetColor(255, 255, 255), "今回の最大一撃ダメージ: %.0f DMG", _maxDamageDealt);
+		DrawFormatString(200, 270, GetColor(255, 255, 255), "残りHPボーナス: %.0f", (std::max)(0.0, _charaCurrentHP)); 
 
 		int finalGain = static_cast<int>((std::max)(0.0, _charaCurrentHP) + _maxDamageDealt); 
-		DrawFormatString(200, 320, GetColor(100, 100, 100), "獲得コイン: + %d COIN !", finalGain);
+		DrawFormatString(200, 320, GetColor(255, 255, 255), "獲得コイン: + %d COIN !", finalGain);
 
 		SetFontSize(18);
 		DrawFormatString(200, 400, GetColor(150, 150, 150), "間もなく次の画面へ移動します... (%.1f)", _battleTimer.GetTime()); 
@@ -360,11 +393,11 @@ void ModeGameBattle::Render(CharaAfterStatus& afterStatus)
 		if(i == _damageHistory.size() - 1)
 		{
 			// 最新のダメージは赤色で強調
-			DrawFormatString(RIGHT_X, rightY, GetColor(255, 50, 50), "Hit %02d: %.0f ダメージ!", i + 1, _damageHistory[i]);
+			DrawFormatString(RIGHT_X, rightY, GetColor(255, 255, 255), "Hit %02d: %.0f ダメージ!", i + 1, _damageHistory[i]);
 		}
 		else
 		{
-			DrawFormatString(RIGHT_X, rightY, GetColor(100, 100, 100), "Hit %02d: %.0f ダメージ!", i + 1, _damageHistory[i]);
+			DrawFormatString(RIGHT_X, rightY, GetColor(120, 200, 255), "Hit %02d: %.0f ダメージ!", i + 1, _damageHistory[i]);
 		}
 		rightY += 22; // 下にずらしていく
 
@@ -395,6 +428,21 @@ void ModeGameBattle::Render(CharaAfterStatus& afterStatus)
 		DrawBox(200, 270, 200 + playerBarWidth, 290, barColor, TRUE);
 
 		// プレイヤーのHP数値テキスト表示
-		DrawFormatString(200, 300, GetColor(100, 100, 100), "HP: %.0f / %.0f", _charaCurrentHP, maxHp);
+		DrawFormatString(200, 300, GetColor(255, 255, 255), "HP: %.0f / %.0f", _charaCurrentHP, maxHp);
 	}	
+
+	if(_damageFlashTimer > 0.0)
+	{
+		int alpha = static_cast<int>((_damageFlashTimer / 0.2) * 120);
+		if(alpha > 255) alpha = 255;
+		if(alpha < 0)   alpha = 0;
+
+		SetDrawBlendMode(DX_BLENDMODE_ALPHA, alpha);
+
+		int screenW, screenH;
+		GetDrawScreenSize(&screenW, &screenH);
+		DrawBox(0, 0, screenW, screenH, GetColor(255, 0, 0), TRUE);
+
+		SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
+	}
 }
