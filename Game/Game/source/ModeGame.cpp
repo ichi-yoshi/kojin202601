@@ -19,7 +19,7 @@ bool ModeGame::Initialize()
 
 	// マップ
 	_handleSkySphere = MV1LoadModel(mv1::SkySphere);
-#if 0
+#if 1
 	// ダンジョン
 	_handleMap = MV1LoadModel(mv1::Dungeon);
 	_frameMapCollision = MV1SearchFrame(_handleMap, "dungeon_collision");
@@ -53,7 +53,6 @@ bool ModeGame::Initialize()
 		{
 			printf("既存のセーブデータを発見したため、初期化をスキップしました。\n");
 		}
-		//if (!SeedSqliteData(dbh)) { sqlite3_close(dbh); return false; }
 		sqlite3_close(dbh);
 
 		if (!_gacha.Initialize("", &error)) { return false; }

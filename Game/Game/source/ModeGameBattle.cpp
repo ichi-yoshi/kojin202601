@@ -67,7 +67,7 @@ void ModeGameBattle::Process(MouseInput& mouse, CharaAfterStatus& afterStatus, S
 	}
 
 	// リザルトフェーズに入った瞬間、一度だけSQLiteデータの更新を実行
-	if(_battleTimer.GetCurrentPhase() == BattleTimer::BattlePhase::Result && !_isResultProcessed) //
+	if(_battleTimer.GetCurrentPhase() == BattleTimer::BattlePhase::Result && !_isResultProcessed) 
 	{
 		ProcessBattleResult(saveData);
 		_isResultProcessed = true;
@@ -86,12 +86,13 @@ void ModeGameBattle::SetPhase(BattleTimer::BattlePhase nextPhase)
 	// タイマーのフェーズを切り替え
 	_battleTimer.ChangePhase(nextPhase);
 
-	// 防御フェーズが始まったら、最初の5秒後（残り35秒）にターゲットをリセット
+	// 防御フェーズが始まったら、リセット
 	if(nextPhase == BattleTimer::BattlePhase::Defense)
 	{
 		_nextDamageTime = 35.0;
 	}
 
+	// フェーズに応じた処理関数を設定
 	static const std::unordered_map<BattleTimer::BattlePhase, PhaseFunc> PhaseMap = 
 	{
 		{ BattleTimer::BattlePhase::Defense, [this](MouseInput& m, CharaAfterStatus& s) { UpdateDefense(m, s); } },
@@ -119,7 +120,7 @@ void ModeGameBattle::UpdateDefense(MouseInput& mouse, CharaAfterStatus& afterSta
 {
 	if(!_battleTimer.IsTimeUp())
 	{
-		// バトルタイマーの残り時間を監視して5秒ごとにダメージを発生
+		// バトルタイマーの残り時間を監視して秒ごとにダメージを発生
 		double currentTimer = _battleTimer.GetTime();
 		if(currentTimer <= _nextDamageTime)
 		{
@@ -128,9 +129,7 @@ void ModeGameBattle::UpdateDefense(MouseInput& mouse, CharaAfterStatus& afterSta
 			_charaCurrentHP -= enemyDamage;
 			if(_charaCurrentHP < 0.0) { _charaCurrentHP = 0.0; }
 
-			std::cout << "【敵の攻撃】残り " << _nextDamageTime << " 秒ライン通過! " << enemyDamage << " の被ダメージ" << std::endl;
-
-			// 次の5秒刻みの閾値に更新（例：35.0 → 30.0）
+			// 次の秒刻みの閾値に更新
 			_nextDamageTime -= 5.0;
 		}
 
@@ -204,7 +203,6 @@ void ModeGameBattle::UpdateResult(MouseInput& mouse, CharaAfterStatus& afterStat
 	if(_battleTimer.IsTimeUp())
 	{
 		_isBattleEnd = true;
-		std::cout << "リザルト終了。自動的に次の画面へ遷移します。" << std::endl;
 	}
 }
 
@@ -229,20 +227,15 @@ void ModeGameBattle::ProcessBattleResult(SaveData& saveData)
 		account = constRows[0];
 	}
 
-	std::cout << "=== 決着（リザルト情報まとめ開始） ===" << std::endl;
-
 	// 勝敗に応じたステータスの計算
 	if(_enemyCurrentHP <= 0.0) // 敵を倒した場合
 	{
-		std::cout << "★ 勝利！" << std::endl;
-
 		// 敵レベルを +1
 		account.enemylevel += 1;
 
 		// 経験値(EXP)を付与（例：敵のレベル×100 EXP）
 		int gainExp = (_enemy ? _enemy->GetLevel() : 1) * 100;
 		account.exp += gainExp;
-		std::cout << "獲得EXP: " << gainExp << std::endl;
 
 		// レベルアップ判定（必要経験値 = 現在レベル * 100 の簡易仕様例）
 		while(account.exp >= (account.level * 100))
@@ -255,7 +248,6 @@ void ModeGameBattle::ProcessBattleResult(SaveData& saveData)
 	// コインの計算（条件：残りHP ＋ 与えた最大ダメージ）
 	double RemainingHP = (std::max)(0.0, _charaCurrentHP);
 	int gainCoin = static_cast<int>(RemainingHP + _maxDamageDealt);
-
 	account.coin += gainCoin;
 
 	std::vector<SaveData::AccountData> updatedVector;
@@ -368,11 +360,11 @@ void ModeGameBattle::Render(CharaAfterStatus& afterStatus)
 		if(i == _damageHistory.size() - 1)
 		{
 			// 最新のダメージは赤色で強調
-			DrawFormatString(RIGHT_X, rightY, GetColor(255, 50, 50), "Hit %02d: %.0f DMG NEW!", i + 1, _damageHistory[i]);
+			DrawFormatString(RIGHT_X, rightY, GetColor(255, 50, 50), "Hit %02d: %.0f ダメージ!", i + 1, _damageHistory[i]);
 		}
 		else
 		{
-			DrawFormatString(RIGHT_X, rightY, GetColor(100, 100, 100), "Hit %02d: %.0f DMG", i + 1, _damageHistory[i]);
+			DrawFormatString(RIGHT_X, rightY, GetColor(100, 100, 100), "Hit %02d: %.0f ダメージ!", i + 1, _damageHistory[i]);
 		}
 		rightY += 22; // 下にずらしていく
 
