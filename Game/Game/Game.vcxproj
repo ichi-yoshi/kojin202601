@@ -165,7 +165,6 @@
   <ItemGroup>
     <ClCompile Include="source\animationmanager.cpp" />
     <ClCompile Include="source\ApplicationMain.cpp" />
-    <ClCompile Include="source\BattleBase.cpp" />
     <ClCompile Include="source\BattleTimer.cpp" />
     <ClCompile Include="source\BattleUI.cpp" />
     <ClCompile Include="source\ButtonUI.cpp" />
@@ -184,7 +183,6 @@
     <ClCompile Include="source\GachaSystem.cpp" />
     <ClCompile Include="source\GachaUI.cpp" />
     <ClCompile Include="source\GaugeUI.cpp" />
-    <ClCompile Include="source\main.cpp" />
     <ClCompile Include="source\ModeGame.cpp" />
     <ClCompile Include="source\ModeGameBattle.cpp" />
     <ClCompile Include="source\MouseInput.cpp" />
@@ -211,7 +209,6 @@
   <ItemGroup>
     <ClInclude Include="source\animationmanager.h" />
     <ClInclude Include="source\ApplicationMain.h" />
-    <ClInclude Include="source\BattleBase.h" />
     <ClInclude Include="source\BattleTimer.h" />
     <ClInclude Include="source\BattleUI.h" />
     <ClInclude Include="source\ButtonUI.h" />
