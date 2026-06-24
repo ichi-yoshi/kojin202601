@@ -39,7 +39,7 @@ void ModeGameBattle::Reset(const SaveData& saveData, CharaAfterStatus& afterStat
 		_enemy = nullptr;
 	}
 
-	_enemy = new Enemy("ドラゴン");
+	_enemy = new Enemy("ゴエポン");
 
 	if(_enemy != nullptr)
 	{
@@ -322,22 +322,22 @@ void ModeGameBattle::Render(CharaAfterStatus& afterStatus)
 		SetFontSize(36);
 		if(_enemyCurrentHP <= 0.0) 
 		{ 
-			DrawString(200, 150, "【 勝利!!! 】", GetColor(255, 215, 0));
+			DrawString(200, 250, "【 勝利!!! 】", GetColor(255, 215, 0));
 		}
 		else 
 		{
-			DrawString(200, 150, "【 敗北... 】", GetColor(255, 50, 50));
+			DrawString(200, 250, "【 敗北... 】", GetColor(255, 50, 50));
 		}
 
 		SetFontSize(24);
-		DrawFormatString(200, 230, GetColor(255, 255, 255), "今回の最大一撃ダメージ: %.0f DMG", _maxDamageDealt);
-		DrawFormatString(200, 270, GetColor(255, 255, 255), "残りHPボーナス: %.0f", (std::max)(0.0, _charaCurrentHP)); 
+		DrawFormatString(200, 330, GetColor(255, 255, 255), "最大ダメージ: %.0f ダメージ", _maxDamageDealt);
+		DrawFormatString(200, 370, GetColor(255, 255, 255), "残りHPボーナス: %.0f", (std::max)(0.0, _charaCurrentHP));
 
 		int finalGain = static_cast<int>((std::max)(0.0, _charaCurrentHP) + _maxDamageDealt); 
-		DrawFormatString(200, 320, GetColor(255, 255, 255), "獲得コイン: + %d COIN !", finalGain);
+		DrawFormatString(200, 420, GetColor(255, 255, 255), "獲得コイン: + %d !", finalGain);
 
 		SetFontSize(18);
-		DrawFormatString(200, 400, GetColor(150, 150, 150), "間もなく次の画面へ移動します... (%.1f)", _battleTimer.GetTime()); 
+		DrawFormatString(200, 500, GetColor(150, 150, 150), "間もなく次の画面へ移動します... (%.1f)", _battleTimer.GetTime()); 
 		return;
 	}
 
@@ -346,18 +346,18 @@ void ModeGameBattle::Render(CharaAfterStatus& afterStatus)
 	{
 		// 敵の名前とレベルを描画
 		SetFontSize(20);
-		DrawFormatString(200, 140, GetColor(100, 100, 100), "%s  (Lv.%d)", _enemy->GetName().c_str(), _enemy->GetLevel());
+		DrawFormatString(100, 140, GetColor(100, 100, 100), "%s  (Lv.%d)", _enemy->GetName().c_str(), _enemy->GetLevel());
 
 		// HPバーの枠を描画
-		DrawBox(200, 170, 600, 190, GetColor(100, 100, 100), FALSE);
+		DrawBox(100, 170, 500, 190, GetColor(100, 100, 100), FALSE);
 
 		// 敵の残りHPの割合に応じて緑色のバーを描画
 		double hpRate = _enemyCurrentHP / max(1.0, _enemy->GetHP());
 		int barWidth = static_cast<int>(400 * hpRate);
-		DrawBox(200, 170, 200 + barWidth, 190, GetColor(0, 255, 0), TRUE);
+		DrawBox(100, 170, 100 + barWidth, 190, GetColor(0, 255, 0), TRUE);
 
 		// HPの数値テキスト表示
-		DrawFormatString(200, 200, GetColor(200, 200, 200), "HP: %.0f / %.0f", _enemyCurrentHP, _enemy->GetHP());
+		DrawFormatString(100, 200, GetColor(200, 200, 200), "HP: %.0f / %.0f", _enemyCurrentHP, _enemy->GetHP());
 	}
 
 	SetFontSize(16);
@@ -414,10 +414,10 @@ void ModeGameBattle::Render(CharaAfterStatus& afterStatus)
 			maxHp = 1.0;
 		}
 
-		// プレイヤーの名前とHPバーの枠を描画（敵のバーの下側に配置 X=200, Y=240付近）
+		// プレイヤーの名前とHPバーの枠を描画（敵のバーの下側に配置）
 		SetFontSize(20);
-		DrawString(200, 240, "プレイヤー", GetColor(120, 200, 255));
-		DrawBox(200, 270, 600, 290, GetColor(100, 100, 100), FALSE);
+		DrawString(100, 240, "プレイヤー", GetColor(120, 200, 255));
+		DrawBox(100, 270, 500, 290, GetColor(100, 100, 100), FALSE);
 
 		// プレイヤーの残りHPの割合に応じて青色（または緑）のバーを描画
 		double playerHpRate = _charaCurrentHP / maxHp;
@@ -425,10 +425,10 @@ void ModeGameBattle::Render(CharaAfterStatus& afterStatus)
 
 		// HPが低くなったらバーの色を赤に変える演出
 		unsigned int barColor = (playerHpRate > 0.2) ? GetColor(50, 150, 255) : GetColor(255, 50, 50);
-		DrawBox(200, 270, 200 + playerBarWidth, 290, barColor, TRUE);
+		DrawBox(100, 270, 100 + playerBarWidth, 290, barColor, TRUE);
 
 		// プレイヤーのHP数値テキスト表示
-		DrawFormatString(200, 300, GetColor(255, 255, 255), "HP: %.0f / %.0f", _charaCurrentHP, maxHp);
+		DrawFormatString(100, 300, GetColor(255, 255, 255), "HP: %.0f / %.0f", _charaCurrentHP, maxHp);
 	}	
 
 	if(_damageFlashTimer > 0.0)
