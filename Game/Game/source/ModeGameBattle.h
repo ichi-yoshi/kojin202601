@@ -9,6 +9,7 @@
 #include "GaugeUI.h"
 #include "CharaFormula.h"
 #include "SqliteCharaFormula.h"
+#include "BattleUI.h"
 #include "container.h"
 
 class ModeGameBattle
@@ -35,6 +36,7 @@ private:
 	BattleTimer _battleTimer;
 	CircleUI _circleUI;
 	GaugeUI _gaugeUI;
+	BattleUI _battleUI;
 
 	bool _isBattleEnd = false;
 

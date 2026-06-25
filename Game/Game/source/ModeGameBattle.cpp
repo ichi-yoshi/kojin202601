@@ -289,154 +289,16 @@ void ModeGameBattle::Render(CharaAfterStatus& afterStatus)
 
 	_enemy->DrawModel();
 
-	// フェーズに応じて画面の文字やUIの描画を切り替える
-	if(_battleTimer.GetCurrentPhase() == BattleTimer::BattlePhase::Defense)
-	{
-		SetFontSize(24);
-		DrawString(100, 50, "【 敵の防御ターン！ 丸を消して時間を進めろ！ 】", GetColor(255, 255, 0));
-		DrawFormatString(100, 80, GetColor(255, 0, 0), "攻撃フェーズまで: %.1f 秒", _battleTimer.GetTime());
-
-		_circleUI.Draw();
-	}
-	else if(_battleTimer.GetCurrentPhase() == BattleTimer::BattlePhase::Attack)
-	{
-		SetFontSize(24);
-		DrawString(100, 50, "【 自分の攻撃ターン！ ゲージを合わせてダメージを与えろ！ 】", GetColor(255, 50, 50));
-		DrawFormatString(100, 80, GetColor(255, 0, 0), "防御フェーズまで: %.1f 秒", _battleTimer.GetTime());
-
-		_gaugeUI.Draw();
-	}
-	else if(_battleTimer.GetCurrentPhase() == BattleTimer::BattlePhase::Start)
-	{
-		SetFontSize(24);
-		DrawFormatString(100, 80, GetColor(255, 0, 0), "戦闘開始まで: %.1f 秒", _battleTimer.GetTime());
-	}
-	else if(_battleTimer.GetCurrentPhase() == BattleTimer::BattlePhase::Result)
-	{
-		SetFontSize(36);
-		if(_enemyCurrentHP <= 0.0) 
-		{ 
-			DrawString(200, 250, "【 勝利!!! 】", GetColor(255, 215, 0));
-		}
-		else 
-		{
-			DrawString(200, 250, "【 敗北... 】", GetColor(255, 50, 50));
-		}
-
-		SetFontSize(24);
-		DrawFormatString(200, 330, GetColor(255, 255, 255), "最大ダメージ: %.0f ダメージ", _maxDamageDealt);
-		DrawFormatString(200, 370, GetColor(255, 255, 255), "残りHPボーナス: %.0f", (std::max)(0.0, _charaCurrentHP));
-
-		int finalGain = static_cast<int>((std::max)(0.0, _charaCurrentHP) + _maxDamageDealt); 
-		DrawFormatString(200, 420, GetColor(255, 255, 255), "獲得コイン: + %d !", finalGain);
-
-		SetFontSize(18);
-		DrawFormatString(200, 500, GetColor(150, 150, 150), "間もなく次の画面へ移動します... (%.1f)", _battleTimer.GetTime()); 
-		return;
-	}
-
-	// 敵が存在すれば、画面上部に敵の情報とHPバーを表示する
-	if(_enemy)
-	{
-		// 敵の名前とレベルを描画
-		SetFontSize(20);
-		DrawFormatString(100, 140, GetColor(100, 100, 100), "%s  (Lv.%d)", _enemy->GetName().c_str(), _enemy->GetLevel());
-
-		// HPバーの枠を描画
-		DrawBox(100, 170, 500, 190, GetColor(100, 100, 100), FALSE);
-
-		// 敵の残りHPの割合に応じて緑色のバーを描画
-		double hpRate = _enemyCurrentHP / max(1.0, _enemy->GetHP());
-		int barWidth = static_cast<int>(400 * hpRate);
-		DrawBox(100, 170, 100 + barWidth, 190, GetColor(0, 255, 0), TRUE);
-
-		// HPの数値テキスト表示
-		DrawFormatString(100, 200, GetColor(200, 200, 200), "HP: %.0f / %.0f", _enemyCurrentHP, _enemy->GetHP());
-	}
-
-	SetFontSize(16);
-	const int LEFT_X = 50;   // 左側座標
-	const int RIGHT_X = 900; // 右側座標（画面サイズに合わせて調整してください）
-
-	//// ----------------------------------------------------------------
-	//// 【左側】数式展開デバッグ表示（確率抽選・Poop減衰 対応版）
-	//// ----------------------------------------------------------------
-	//int leftY = 300;
-	//DrawString(LEFT_X, leftY, "--- [左側] 数式展開デバッグ ---", GetColor(100, 100, 100));
-
-	//leftY += 25;
-	//std::string repStr = "［代入状態］: " + g_debugFormulaReplaced;
-	//DrawString(LEFT_X, leftY, repStr.c_str(), GetColor(100, 100, 100)); // リアルタイムな計算履歴を緑色で展開
-
-	//leftY += 25;
-	//DrawFormatString(LEFT_X, leftY, GetColor(100, 100, 100), "・ダメージ減衰率の仕様: 1+(Poop / 5000)");
-
-	//leftY += 25;
-	//// 外枠の公式のガイドラインを今回の最新仕様に書き換え
-	//DrawFormatString(LEFT_X, leftY, GetColor(255, 200, 0), "最終公式: (ベース計算) * 会心倍率(抽選) * ゲージ倍率 * 運値2倍(抽選)");
-
-
-	// 右側：最終ダメージ（新しいものが古いものの下へ追加される）
-	int rightY = 100;
-	DrawString(RIGHT_X, rightY, "--- [右側] 最終ダメージ履歴 ---", GetColor(100, 100, 100));
-	rightY += 25;
-
-	for(size_t i = 0; i < _damageHistory.size(); ++i)
-	{
-		// 新しい結果ほど下に描画される（iが大きくなる＝ループが後に回る＝Y座標が下に下がる）
-		if(i == _damageHistory.size() - 1)
-		{
-			// 最新のダメージは赤色で強調
-			DrawFormatString(RIGHT_X, rightY, GetColor(255, 255, 255), "Hit %02d: %.0f ダメージ!", i + 1, _damageHistory[i]);
-		}
-		else
-		{
-			DrawFormatString(RIGHT_X, rightY, GetColor(120, 200, 255), "Hit %02d: %.0f ダメージ!", i + 1, _damageHistory[i]);
-		}
-		rightY += 22; // 下にずらしていく
-
-		// 画面外にはみ出さないための簡易セーフティ
-		if(rightY > 650) { break; }
-	}
-
-	// プレイヤーのHPバーを描画する
-	{
-		double maxHp = afterStatus.GetAfterStatus().hp;
-
-		if(maxHp < 1.0)
-		{
-			maxHp = 1.0;
-		}
-
-		// プレイヤーの名前とHPバーの枠を描画（敵のバーの下側に配置）
-		SetFontSize(20);
-		DrawString(100, 240, "プレイヤー", GetColor(120, 200, 255));
-		DrawBox(100, 270, 500, 290, GetColor(100, 100, 100), FALSE);
-
-		// プレイヤーの残りHPの割合に応じて青色（または緑）のバーを描画
-		double playerHpRate = _charaCurrentHP / maxHp;
-		int playerBarWidth = static_cast<int>(400 * playerHpRate);
-
-		// HPが低くなったらバーの色を赤に変える演出
-		unsigned int barColor = (playerHpRate > 0.2) ? GetColor(50, 150, 255) : GetColor(255, 50, 50);
-		DrawBox(100, 270, 100 + playerBarWidth, 290, barColor, TRUE);
-
-		// プレイヤーのHP数値テキスト表示
-		DrawFormatString(100, 300, GetColor(255, 255, 255), "HP: %.0f / %.0f", _charaCurrentHP, maxHp);
-	}	
-
-	if(_damageFlashTimer > 0.0)
-	{
-		int alpha = static_cast<int>((_damageFlashTimer / 0.2) * 120);
-		if(alpha > 255) alpha = 255;
-		if(alpha < 0)   alpha = 0;
-
-		SetDrawBlendMode(DX_BLENDMODE_ALPHA, alpha);
-
-		int screenW, screenH;
-		GetDrawScreenSize(&screenW, &screenH);
-		DrawBox(0, 0, screenW, screenH, GetColor(255, 0, 0), TRUE);
-
-		SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
-	}
+	_battleUI.Render(
+		afterStatus,
+		_enemy,
+		_enemyCurrentHP,
+		_charaCurrentHP,
+		_battleTimer,
+		_circleUI,
+		_gaugeUI,
+		_maxDamageDealt,
+		_damageHistory,
+		_damageFlashTimer
+	);
 }
