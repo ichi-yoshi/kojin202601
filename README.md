@@ -89,79 +89,84 @@
 
 ### 📊 ゲーム全体・シーン管理
 		[ApplicationMain.h](https://github.com/ichi-yoshi/kojin202601/blob/20260611/Game/Game/source/ApplicationMain.h) / [ApplicationMain.cpp](https://github.com/ichi-yoshi/kojin202601/blob/20260611/Game/Game/source/ApplicationMain.cpp)  
-    	アプリケーション全体の管理クラス。DxLib のウインドウ設定（1280x720）や、ゲームメインシーン（`ModeGame`）の登録を行います。
+    	アプリケーション全体の管理クラス。DxLib のウインドウ設定（1280x720）や、ゲームメインシーン（`ModeGame`）の登録を行います
 		[ModeGame.h](https://github.com/ichi-yoshi/kojin202601/blob/20260611/Game/Game/source/ModeGame.h) / [ModeGame.cpp](https://github.com/ichi-yoshi/kojin202601/blob/20260611/Game/Game/source/ModeGame.cpp)  
-    	ゲームのメイン進行シーン。ガチャフェーズとバトルフェーズの遷移、3D背景モデルの描画、3Dカメラ制御、各UI（ガチャ、ステータス、セーブデータ）の更新・描画を統括します。
+    	ゲームのメイン進行シーン。ガチャフェーズとバトルフェーズの遷移、3D背景モデルの描画、3Dカメラ制御、各UI（ガチャ、ステータス、セーブデータ）の更新・描画を統括します
 		[Resource.h](https://github.com/ichi-yoshi/kojin202601/blob/20260611/Game/Game/source/Resource.h)  
-    	3Dアセット（空球、地面、ダンジョン、敵キャラクターのモデル）のファイルパスを定義するヘッダーファイル。
+    	3Dアセット（空球、地面、ダンジョン、敵キャラクターのモデル）のファイルパスを定義するヘッダーファイル
+
 
 ### ⚔ バトルシステム関連
 		[ModeGameBattle.h](https://github.com/ichi-yoshi/kojin202601/blob/20260611/Game/Game/source/ModeGameBattle.h) / [ModeGameBattle.cpp](https://github.com/ichi-yoshi/kojin202601/blob/20260611/Game/Game/source/ModeGameBattle.cpp)  
-    	バトル全体の進行管理。スタート・攻撃・防御・リザルトといったバトル内フェーズの制御、敵の描画、戦闘結果に応じたセーブデータの更新（経験値付与、コイン獲得、レベルアップ）を行います。
+    	バトル全体の進行管理。スタート・攻撃・防御・リザルトといったバトル内フェーズの制御、敵の描画、戦闘結果に応じたセーブデータの更新（経験値付与、コイン獲得、レベルアップ）を行います
 		[BattleTimer.h](https://github.com/ichi-yoshi/kojin202601/blob/20260611/Game/Game/source/BattleTimer.h) / [BattleTimer.cpp](https://github.com/ichi-yoshi/kojin202601/blob/20260611/Game/Game/source/BattleTimer.cpp)  
-    	バトルの制限時間や、フェーズ経過時間を管理するタイマークラス。
+    	バトルの制限時間や、フェーズ経過時間を管理するタイマークラス
 		[BattleUI.h](https://github.com/ichi-yoshi/kojin202601/blob/20260611/Game/Game/source/BattleUI.h) / [BattleUI.cpp](https://github.com/ichi-yoshi/kojin202601/blob/20260611/Game/Game/source/BattleUI.cpp)  
-    	バトル開始ボタンなど、バトル移行に関するUIの描画・クリック判定。
+    	バトル開始ボタンなど、バトル移行に関するUIの描画・クリック判定
 		[GaugeUI.h](https://github.com/ichi-yoshi/kojin202601/blob/20260611/Game/Game/source/GaugeUI.h) / [GaugeUI.cpp](https://github.com/ichi-yoshi/kojin202601/blob/20260611/Game/Game/source/GaugeUI.cpp)  
-    	攻撃時にタイミングよく目印を止める、タイミングバー（ゲージ）の描画と成否の判定ロジック。
+    	攻撃時にタイミングよく目印を止める、タイミングバー（ゲージ）の描画と成否の判定ロジック
 		[CircleUI.h](https://github.com/ichi-yoshi/kojin202601/blob/20260611/Game/Game/source/CircleUI.h) / [CircleUI.cpp](https://github.com/ichi-yoshi/kojin202601/blob/20260611/Game/Game/source/CircleUI.cpp)  
-    	防御時に出現する円を左クリックで消す、サークルの描画と成否の判定ロジック。
+    	防御時に出現する円を左クリックで消す、サークルの描画と成否の判定ロジック
+
 
 ### 🧙 キャラクタ・敵・計算処理
 *   	[CharaBase.h](https://github.com/ichi-yoshi/kojin202601/blob/20260611/Game/Game/source/CharaBase.h) / [CharaBase.cpp](https://github.com/ichi-yoshi/kojin202601/blob/20260611/Game/Game/source/CharaBase.cpp)  
-    	プレイヤーキャラクターの無装備状態における基本ステータスを保持。
+    	プレイヤーキャラクターの無装備状態における基本ステータスを保持
 *   	[Chara.h](https://github.com/ichi-yoshi/kojin202601/blob/20260611/Game/Game/source/Chara.h) / [Chara.cpp](https://github.com/ichi-yoshi/kojin202601/blob/20260611/Game/Game/source/Chara.cpp)  
-    	装備ステータスのパース（解析）と、基本ステータスに対する装備補正（％上昇など）の合算計算。
+    	装備ステータスのパース（解析）と、基本ステータスに対する装備補正（％上昇など）の合算計算
 *   	[CharaAfterStatus.h](https://github.com/ichi-yoshi/kojin202601/blob/20260611/Game/Game/source/CharaAfterStatus.h) / [CharaAfterStatus.cpp](https://github.com/ichi-yoshi/kojin202601/blob/20260611/Game/Game/source/CharaAfterStatus.cpp)  
-    	装備適用後の最終ステータスの保持、および速度値に基づいたバトルのボーナスタイム換算。
+    	装備適用後の最終ステータスの保持、および速度値に基づいたバトルのボーナスタイム換算
 *   	[Enemy.h](https://github.com/ichi-yoshi/kojin202601/blob/20260611/Game/Game/source/Enemy.h) / [Enemy.cpp](https://github.com/ichi-yoshi/kojin202601/blob/20260611/Game/Game/source/Enemy.cpp)  
-    	敵キャラクターの3Dモデル（タヌキ）のロード、描画、アニメーションステート（待機、攻撃、防御、勝利など）の切り替え。
+    	敵キャラクターの3Dモデル（タヌキ）のロード、描画、アニメーションステート（待機、攻撃、防御、勝利など）の切り替え
 *   	[CharaFormula.h](https://github.com/ichi-yoshi/kojin202601/blob/20260611/Game/Game/source/CharaFormula.h) / [CharaFormula.cpp](https://github.com/ichi-yoshi/kojin202601/blob/20260611/Game/Game/source/CharaFormula.cpp)  
-    	戦闘中の与ダメージ・被ダメージを、データベース上の数式をパースして算出するダメージ計算ブリッジ。
+    	戦闘中の与ダメージ・被ダメージを、データベース上の数式をパースして算出するダメージ計算ブリッジ
 *   	[EvaluateFormula.h](https://github.com/ichi-yoshi/kojin202601/blob/20260611/Game/Game/source/EvaluateFormula.h) / [EvaluateFormula.cpp](https://github.com/ichi-yoshi/kojin202601/blob/20260611/Game/Game/source/EvaluateFormula.cpp)  
-    	独自の数式評価エンジン。文字列としての計算式をパースし、四則演算（カッコ対応）を行う電卓ロジック。
+    	独自の数式評価エンジン。文字列としての計算式をパースし、四則演算（カッコ対応）を行う電卓ロジック
+
 
 ### 🎁 ガチャシステム関連
 		[GachaBase.h](https://github.com/ichi-yoshi/kojin202601/blob/20260611/Game/Game/source/GachaBase.h) / [GachaBase.cpp](https://github.com/ichi-yoshi/kojin202601/blob/20260611/Game/Game/source/GachaBase.cpp)  
-    	重み付き確率抽選など、ガチャを回す際の共通確率計算処理。
+    	重み付き確率抽選など、ガチャを回す際の共通確率計算処理
 		[GachaArmor.h](https://github.com/ichi-yoshi/kojin202601/blob/20260611/Game/Game/source/GachaArmor.h) / [GachaArmor.cpp](https://github.com/ichi-yoshi/kojin202601/blob/20260611/Game/Game/source/GachaArmor.cpp)  
-    	防具の部位の抽選処理。
+    	防具の部位の抽選処理
 		[GachaBasicStatus.h](https://github.com/ichi-yoshi/kojin202601/blob/20260611/Game/Game/source/GachaBasicStatus.h) / [GachaBasicStatus.cpp](https://github.com/ichi-yoshi/kojin202601/blob/20260611/Game/Game/source/GachaBasicStatus.cpp)  
-    	装備に付与されるメインステータス項目の抽選処理。
+    	装備に付与されるメインステータス項目の抽選処理
 		[Gacha.h](https://github.com/ichi-yoshi/kojin202601/blob/20260611/Game/Game/source/Gacha.h) / [Gacha.cpp](https://github.com/ichi-yoshi/kojin202601/blob/20260611/Game/Game/source/Gacha.cpp)  
-    	装備に付与されるサブステータス項目の抽選処理。
+    	装備に付与されるサブステータス項目の抽選処理
 		[GachaSystem.h](https://github.com/ichi-yoshi/kojin202601/blob/20260611/Game/Game/source/GachaSystem.h) / [GachaSystem.cpp](https://github.com/ichi-yoshi/kojin202601/blob/20260611/Game/Game/source/GachaSystem.cpp)  
-    	ガチャを引く（コイン消費・確率決定）、結果を装備する（セーブデータ同期）、結果を破棄するといった一連の流れを管理。
+    	ガチャを引く（コイン消費・確率決定）、結果を装備する（セーブデータ同期）、結果を破棄するといった一連の流れを管理
 		[GachaUI.h](https://github.com/ichi-yoshi/kojin202601/blob/20260611/Game/Game/source/GachaUI.h) / [GachaUI.cpp](https://github.com/ichi-yoshi/kojin202601/blob/20260611/Game/Game/source/GachaUI.cpp)  
-    	ガチャ画面の背景、ガチャボタン、引いた装備のステータス表示、装備・破棄選択ボタンなどの描画。
+    	ガチャ画面の背景、ガチャボタン、引いた装備のステータス表示、装備・破棄選択ボタンなどの描画
+
 
 ### 💾 セーブデータ・UI関連
 		[SaveData.h](https://github.com/ichi-yoshi/kojin202601/blob/20260611/Game/Game/source/SaveData.h) / [SaveData.cpp](https://github.com/ichi-yoshi/kojin202601/blob/20260611/Game/Game/source/SaveData.cpp)  
-    	アカウントデータ（レベル、経験値、コイン等）を SQLite 経由で保存・読込する。
+    	アカウントデータ（レベル、経験値、コイン等）を SQLite 経由で保存・読込する
 		[SaveEquipment.h](https://github.com/ichi-yoshi/kojin202601/blob/20260611/Game/Game/source/SaveEquipment.h) / [SaveEquipment.cpp](https://github.com/ichi-yoshi/kojin202601/blob/20260611/Game/Game/source/SaveEquipment.cpp)  
-    	部位ごとの装備中の防具情報（メイン・サブステータス値）を SQLite 経由で保存・読込する。
+    	部位ごとの装備中の防具情報（メイン・サブステータス値）を SQLite 経由で保存・読込する
 		[SaveCharaStatus.h](https://github.com/ichi-yoshi/kojin202601/blob/20260611/Game/Game/source/SaveCharaStatus.h) / [SaveCharaStatus.cpp](https://github.com/ichi-yoshi/kojin202601/blob/20260611/Game/Game/source/SaveCharaStatus.cpp)  
-    	装備適用後の最終ステータスを SQLite に保存・同期する。
+    	装備適用後の最終ステータスを SQLite に保存・同期する
 		[StatusUI.h](https://github.com/ichi-yoshi/kojin202601/blob/20260611/Game/Game/source/StatusUI.h) / [StatusUI.cpp](https://github.com/ichi-yoshi/kojin202601/blob/20260611/Game/Game/source/StatusUI.cpp)  
-    	キャラクターの最終ステータス一覧をウィンドウ表示するUI。
+    	キャラクターの最終ステータス一覧をウィンドウ表示するUI
 		[SaveDataUI.h](https://github.com/ichi-yoshi/kojin202601/blob/20260611/Game/Game/source/SaveDataUI.h) / [SaveDataUI.cpp](https://github.com/ichi-yoshi/kojin202601/blob/20260611/Game/Game/source/SaveDataUI.cpp)  
-    	アカウント情報（セーブデータ）をウィンドウ表示するUI。
+    	アカウント情報（セーブデータ）をウィンドウ表示するUI
 		[ButtonUI.h](https://github.com/ichi-yoshi/kojin202601/blob/20260611/Game/Game/source/ButtonUI.h) / [ButtonUI.cpp](https://github.com/ichi-yoshi/kojin202601/blob/20260611/Game/Game/source/ButtonUI.cpp)  
-    	様々なUIで再利用される、汎用的な矩形ボタン。
+    	様々なUIで再利用される、汎用的な矩形ボタン
+
 
 ### 🔌 SQLite連携ユーティリティ
 		[SqliteConfig.h](https://github.com/ichi-yoshi/kojin202601/blob/20260611/Game/Game/source/SqliteConfig.h)  
-    	使用するデータベースファイル名（`name.sqlite3` 等）を定義。
+    	使用するデータベースファイル名（`name.sqlite3` 等）を定義
 		[SqliteUtill.h](https://github.com/ichi-yoshi/kojin202601/blob/20260611/Game/Game/source/SqliteUtill.h) / [SqliteUtill.cpp](https://github.com/ichi-yoshi/kojin202601/blob/20260611/Game/Game/source/SqliteUtill.cpp)  
-    	SQLite 接続（Open / Close）を行う共通関数群。
+    	SQLite 接続（Open / Close）を行う共通関数群
 		[SqliteTextUtill.h](https://github.com/ichi-yoshi/kojin202601/blob/20260611/Game/Game/source/SqliteTextUtill.h) / [SqliteTextUtill.cpp](https://github.com/ichi-yoshi/kojin202601/blob/20260611/Game/Game/source/SqliteTextUtill.cpp)  
-    	Shift_JIS と UTF-8 の文字エンコーディング相互変換、SQL インジェクション対策のエスケープ処理。
+    	Shift_JIS と UTF-8 の文字エンコーディング相互変換、SQL インジェクション対策のエスケープ処理
 		[SqliteTableCreator.h](https://github.com/ichi-yoshi/kojin202601/blob/20260611/Game/Game/source/SqliteTableCreator.h) / [SqliteTableCreator.cpp](https://github.com/ichi-yoshi/kojin202601/blob/20260611/Game/Game/source/SqliteTableCreator.cpp)  
-    	ゲーム起動時に必要なすべてのデータベーステーブル（計12個）を生成する。
+    	ゲーム起動時に必要なすべてのデータベーステーブル（計12個）を生成する
 		[SqliteSeeder.h](https://github.com/ichi-yoshi/kojin202601/blob/20260611/Game/Game/source/SqliteSeeder.h) / [SqliteSeeder.cpp](https://github.com/ichi-yoshi/kojin202601/blob/20260611/Game/Game/source/SqliteSeeder.cpp)  
-    	初回起動時等に、確率マスタや計算式、敵パラメータ等の初期レコードをテーブルに流し込む（Seed）。
+    	初回起動時等に、確率マスタや計算式、敵パラメータ等の初期レコードをテーブルに流し込む（Seed）
 		各データ取得クラス（SQLiteマスタロード用） 
-    	データベースから各設定レコードを抽出し、ゲーム内インスタンスに割り振るブリッジ処理群。
+    	データベースから各設定レコードを抽出し、ゲーム内インスタンスに割り振るブリッジ処理群
     	[SqliteBasicStatus.h](https://github.com/ichi-yoshi/kojin202601/blob/20260611/Game/Game/source/SqliteBasicStatus.h) / [SqliteBasicStatus.cpp](https://github.com/ichi-yoshi/kojin202601/blob/20260611/Game/Game/source/SqliteBasicStatus.cpp) (メインステータス確率マスタ)
     	[SqliteStatus.h](https://github.com/ichi-yoshi/kojin202601/blob/20260611/Game/Game/source/SqliteStatus.h) / [SqliteStatus.cpp](https://github.com/ichi-yoshi/kojin202601/blob/20260611/Game/Game/source/SqliteStatus.cpp) (サブステータス確率マスタ)
     	[SqliteArmor.h](https://github.com/ichi-yoshi/kojin202601/blob/20260611/Game/Game/source/SqliteArmor.h) / [SqliteArmor.cpp](https://github.com/ichi-yoshi/kojin202601/blob/20260611/Game/Game/source/SqliteArmor.cpp) (防具部位マスタ)
@@ -172,17 +177,18 @@
     	[SqliteGauge.h](https://github.com/ichi-yoshi/kojin202601/blob/20260611/Game/Game/source/SqliteGauge.h) / [SqliteGauge.cpp](https://github.com/ichi-yoshi/kojin202601/blob/20260611/Game/Game/source/SqliteGauge.cpp) (ゲージミニゲーム設定マスタ)
     	[SqliteSpeed.h](https://github.com/ichi-yoshi/kojin202601/blob/20260611/Game/Game/source/SqliteSpeed.h) / [SqliteSpeed.cpp](https://github.com/ichi-yoshi/kojin202601/blob/20260611/Game/Game/source/SqliteSpeed.cpp) (速度ボーナス対応表)
 
+
 ### 🖱 インプット・グラフィック周辺
 		[MouseInput.h](https://github.com/ichi-yoshi/kojin202601/blob/20260611/Game/Game/source/MouseInput.h) / [MouseInput.cpp](https://github.com/ichi-yoshi/kojin202601/blob/20260611/Game/Game/source/MouseInput.cpp)  
-    	マウスの座標、左・右クリック状態、矩形選択範囲の進入判定、ドラッグ、ホイールスクロール値を管理する入力仲介クラス。
+    	マウスの座標、左・右クリック状態、矩形選択範囲の進入判定、ドラッグ、ホイールスクロール値を管理する入力仲介クラス
 		[CameraBase.h](https://github.com/ichi-yoshi/kojin202601/blob/20260611/Game/Game/source/CameraBase.h) / [CameraBase.cpp](https://github.com/ichi-yoshi/kojin202601/blob/20260611/Game/Game/source/CameraBase.cpp)  
-    	3D空間カメラの位置（Position）や注視点（Target）、視野角などを設定するカメラクラス。
+    	3D空間カメラの位置（Position）や注視点（Target）、視野角などを設定するカメラクラス
 		[animationmanager.h](https://github.com/ichi-yoshi/kojin202601/blob/20260611/Game/Game/source/animationmanager.h) / [animationmanager.cpp](https://github.com/ichi-yoshi/kojin202601/blob/20260611/Game/Game/source/animationmanager.cpp)  
-    	3Dモデルのアニメーションを滑らかに補間・ブレンド（フェードイン・アウト）して切り替えるためのアニメーション管理クラス。
+    	3Dモデルのアニメーションを滑らかに補間・ブレンド（フェードイン・アウト）して切り替えるためのアニメーション管理クラス
     
     
     
-## 6. SQLiteでのデータ確認方法
+## 6. SQLiteのデータ確認方法
 
 	  こちらでは実際に作成したデータベースの確認手順を明記します。
 	  
@@ -190,10 +196,13 @@
 	  開いたら「データベースを開く」から閲覧したいデータベース開きます。(.sqlite3というファイルが対象です。sqlite3.dllと同じ階層にあります。)
 	  「データベース構造」「データ閲覧」からそれぞれのテーブルを閲覧できます。
 	  
+	  DB Browser for SQLiteダウンロード用
+	  DB Browser for SQLite.exeのみでは動かないので下記リンクから全てダウンロードしてください。
+	  https://github.com/ichi-yoshi/kojin202601/tree/20260611/DB%20Browser%20for%20SQLite
+	  
 	  作成済みデータ
 	  https://github.com/ichi-yoshi/kojin202601/blob/20260611/Game/Game/e.sqlite3
 	  https://github.com/ichi-yoshi/kojin202601/blob/20260611/Game/Game/f.sqlite3
-	  
 	  
 	  
 	  
