@@ -235,6 +235,7 @@ bool CreateSqliteTables(sqlite3* dbh)
 
 	}
 
+	// キャラのダメージ計算式
 	if(err == 0) 
 	{
 		char* errorMessage;
@@ -258,6 +259,7 @@ bool CreateSqliteTables(sqlite3* dbh)
 		}
 	}
 
+	// アカウントデータ
 	if(err == 0)
 	{
 		char* errorMessage;

@@ -12,7 +12,6 @@ std::string CharaFormula::ReplaceVar(std::string sourceStr, const std::string& s
 	ss << std::fixed << std::setprecision(4) << value;
 	std::string replaceStr = ss.str();
 
-	// 正規表現を使わず、文字列検索 (find) で愚直に置換する
 	size_t pos = sourceStr.find(status);
 	while(pos != std::string::npos)
 	{
@@ -31,11 +30,9 @@ double CharaFormula::GetLiveCriticalMultiplier(const CharaAfterStatus& afterstat
 	// 0〜9999のサイコロを振り、会心率(%)未満なら当選
 	if((rand() % 10000) < (charaCritRate * 100))
 	{
-		// 当選したら「会心ダメージ / 100」の倍率（例: 1.78倍）を返す
 		return 1.0 + afterstatus.GetAfterStatus().critDamage / 100.0;
 	}
 
-	// 外れたら等倍（1.0倍）
 	return 1.0;
 }
 
@@ -51,11 +48,9 @@ double CharaFormula::GetLiveLuckMultiplier(const CharaAfterStatus& afterstatus)
 	// 算出した確率（%）でサイコロを振る
 	if((rand() % 10000) < (luckProbability * 100))
 	{
-		// 当選したら2倍！
 		return 2.0;
 	}
 
-	// 外れたら等倍（1.0倍）
 	return 1.0;
 }
 
@@ -101,10 +96,7 @@ double CharaFormula::CalculateFinalDamage(const CharaAfterStatus& afterstatus, c
 	exprFinal = ReplaceVar(exprFinal, "会心倍率", res_critical);
 	exprFinal = ReplaceVar(exprFinal, "運値倍率", res_luck);
 
-	extern std::string g_debugFormulaReplaced;
-	g_debugFormulaReplaced = exprFinal;
-
-	// 確率抽選を含んだ数式を一発で評価計算（ここが本来のルートです！）
+	// 確率抽選を含んだ数式を一発で評価計算
 	double baseFinalDamage = EvaluateFormula::Evaluate(exprFinal);
 
 	// 今まで通り、ゲージ倍率を最後に掛け合わせる
@@ -119,14 +111,14 @@ double CharaFormula::CalculateEnemyDamage(const CharaAfterStatus& afterstatus, c
 	CharaFormulasRow row;
 	if(!_charaFormula.GetCharaFormula("敵の攻撃ダメージ", row)) return 0.0;
 
-	std::string expr = row.formula; // "(キャラ最大HP*0.02)+敵攻撃力*(敵攻撃力/キャラ防御力)"
+	std::string expr = row.formula; 
 
-	// 長いキーワードから順番に完全置換（文字被りバグ防止）
+	// 長いキーワードから順番に完全置換
 	expr = ReplaceVar(expr, "キャラ最大HP", afterstatus.GetAfterStatus().hp);
 	expr = ReplaceVar(expr, "キャラ防御力", afterstatus.GetAfterStatus().defense);
 	expr = ReplaceVar(expr, "敵攻撃力", enemy.GetAttack());
 
-	// 数式エンジンで評価（今度は純粋な足し算として完璧に計算されます）
+	// 数式エンジンで評価
 	double enemyDamage = EvaluateFormula::Evaluate(expr);
 
 	return enemyDamage;

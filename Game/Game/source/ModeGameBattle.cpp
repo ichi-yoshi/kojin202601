@@ -2,8 +2,6 @@
 #include "EvaluateFormula.h"
 #include "Resource.h"
 
-extern std::string g_debugFormulaReplaced = "(未計算)";
-
 bool ModeGameBattle::Initialize(const std::string& dbPath, std::string* outError)
 {
 	if(!_gaugeUI.Initialize(dbPath, outError)) { return false; }

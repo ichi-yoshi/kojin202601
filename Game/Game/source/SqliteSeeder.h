@@ -86,6 +86,7 @@ struct CharaFormulasSeed
 	double gaugeFail;			// ゲージ失敗時の値
 };
 
+// アカウントデータの初期データ
 struct AccountDataSeed
 {
 	int uid;			// ユーザーID
