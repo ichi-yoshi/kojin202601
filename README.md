@@ -94,6 +94,8 @@
     	ゲームのメイン進行シーン。ガチャフェーズとバトルフェーズの遷移、3D背景モデルの描画、3Dカメラ制御、各UI（ガチャ、ステータス、セーブデータ）の更新・描画を統括します
 		[Resource.h](https://github.com/ichi-yoshi/kojin202601/blob/20260611/Game/Game/source/Resource.h)  
     	3Dアセット（空球、地面、ダンジョン、敵キャラクターのモデル）のファイルパスを定義するヘッダーファイル
+    	[container.h](https://github.com/ichi-yoshi/kojin202601/blob/main/Game/Game/source/container.h)
+    	共通インクルード用のヘッダーファイル
 
 
 ### ⚔ バトルシステム関連
@@ -101,8 +103,10 @@
     	バトル全体の進行管理。スタート・攻撃・防御・リザルトといったバトル内フェーズの制御、敵の描画、戦闘結果に応じたセーブデータの更新（経験値付与、コイン獲得、レベルアップ）を行います
 		[BattleTimer.h](https://github.com/ichi-yoshi/kojin202601/blob/20260611/Game/Game/source/BattleTimer.h) / [BattleTimer.cpp](https://github.com/ichi-yoshi/kojin202601/blob/20260611/Game/Game/source/BattleTimer.cpp)  
     	バトルの制限時間や、フェーズ経過時間を管理するタイマークラス
-		[BattleUI.h](https://github.com/ichi-yoshi/kojin202601/blob/20260611/Game/Game/source/BattleUI.h) / [BattleUI.cpp](https://github.com/ichi-yoshi/kojin202601/blob/20260611/Game/Game/source/BattleUI.cpp)  
-    	バトル開始ボタンなど、バトル移行に関するUIの描画・クリック判定
+		[BattleButtonUI.h](https://github.com/ichi-yoshi/kojin202601/blob/main/Game/Game/source/BattleButtonUI.h) / [BattleUI.cpp](https://github.com/ichi-yoshi/kojin202601/blob/main/Game/Game/source/BattleButtonUI.cpp)  
+    	バトルフェーズ移行に関するUIの描画・クリック判定
+    	[BattleUI.h](https://github.com/ichi-yoshi/kojin202601/blob/main/Game/Game/source/BattleUI.h) / [BattleUI](https://github.com/ichi-yoshi/kojin202601/blob/main/Game/Game/source/BattleUI.cpp)
+    	バトル中に関するUIの描画
 		[GaugeUI.h](https://github.com/ichi-yoshi/kojin202601/blob/20260611/Game/Game/source/GaugeUI.h) / [GaugeUI.cpp](https://github.com/ichi-yoshi/kojin202601/blob/20260611/Game/Game/source/GaugeUI.cpp)  
     	攻撃時にタイミングよく目印を止める、タイミングバー（ゲージ）の描画と成否の判定ロジック
 		[CircleUI.h](https://github.com/ichi-yoshi/kojin202601/blob/20260611/Game/Game/source/CircleUI.h) / [CircleUI.cpp](https://github.com/ichi-yoshi/kojin202601/blob/20260611/Game/Game/source/CircleUI.cpp)  
@@ -203,6 +207,7 @@
 	  作成済みデータ
 	  https://github.com/ichi-yoshi/kojin202601/blob/20260611/Game/Game/e.sqlite3
 	  https://github.com/ichi-yoshi/kojin202601/blob/20260611/Game/Game/f.sqlite3
+	  https://github.com/ichi-yoshi/kojin202601/blob/main/Game/Game/g.sqlite3
 	  
 	  
 	  
