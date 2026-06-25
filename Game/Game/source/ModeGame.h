@@ -12,7 +12,7 @@
 #include "CharaAfterStatus.h"
 #include "CharaBase.h"
 #include "SaveCharaStatus.h"
-#include "BattleUI.h"
+#include "BattleButtonUI.h"
 #include "GaugeUI.h"
 #include "CircleUI.h"
 #include "BattleTimer.h"
@@ -73,9 +73,9 @@ protected:
 	bool _showCharaStatus = false;
 
 	MouseInput _mouse;
-	CameraBase	_cam;
+	CameraBase	_cam;	
 	
-	BattleUI _battleUI;
+	BattleButtonUI _battleButtonUI;
 	ModeGameBattle _battleSystem;
 
 	SaveData _saveData;

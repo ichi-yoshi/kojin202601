@@ -99,7 +99,7 @@
     <ClCompile Include="source\SqliteGauge.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="source\BattleUI.cpp">
+    <ClCompile Include="source\BattleButtonUI.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="source\CircleUI.cpp">
@@ -227,7 +227,7 @@
     <ClInclude Include="source\SqliteGauge.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="source\BattleUI.h">
+    <ClInclude Include="source\BattleButtonUI.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="source\CircleUI.h">

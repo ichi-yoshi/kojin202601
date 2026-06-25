@@ -98,7 +98,7 @@ bool ModeGame::Process()
 	{
 		// アイコンクリックの処理
 		_gachaSystem.Process(gachaCtx);
-		_battleUI.Update(_mouse);
+		_battleButtonUI.Update(_mouse);
 		_statusUI.Update(_mouse);
 		_saveDataUI.Update(_mouse);
 
@@ -125,7 +125,7 @@ bool ModeGame::Process()
 			_showCharaStatus = !_showCharaStatus;
 		}
 
-		if(_battleUI.IsBattleClicked())
+		if(_battleButtonUI.IsBattleClicked())
 		{
 			// バトルフェーズへ遷移
 			_saveData.LoadFromSqlite();
@@ -191,7 +191,7 @@ bool ModeGame::Render()
 	{
 		_gachaUI.Draw(_gacha, _gachaBasic, _gachaArmor, _saveEquipment, _pendingResult);
 		_statusUI.Draw(_afterStatus, _showCharaStatus);
-		_battleUI.Draw();
+		_battleButtonUI.Draw();
 		_saveDataUI.Draw(_saveData, _showSaveData);
 	}
 	else if (_gamePhase == GamePhase::Battle)

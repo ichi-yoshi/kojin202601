@@ -2,7 +2,7 @@
 #include "ButtonUI.h"
 #include "MouseInput.h"
 
-class BattleUI
+class BattleButtonUI
 {
 public:
 	const ButtonUI::ButtonRect& GetBattleButtonRect() const;

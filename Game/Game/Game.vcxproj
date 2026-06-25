@@ -166,7 +166,7 @@
     <ClCompile Include="source\animationmanager.cpp" />
     <ClCompile Include="source\ApplicationMain.cpp" />
     <ClCompile Include="source\BattleTimer.cpp" />
-    <ClCompile Include="source\BattleUI.cpp" />
+    <ClCompile Include="source\BattleButtonUI.cpp" />
     <ClCompile Include="source\ButtonUI.cpp" />
     <ClCompile Include="source\CameraBase.cpp" />
     <ClCompile Include="source\Chara.cpp" />
@@ -210,7 +210,7 @@
     <ClInclude Include="source\animationmanager.h" />
     <ClInclude Include="source\ApplicationMain.h" />
     <ClInclude Include="source\BattleTimer.h" />
-    <ClInclude Include="source\BattleUI.h" />
+    <ClInclude Include="source\BattleButtonUI.h" />
     <ClInclude Include="source\ButtonUI.h" />
     <ClInclude Include="source\CameraBase.h" />
     <ClInclude Include="source\Chara.h" />
