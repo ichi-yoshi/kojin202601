@@ -4,8 +4,7 @@
 #include "GachaArmor.h"
 #include "SaveEquipment.h"
 #include "ButtonUI.h"
-#include <string>
-#include <vector>
+#include "container.h"
 
 struct PendingGachaResult
 {

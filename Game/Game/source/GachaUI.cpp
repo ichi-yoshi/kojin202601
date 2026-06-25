@@ -1,6 +1,5 @@
 ﻿#include "GachaUI.h"
 #include "ButtonUI.h"
-#include "DxLib.h"
 
 const ButtonUI::ButtonRect& GachaUI::GetGachaButtonRect() const
 {
@@ -203,5 +202,5 @@ void GachaUI::DrawSavedEquipment(const SaveEquipment& saveEquipment) const
 
 void GachaUI::DrawGachaButton() const
 {
-	ButtonUI::DrawButton(_gachaButton, "錬成[R]");
+	ButtonUI::DrawButton(_gachaButton, "錬成[R]1回-3000");
 }

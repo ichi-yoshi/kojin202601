@@ -1,10 +1,9 @@
 ﻿#pragma once
-#include <string>
-#include <vector>
 #include "SqliteCharaFormula.h"
 #include "CharaAfterStatus.h"
 #include "Enemy.h"
 #include "SaveData.h"
+#include "container.h"
 
 class CharaFormula
 {
@@ -13,6 +12,7 @@ public:
 	double CalculateFinalDamage(const CharaAfterStatus& player, const Enemy& enemy, bool isGaugeSuccess);
 	double CalculateEnemyDamage(const CharaAfterStatus& afterstatus, const Enemy& enemy);
 	std::string ReplaceVar(std::string sourceStr, const std::string& status, double value);
+
 	// 各種計算式の評価関数
 	double GetDefenseMultiplier(const CharaAfterStatus& afterstatus, const Enemy& enemy	);
 	double GetDecayRate(const CharaAfterStatus& afterstatus);

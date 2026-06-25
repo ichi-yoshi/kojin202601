@@ -1,6 +1,5 @@
 ﻿#include "appframe.h"
 #include "CameraBase.h"
-#include <string>
 #include "MouseInput.h"
 #include "Gacha.h"
 #include "GachaBasicStatus.h"
@@ -19,6 +18,7 @@
 #include "ModeGameBattle.h"
 #include "SaveData.h" 
 #include "SaveDataUI.h"
+#include "container.h"
 
 // モード
 class ModeGame : public ModeBase

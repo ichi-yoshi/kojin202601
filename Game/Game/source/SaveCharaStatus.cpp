@@ -1,8 +1,6 @@
 ﻿#include "SaveCharaStatus.h"
 #include "SqliteUtill.h"
 #include "SqliteTextUtill.h"
-#include <cstdio>
-#include <cstdlib>
 
 // CharaAfterStatusからステータスを行の配列に変換して保存する
 void SaveCharaStatus::SetFromAfterStatus(const CharaAfterStatus& afterStatus)

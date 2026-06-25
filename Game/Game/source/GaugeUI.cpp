@@ -1,6 +1,5 @@
 ﻿#include "GaugeUI.h"
 #include "ButtonUI.h"
-#include "DxLib.h"
 
 const ButtonUI::ButtonRect& GaugeUI::GetGaugeButtonRect() const
 {

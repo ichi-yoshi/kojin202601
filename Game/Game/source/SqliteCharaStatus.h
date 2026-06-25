@@ -1,5 +1,5 @@
 ﻿#pragma once
-#include <string>
+#include "container.h"
 #include "CharaBase.h"
 
 // SQLiteからキャラの基礎ステータスを読み込む

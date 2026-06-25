@@ -1,5 +1,4 @@
 ﻿#include "SaveDataUI.h"
-#include "DxLib.h"
 
 const ButtonUI::ButtonRect& SaveDataUI::GetSaveDataButtonRect() const
 {

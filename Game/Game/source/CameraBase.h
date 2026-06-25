@@ -1,5 +1,5 @@
 #pragma once
-#include "DxLib.h"
+#include "container.h"
 
 class CameraBase {
 public:

@@ -1,7 +1,4 @@
 ﻿#include "EvaluateFormula.h"
-#include <regex>
-#include <sstream>
-#include <vector>
 
 double EvaluateFormula::Evaluate(const std::string& expression)
 {

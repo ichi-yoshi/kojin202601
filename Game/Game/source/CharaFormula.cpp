@@ -1,11 +1,5 @@
 ﻿#include "CharaFormula.h"
 #include "EvaluateFormula.h"
-#include "SqliteCharaFormula.h"
-#include "SaveData.h"
-#include <regex>
-#include <iostream>
-#include <sstream>
-#include <iomanip>
 
 bool CharaFormula::Initialize(const std::string& dbPath, std::string* outError)
 {

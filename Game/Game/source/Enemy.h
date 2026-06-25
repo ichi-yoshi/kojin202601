@@ -3,8 +3,7 @@
 #include "SqliteUtill.h"
 #include "SaveData.h"
 #include "Resource.h"
-#include <string>
-#include <vector>
+#include "container.h"
 
 enum class EnemyStatus
 {

@@ -1,7 +1,6 @@
 ﻿#pragma once
-#include "../sqlite3/sqlite3.h"
-#include <vector>
-#include <cstddef>
+#include "SqliteUtill.h"
+#include "container.h"
 
 //シードデータ
 //メインステータス

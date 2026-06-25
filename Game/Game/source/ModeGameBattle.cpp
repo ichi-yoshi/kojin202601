@@ -1,10 +1,4 @@
 ﻿#include "ModeGameBattle.h"
-#include "Dxlib.h"
-#include <algorithm>
-#include <sstream> // （文字列結合用）
-#include <iomanip> // （小数点桁数固定用）
-#include <iostream>
-#include <algorithm>
 #include "EvaluateFormula.h"
 #include "Resource.h"
 

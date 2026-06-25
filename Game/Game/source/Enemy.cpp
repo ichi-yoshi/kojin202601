@@ -1,9 +1,5 @@
 ﻿#include "Enemy.h"
-#include "SqliteEnemy.h"
-#include "SqliteTextUtill.h"
 #include "animationmanager.h"
-#include "DxLib.h"
-#include <iostream>
 
 Enemy::Enemy(const std::string& name)
 {

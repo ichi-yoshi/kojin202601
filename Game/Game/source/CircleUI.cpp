@@ -1,6 +1,5 @@
 #include "CircleUI.h"
 #include "ButtonUI.h"
-#include "DxLib.h"
 
 const ButtonUI::ButtonRect& CircleUI::GetGaugeButtonRect() const
 {

@@ -1,7 +1,5 @@
 #pragma once
-#include <vector>
-#include <string>
-#include <random>
+#include "container.h"
 
 class SqliteSpeed
 {

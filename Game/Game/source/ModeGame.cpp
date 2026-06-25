@@ -1,14 +1,11 @@
 ﻿#include "AppFrame.h"
 #include "ApplicationMain.h"
 #include "ModeGame.h"
-#include "SqliteUtill.h"
 #include "SqliteTableCreator.h"
 #include "SqliteSeeder.h"
 #include "SqliteCharaStatus.h"
 #include "Chara.h"
 #include "Resource.h"
-#include "SaveData.h"
-#include <random>
 
 ModeGame _modeGame;
 
@@ -101,24 +98,6 @@ bool ModeGame::Process()
 		_battleButtonUI.Update(_mouse);
 		_statusUI.Update(_mouse);
 		_saveDataUI.Update(_mouse);
-
-		auto constRows = _saveData.GetRows();
-		SaveData::AccountData account;
-
-		if(constRows.empty())
-		{
-			// データベースが万が一空だった場合の初期化ガード
-			account.uid = 1;
-			account.level = 1;
-			account.exp = 0;
-			account.coin = 30000; // ガチャ突入時のデフォルトコイン（任意に調整してください）
-			account.enemylevel = 0;
-		}
-		else
-		{
-			// 既存のデータをベースにする
-			account = constRows[0];
-		}
 
 		if (_statusUI.IsCharaClicked())
 		{

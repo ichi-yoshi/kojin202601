@@ -9,6 +9,7 @@
 #include "CharaAfterStatus.h"
 #include "CharaBase.h"
 #include "SaveData.h"
+#include "container.h"
 
 // 引数リスト
 struct GachaContext

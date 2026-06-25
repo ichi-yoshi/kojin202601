@@ -1,6 +1,4 @@
 #include "GachaBasicStatus.h"
-#include <sstream>
-#include <iomanip>
 
 bool GachaBasicStatus::Roll(int count)
 {

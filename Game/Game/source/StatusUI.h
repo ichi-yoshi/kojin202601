@@ -2,6 +2,7 @@
 #include "CharaAfterStatus.h"
 #include "ButtonUI.h"
 #include "MouseInput.h"
+#include "container.h"
 
 class StatusUI
 {

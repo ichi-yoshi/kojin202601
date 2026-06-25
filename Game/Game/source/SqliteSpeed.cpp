@@ -1,6 +1,5 @@
 #include "SqliteSpeed.h"
 #include "SqliteUtill.h"
-#include <cstdlib>
 
 bool SqliteSpeed::Initialize(const std::string& Path, std::string* outError)
 {

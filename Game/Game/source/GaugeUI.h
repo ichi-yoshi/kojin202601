@@ -2,6 +2,7 @@
 #include "ButtonUI.h"
 #include "MouseInput.h"
 #include "SqliteGauge.h"
+#include "container.h"
 
 class GaugeUI
 {

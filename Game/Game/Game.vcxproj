@@ -218,6 +218,7 @@
     <ClInclude Include="source\CharaBase.h" />
     <ClInclude Include="source\CharaFormula.h" />
     <ClInclude Include="source\CircleUI.h" />
+    <ClInclude Include="source\container.h" />
     <ClInclude Include="source\Enemy.h" />
     <ClInclude Include="source\EvaluateFormula.h" />
     <ClInclude Include="source\Gacha.h" />

@@ -1,5 +1,4 @@
 ﻿#include "GachaSystem.h"
-#include "DxLib.h"
 
 // ガチャシステムの処理
 void GachaSystem::Process(GachaContext& ctx)

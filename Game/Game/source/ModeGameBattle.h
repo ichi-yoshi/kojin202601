@@ -9,10 +9,7 @@
 #include "GaugeUI.h"
 #include "CharaFormula.h"
 #include "SqliteCharaFormula.h"
-#include <string>
-#include <functional>
-#include <unordered_map>
-#include <vector>
+#include "container.h"
 
 class ModeGameBattle
 {

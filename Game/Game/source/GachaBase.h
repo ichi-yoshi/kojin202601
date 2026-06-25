@@ -1,7 +1,5 @@
 ﻿#pragma once
-#include <string>
-#include <vector>
-#include <random>
+#include "container.h"
 
 template <typename TRow>
 class GachaBase

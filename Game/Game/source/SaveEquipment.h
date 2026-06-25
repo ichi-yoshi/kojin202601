@@ -1,7 +1,6 @@
 ﻿#pragma once
-#include <string>
-#include <vector>
-#include "../sqlite3/sqlite3.h"
+#include "container.h"
+#include "SqliteUtill.h"
 
 class SaveEquipment
 {

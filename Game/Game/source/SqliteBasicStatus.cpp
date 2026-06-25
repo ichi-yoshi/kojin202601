@@ -1,7 +1,6 @@
 ﻿#include "SqliteBasicStatus.h"
 #include "SqliteUtill.h"
 #include "SqliteTextUtill.h"
-#include <cstdlib>
 
 struct BasicStatusContext
 {

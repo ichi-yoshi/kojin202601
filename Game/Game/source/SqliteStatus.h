@@ -1,8 +1,5 @@
 ﻿#pragma once
-#include <array>
-#include <string>
-#include <vector>
-#include <random>
+#include "container.h"
 
 struct StatusRow
 {

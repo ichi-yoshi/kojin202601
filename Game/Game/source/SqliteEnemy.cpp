@@ -1,7 +1,6 @@
 #include "SqliteEnemy.h"
 #include "SqliteUtill.h"
 #include "SqliteTextUtill.h"
-#include <cstdlib>
 
 bool SqliteEnemy::Initialize(const std::string& Path, std::string* outError)
 {

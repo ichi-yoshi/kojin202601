@@ -1,7 +1,5 @@
 ﻿#include "SqliteSeeder.h"
 #include "SqliteTextUtill.h"
-#include <vector>
-#include <cstdio>
 
 // SQLを実行するユーティリティ関数
 static bool ExecSql(sqlite3* dbh, const char* sql, const char* label, int& err)

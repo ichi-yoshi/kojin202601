@@ -1,8 +1,6 @@
 ﻿#include "CharaAfterStatus.h"
 #include "Chara.h"
 #include "SaveEquipment.h"
-#include <sstream>
-#include <iomanip>
 
 namespace
 {

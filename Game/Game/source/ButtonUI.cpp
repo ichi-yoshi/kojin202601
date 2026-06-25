@@ -1,5 +1,4 @@
 ﻿#include "ButtonUI.h"
-#include "DxLib.h"
 
 // ボタンの描画
 void ButtonUI::DrawButton(const ButtonRect& rect, const std::string& label)

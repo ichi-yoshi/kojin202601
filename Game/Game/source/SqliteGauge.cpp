@@ -1,6 +1,5 @@
 #include "SqliteGauge.h"
 #include "SqliteUtill.h"
-#include <cstdlib>
 
 bool SqliteGauge::Initialize(const std::string& Path, std::string* outError)
 {

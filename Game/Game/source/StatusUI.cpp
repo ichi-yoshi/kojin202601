@@ -1,5 +1,4 @@
 ﻿#include "StatusUI.h"
-#include "DxLib.h"
 
 const ButtonUI::ButtonRect& StatusUI::GetCharaButtonRect() const
 {

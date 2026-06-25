@@ -1,6 +1,5 @@
 ﻿#pragma once
-#include <string>
-#include <vector>
+#include "container.h"
 
 // SQLiteのテキストデータを扱うためのユーティリティクラス
 class SqliteTextUtill

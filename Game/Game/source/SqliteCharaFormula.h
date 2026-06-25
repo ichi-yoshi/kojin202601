@@ -1,6 +1,5 @@
 #pragma once
-#include <string>
-#include <vector>
+#include "container.h"
 
 struct CharaFormulasRow
 {

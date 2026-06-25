@@ -1,11 +1,7 @@
 #include "SaveData.h"
 #include "SqliteUtill.h"
 #include "SqliteTextUtill.h"
-#include <cstdio>
-#include <cstdlib>
-#include <sstream>
-#include <iomanip>
-#include <iostream>
+#include "container.h"
 
 const std::vector<SaveData::AccountData>& SaveData::GetRows() const
 {

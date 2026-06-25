@@ -1,6 +1,4 @@
 ﻿#include "Chara.h"
-#include <sstream>
-#include <iomanip>
 
 namespace 
 {

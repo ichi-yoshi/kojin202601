@@ -1,5 +1,5 @@
 ﻿#include "BattleButtonUI.h"
-#include "DxLib.h"
+#include "container.h"
 
 const ButtonUI::ButtonRect& BattleButtonUI::GetBattleButtonRect() const
 {

@@ -1,5 +1,4 @@
 #include "SqliteTableCreator.h"
-#include <stdio.h>
 
 // データベースにテーブルを作成する
 bool CreateSqliteTables(sqlite3* dbh)

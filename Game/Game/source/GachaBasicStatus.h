@@ -1,7 +1,7 @@
 #pragma once
 #include "GachaBase.h"
 #include "SqliteBasicStatus.h"
-#include <string>
+#include "container.h"
 
 class GachaBasicStatus : public GachaBase<BasicStatusRow>
 {

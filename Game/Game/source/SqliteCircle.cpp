@@ -1,6 +1,5 @@
 #include "SqliteCircle.h"
 #include "SqliteUtill.h"
-#include <cstdlib>
 
 bool SqliteCircle::Initialize(const std::string& Path, std::string* outError)
 {

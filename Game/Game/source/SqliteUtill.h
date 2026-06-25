@@ -1,5 +1,5 @@
 ﻿#pragma once
-#include <string>
+#include "container.h"
 #include "../sqlite3/sqlite3.h"
 
 //	SQLiteのデータベースに接続する

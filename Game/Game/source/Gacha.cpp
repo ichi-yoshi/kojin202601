@@ -1,6 +1,4 @@
 #include "Gacha.h"
-#include <sstream>
-#include <iomanip>
 
 bool Gacha::Roll(int count)
 {

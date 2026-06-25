@@ -1,8 +1,6 @@
 ﻿#include "SaveEquipment.h"
 #include "SqliteUtill.h"
 #include "SqliteTextUtill.h"
-#include <sstream>
-#include <cstdio>
 
 namespace
 {
