@@ -200,14 +200,13 @@
 	  開いたら「データベースを開く」から閲覧したいデータベース開きます。(.sqlite3というファイルが対象です。sqlite3.dllと同じ階層にあります。)
 	  「データベース構造」「データ閲覧」からそれぞれのテーブルを閲覧できます。
 	  
-	  DB Browser for SQLiteダウンロード用
-	  DB Browser for SQLite.exeのみでは動かないので下記リンクから全てダウンロードしてください。
-	  https://github.com/ichi-yoshi/kojin202601/tree/20260611/DB%20Browser%20for%20SQLite
+	  ※DB Browser for SQLite.exeのみでは動かないのでプロジェクトごとダウンロードしてください
 	  
 	  作成済みデータ
 	  https://github.com/ichi-yoshi/kojin202601/blob/20260611/Game/Game/e.sqlite3
 	  https://github.com/ichi-yoshi/kojin202601/blob/20260611/Game/Game/f.sqlite3
 	  https://github.com/ichi-yoshi/kojin202601/blob/main/Game/Game/g.sqlite3
 	  
+	  リンク先で「view raw」を押すとダウンロードできます。
 	  
 	  
