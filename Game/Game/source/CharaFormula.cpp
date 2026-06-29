@@ -121,7 +121,7 @@ double CharaFormula::CalculateEnemyDamage(const CharaAfterStatus& afterstatus, c
 	// 数式エンジンで評価
 	double enemyDamage = EvaluateFormula::Evaluate(expr);
 
-	return enemyDamage;
+	return std::floor(enemyDamage * 10.0) / 10.0;
 }
 
 void CharaFormula::SetFinalDamage(double damage)
