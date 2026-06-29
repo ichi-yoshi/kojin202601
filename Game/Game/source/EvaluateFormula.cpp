@@ -23,7 +23,10 @@ double EvaluateFormula::Evaluate(const std::string& expression)
 	}
 
 	// カッコがすべて消えたら、残った四則演算を計算する
-	return EvaluateSimpleFormula(expr);
+	double finalResult = EvaluateSimpleFormula(expr);
+
+	// 小数点第1位までに切り捨て
+	return std::floor(finalResult * 10.0) / 10.0;
 }
 
 double EvaluateFormula::EvaluateSimpleFormula(const std::string& expr)
@@ -68,6 +71,9 @@ double EvaluateFormula::EvaluateSimpleFormula(const std::string& expr)
 	{
 		if(ops[i] == '+') result += values[i + 1];
 		if(ops[i] == '-') result -= values[i + 1];
+
+		values.erase(values.begin() + i + 1);
+		ops.erase(ops.begin() + i);
 	}
 
 	return result;

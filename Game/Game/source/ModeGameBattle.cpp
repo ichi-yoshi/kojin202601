@@ -235,18 +235,8 @@ void ModeGameBattle::ProcessBattleResult(SaveData& saveData)
 	auto constRows = saveData.GetRows();
 
 	SaveData::AccountData account;
-	if(constRows.empty())
+	if(!constRows.empty())
 	{
-		// データベースが万が一空だった場合の初期化ガード
-		account.uid = 0;
-		account.level = 1;
-		account.exp = 0;
-		account.coin = 30000;
-		account.enemylevel = 0;
-	}
-	else
-	{
-		// 既存のデータをベースにする
 		account = constRows[0];
 	}
 
