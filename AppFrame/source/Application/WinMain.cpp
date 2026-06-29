@@ -19,6 +19,8 @@ int WINAPI WinMain(
 	LPSTR lpCmdLine,
 	int nCmdShow
 ) {
+	SetOutApplicationLogValidFlag(false);
+
 	ApplicationBase *appBase = ApplicationBase::GetInstance();
 	if (!appBase) { return 0; }
 
