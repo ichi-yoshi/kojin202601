@@ -175,6 +175,8 @@
     <ClCompile Include="source\CharaBase.cpp" />
     <ClCompile Include="source\CharaFormula.cpp" />
     <ClCompile Include="source\CircleUI.cpp" />
+    <ClCompile Include="source\DatabaseSelector.cpp" />
+    <ClCompile Include="source\DatabaseSelectorButtonUI.cpp" />
     <ClCompile Include="source\Enemy.cpp" />
     <ClCompile Include="source\EvaluateFormula.cpp" />
     <ClCompile Include="source\Gacha.cpp" />
@@ -221,6 +223,8 @@
     <ClInclude Include="source\CharaFormula.h" />
     <ClInclude Include="source\CircleUI.h" />
     <ClInclude Include="source\container.h" />
+    <ClInclude Include="source\DatabaseSelector.h" />
+    <ClInclude Include="source\DatabaseSelectorButtonUI.h" />
     <ClInclude Include="source\Enemy.h" />
     <ClInclude Include="source\EvaluateFormula.h" />
     <ClInclude Include="source\Gacha.h" />

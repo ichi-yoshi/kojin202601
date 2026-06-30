@@ -9,7 +9,7 @@ bool OpenSqliteConnection(sqlite3** outDb, std::string* outError)
 
 	// データベースに接続
 	int ret = sqlite3_open_v2(
-		kSqliteDbPath,
+		SqliteConfig::GetSqliteDbPath(),
 		outDb,
 		SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE,
 		nullptr);

@@ -19,6 +19,8 @@
 #include "SaveData.h" 
 #include "SaveDataUI.h"
 #include "container.h"
+#include "DatabaseSelector.h"
+#include "DatabaseSelectorButtonUI.h"
 
 // モード
 class ModeGame : public ModeBase
@@ -30,6 +32,7 @@ public:
 	virtual bool Process();
 	virtual bool Render();
 
+	bool ChangeDatabase(const std::string& newDbPath);
 protected:
 	float deltaTime;
 
@@ -38,6 +41,7 @@ protected:
 	{
 		Gacha,
 		Battle,
+		DbSelect,
 		_EOT_
 	};
 	GamePhase _gamePhase= GamePhase::Gacha;
@@ -83,4 +87,7 @@ protected:
 	bool _showSaveData = false;
 	SaveEquipment _saveEquipment;
 	SaveCharaStatus _saveCharaStatus;
+
+	DatabaseSelector _dbSelector;
+	DatabaseSelectorButtonUI _dbSelectorButtonUI;
 }; 
