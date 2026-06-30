@@ -157,6 +157,10 @@
     	アカウント情報（セーブデータ）をウィンドウ表示するUI
 		[ButtonUI.h](https://github.com/ichi-yoshi/kojin202601/blob/20260611/Game/Game/source/ButtonUI.h) / [ButtonUI.cpp](https://github.com/ichi-yoshi/kojin202601/blob/20260611/Game/Game/source/ButtonUI.cpp)  
     	様々なUIで再利用される、汎用的な矩形ボタン
+    	[DatabaseSelector.h](https://github.com/ichi-yoshi/kojin202601/blob/main/Game/Game/source/DatabaseSelector.h) / [DatabaseSelector.cpp](https://github.com/ichi-yoshi/kojin202601/blob/main/Game/Game/source/DatabaseSelector.cpp)
+    	データベースを変更する。新規データベースの作成可
+    	[DatabaseSelectorButtonUI.h](https://github.com/ichi-yoshi/kojin202601/blob/main/Game/Game/source/DatabaseSelectorButtonUI.h) / [DatabaseSelectorButtonUI.cpp](https://github.com/ichi-yoshi/kojin202601/blob/main/Game/Game/source/DatabaseSelectorButtonUI.cpp)
+    	データベース変更フェーズに移行するためのボタン
 
 
 ### 🔌 SQLite連携ユーティリティ
@@ -207,6 +211,7 @@
 	  https://github.com/ichi-yoshi/kojin202601/blob/20260611/Game/Game/e.sqlite3
 	  https://github.com/ichi-yoshi/kojin202601/blob/20260611/Game/Game/f.sqlite3
 	  https://github.com/ichi-yoshi/kojin202601/blob/main/Game/Game/g.sqlite3
+	  https://github.com/ichi-yoshi/kojin202601/blob/main/Game/Game/h.sqlite3
 	  
 	  リンク先で「view raw」を押すとダウンロードできます。
 	  
