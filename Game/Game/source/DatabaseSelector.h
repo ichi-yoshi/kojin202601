@@ -14,9 +14,9 @@ public:
 	bool IsCancelled() const { return _isCancelled; }
 	std::string GetDatabasePrefix() const { return _databasePrefix; }
 private:
-	int _inputHandle = -1;
-	bool _isFinished = false;
-	bool _isCancelled = false;
+	int _inputHandle;
+	bool _isFinished;
+	bool _isCancelled;
 	std::string _databasePrefix;
 };
 

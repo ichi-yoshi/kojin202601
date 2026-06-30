@@ -85,10 +85,10 @@ bool ModeGame::ChangeDatabase(const std::string& newDbPath)
 {
 	printf("データベースを %s に切り替えます...\n", newDbPath.c_str());
 
-	// 1. パスの変更
+	// パスの変更
 	SqliteConfig::SetSqliteDbPath(newDbPath);
 
-	// 2. 新しいデータベースに対するテーブル作成およびシードデータの確認
+	// 新しいデータベースに対するテーブル作成およびシードデータの確認
 	{
 		sqlite3 * dbh = nullptr;
 		std::string error;
@@ -110,7 +110,7 @@ bool ModeGame::ChangeDatabase(const std::string& newDbPath)
 
 		sqlite3_close(dbh);
 
-		// 3. マスタ・設定データの再ロード
+		// マスタ・設定データの再ロード
 		if(!_gacha.Initialize("", &error)) { return false; }
 		if(!_gachaBasic.Initialize("", &error)) { return false; }
 		if(!_gachaArmor.Initialize("", &error)) { return false; }
@@ -122,11 +122,11 @@ bool ModeGame::ChangeDatabase(const std::string& newDbPath)
 		if(!_afterStatus.InitializeSpeedTable("", &error)) { return false; }
 	}
 	
-	// 4. セーブデータの再ロード
+	// セーブデータの再ロード
 	_saveEquipment.LoadFromSqlite();
 	_saveData.LoadFromSqlite();
 	
-		 	// 5. ステータス再計算
+	// ステータス再計算
 	_afterStatus.UpdateFrom(_charaBase, _saveEquipment);
 	
 	printf("データベースの切り替えが完了しました。\n");
