@@ -20,5 +20,5 @@ void DatabaseSelectorButtonUI::Draw() const
 
 void DatabaseSelectorButtonUI::DrawDbSelectButton() const
 {
-	ButtonUI::DrawButton(_dbSelectButton, "データベース選択");
+	ButtonUI::DrawButton(_dbSelectButton, "セーブデータ選択");
 }

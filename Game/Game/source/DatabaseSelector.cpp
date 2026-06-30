@@ -72,8 +72,8 @@ void DatabaseSelector::Draw() const
 	SetFontSize(18);
 
 	// テキストと説明
-	DrawString(x1 + 30, y1 + 25, "データベースの切り替え / 新規作成", GetColor(255, 255, 255));
-	DrawString(x1 + 30, y1 + 60, "データベースのファイル名を入力してください (例: f )", GetColor(200, 200, 200));
+	DrawString(x1 + 30, y1 + 25, "セーブデータの切り替え / 新規作成", GetColor(255, 255, 255));
+	DrawString(x1 + 30, y1 + 60, "セーブデータのファイル名を入力してください (例: f )", GetColor(200, 200, 200));
 	DrawString(x1 + 30, y1 + 80, "※拡張子(.sqlite3)は自動的に付与されます。", GetColor(140, 140, 140));
 	DrawString(x1 + 30, y1 + 100, "※存在しない場合は新規作成します。", GetColor(140, 140, 140));
 
