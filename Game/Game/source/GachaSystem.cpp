@@ -1,4 +1,4 @@
-﻿#include "GachaSystem.h"
+#include "GachaSystem.h"
 
 // ガチャシステムの処理
 void GachaSystem::Process(GachaContext& ctx)
@@ -14,6 +14,7 @@ void GachaSystem::ProcessRoll(GachaContext& ctx)
 	const auto& btn = ctx.gachaUI.GetGachaButtonRect();
 	const bool gachaClicked = ctx.mouse.IsLeftTrig() && ctx.mouse.IsInRect(btn.x, btn.y, btn.w, btn.h);
 
+	// データベースからアカウントデータをロードする
 	ctx.saveData.LoadFromSqlite();
 
 	auto constRows = ctx.saveData.GetRows();
@@ -27,9 +28,10 @@ void GachaSystem::ProcessRoll(GachaContext& ctx)
 	// ガチャ結果が未表示でガチャボタンがクリックされた場合は抽選を行う
 	if(!ctx.pendingResult.hasPending && (CheckHitKey(KEY_INPUT_R) || gachaClicked) && account.coin >= 3000)
 	{
-		ctx.gacha.Roll();
-		ctx.gachaBasic.Roll();
-		ctx.gachaArmor.Roll();
+		// ガチャの抽選を行う
+		ctx.gacha.Roll();		// サブステータスガチャの抽選
+		ctx.gachaBasic.Roll();	// メインステータスガチャの抽選
+		ctx.gachaArmor.Roll();	// 装備ガチャの抽選
 
 		// ガチャ結果の装備名を取得して、保存待ち状態にする
 		if(ctx.gachaArmor.HasResult() && !ctx.gachaArmor.GetResultLines().empty())
@@ -50,6 +52,7 @@ void GachaSystem::ProcessRoll(GachaContext& ctx)
 
 		account.coin -= 3000;		// ガチャコストを引く
 		account.gachaCount += 1;	// ガチャ回数を増やす
+
 		std::vector<SaveData::AccountData> updatedVector;
 		updatedVector.push_back(account); // 編集し終わったデータを格納
 		std::string errStr;
@@ -69,6 +72,7 @@ void GachaSystem::ProcessPendingSelection(GachaContext& ctx)
 	// ガチャ結果の保存・破棄ボタンは、保存待ち状態でのみ表示されるため、ここでボタンの有効/無効を更新する
 	ctx.gachaUI.UpdatePendingButtons(ctx.gacha, ctx.gachaBasic, ctx.gachaArmor, ctx.pendingResult);
 
+	// 保存ボタンと破棄ボタンの矩形を取得
 	const auto& saveBtn = ctx.gachaUI.GetSaveButtonRect();
 	const auto& keepBtn = ctx.gachaUI.GetKeepButtonRect();
 
@@ -98,13 +102,14 @@ void GachaSystem::ProcessPendingSelection(GachaContext& ctx)
 		ctx.gacha.ClearResult();
 		ctx.gachaBasic.ClearResult();
 		ctx.gachaArmor.ClearResult();
-		ctx.pendingResult = PendingGachaResult{};// クリア後は保存待ち状態を解除
+		ctx.pendingResult = PendingGachaResult{};	// クリア後は保存待ち状態を解除
 	}
 	else if(keepClicked)
 	{
+		// ガチャ結果をクリア
 		ctx.gacha.ClearResult();
 		ctx.gachaBasic.ClearResult();
 		ctx.gachaArmor.ClearResult();
-		ctx.pendingResult = PendingGachaResult{};
+		ctx.pendingResult = PendingGachaResult{};	// クリア後は保存待ち状態を解除
 	}
 }

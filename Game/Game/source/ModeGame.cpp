@@ -215,7 +215,7 @@ bool ModeGame::Render()
 		_battleButtonUI.Draw();
 		_dbSelectorButtonUI.Draw();
 		_saveDataUI.Draw(_saveData, _showSaveData);
-		std::string dbMsg = "Active DB: " + std::string(SqliteConfig::GetSqliteDbPath());
+		std::string dbMsg = "現在のDB: " + std::string(SqliteConfig::GetSqliteDbPath());
 		DrawString(10,10, dbMsg.c_str(), GetColor(100,100,100));
 	}
 	else if (_gamePhase == GamePhase::Battle)

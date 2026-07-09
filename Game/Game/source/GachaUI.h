@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 #include "Gacha.h"
 #include "GachaBasicStatus.h"
 #include "GachaArmor.h"

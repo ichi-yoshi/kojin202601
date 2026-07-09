@@ -90,6 +90,7 @@ void BattleUI::Render(
     DrawString(RIGHT_X, rightY, "--- 最終ダメージ履歴 ---", GetColor(100, 100, 100));
     rightY += 25;
 
+	// ダメージ履歴を上から順に描画する
     for(size_t i = 0; i < damageHistory.size(); ++i)
     {
         if(i == damageHistory.size() - 1)

@@ -1,4 +1,4 @@
-﻿#include "Enemy.h"
+#include "Enemy.h"
 #include "animationmanager.h"
 
 Enemy::Enemy(const std::string& name)

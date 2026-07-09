@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 #include "SqliteCharaFormula.h"
 #include "CharaAfterStatus.h"
 #include "Enemy.h"

@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 #include "container.h"
 
 class EvaluateFormula
@@ -9,6 +9,5 @@ public:
 	static double Evaluate(const std::string& expression);
 private:
 	static double EvaluateSimpleFormula(const std::string& expr);
-
 };
 

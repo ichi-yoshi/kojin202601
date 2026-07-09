@@ -1,4 +1,4 @@
-﻿#include "SqliteStatus.h"
+#include "SqliteStatus.h"
 #include "SqliteUtill.h"
 #include "SqliteTextUtill.h"
 

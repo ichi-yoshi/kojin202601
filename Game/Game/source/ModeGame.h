@@ -1,4 +1,4 @@
-﻿#include "appframe.h"
+#include "appframe.h"
 #include "CameraBase.h"
 #include "MouseInput.h"
 #include "Gacha.h"

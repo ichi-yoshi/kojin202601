@@ -1,7 +1,7 @@
 #include "CameraBase.h"
 #include "ApplicationMain.h"
 
-// ’è”’è‹`
+// å®šæ•°å®šç¾©
 const float CameraBase::FPS_CAMERA_HEIGHT = 100.0f;
 const int CameraBase::SCREEN_CENTER_X = 1920 / 2;
 const int CameraBase::SCREEN_CENTER_Y = 1080 / 2;
@@ -26,13 +26,13 @@ CameraBase::~CameraBase()
 
 bool CameraBase::Initialize()
 {
-    // ƒJƒƒ‰‚Ì‰Šúİ’è
+    // ã‚«ãƒ¡ãƒ©ã®åˆæœŸè¨­å®š
     _vPos = VGet(0, 90.f, -300.f);
     _vTarget = VGet(0, 60, 0);
     _clipNear = 2.f;
     _clipFar = 10000.f;
 
-    // ƒ}ƒEƒXŠÖ˜A‚Ì‰Šú‰»
+    // ãƒã‚¦ã‚¹é–¢é€£ã®åˆæœŸåŒ–
     _prevMouseX = -1;
     _prevMouseY = -1;
     _camYaw = 0.0f;
@@ -56,11 +56,11 @@ void CameraBase::Update(VECTOR playerPos, int& key)
 
 void CameraBase::HandleMouseInput()
 {
-    // ƒ}ƒEƒXˆÚ“®—Êæ“¾
+    // ãƒã‚¦ã‚¹ç§»å‹•é‡å–å¾—
     int mouseX, mouseY;
     GetMousePoint(&mouseX, &mouseY);
 
-    // ‰‰ñ‚Ì‘O‰ñˆÊ’uİ’è
+    // åˆå›æ™‚ã®å‰å›ä½ç½®è¨­å®š
     if(_prevMouseX == -1)
     {
         _prevMouseX = mouseX;
@@ -72,31 +72,31 @@ void CameraBase::HandleMouseInput()
     _prevMouseX = mouseX;
     _prevMouseY = mouseY;
 
-    // ƒJƒƒ‰‰ñ“](ƒ}ƒEƒXˆÚ“®‚Å§Œä)FPS‹“_—p
+    // ã‚«ãƒ¡ãƒ©å›è»¢(ãƒã‚¦ã‚¹ç§»å‹•ã§åˆ¶å¾¡)FPSè¦–ç‚¹ç”¨
     _camYaw += deltaX * _mouseSensitivity;
     _camPitch -= deltaY * _mouseSensitivity;
 
-    // ƒsƒbƒ`§ŒÀ
+    // ãƒ”ãƒƒãƒåˆ¶é™
     if(_camPitch < -1.2f) _camPitch = -1.2f;
     if(_camPitch > 1.2f) _camPitch = 1.2f;
 }
 
 void CameraBase::UpdateFPSCamera(VECTOR playerPos)
 {
-    // FPS‹“_‚ÌƒJƒƒ‰ˆÊ’u‚ÆŒü‚«
-    _vPos = VAdd(playerPos, VGet(0, FPS_CAMERA_HEIGHT, 0)); // ƒvƒŒƒCƒ„[‚Ì“ª•”
+    // FPSè¦–ç‚¹ã®ã‚«ãƒ¡ãƒ©ä½ç½®ã¨å‘ã
+    _vPos = VAdd(playerPos, VGet(0, FPS_CAMERA_HEIGHT, 0)); // ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®é ­éƒ¨
 
     VECTOR forward = VGet(
         cos(_camPitch) * sin(_camYaw),
         sin(_camPitch),
         cos(_camPitch) * cos(_camYaw)
     );
-    _vTarget = VAdd(_vPos, forward); // ‹ü•ûŒü
+    _vTarget = VAdd(_vPos, forward); // è¦–ç·šæ–¹å‘
 }
 
 void CameraBase::ResetMouseToCenter()
 {
-    // –ˆƒtƒŒ[ƒ€’†‰›‚É–ß‚·
+    // æ¯ãƒ•ãƒ¬ãƒ¼ãƒ ä¸­å¤®ã«æˆ»ã™
     SetMousePoint(SCREEN_CENTER_X, SCREEN_CENTER_Y);
     _prevMouseX = SCREEN_CENTER_X;
     _prevMouseY = SCREEN_CENTER_Y;
@@ -104,7 +104,7 @@ void CameraBase::ResetMouseToCenter()
 
 void CameraBase::ApplyCamera()
 {
-    // ƒJƒƒ‰İ’èXV
+    // ã‚«ãƒ¡ãƒ©è¨­å®šæ›´æ–°
     SetCameraPositionAndTarget_UpVecY(_vPos, _vTarget);
     SetCameraNearFar(_clipNear, _clipFar);
 }

@@ -1,4 +1,4 @@
-﻿#include "SqliteUtill.h"
+#include "SqliteUtill.h"
 #include "SqliteConfig.h"
 
 // SQLiteのデータベースに接続する

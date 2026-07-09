@@ -1,4 +1,4 @@
-﻿#include "CharaBase.h"
+#include "CharaBase.h"
 
 const CharaStatus& CharaBase::GetBaseStatus() const
 {

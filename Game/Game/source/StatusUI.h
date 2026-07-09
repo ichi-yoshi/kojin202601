@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 #include "CharaAfterStatus.h"
 #include "ButtonUI.h"
 #include "MouseInput.h"

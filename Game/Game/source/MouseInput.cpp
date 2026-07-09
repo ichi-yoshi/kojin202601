@@ -1,4 +1,4 @@
-﻿#include "AppFrame.h"
+#include "AppFrame.h"
 #include "MouseInput.h"
 
 // マウスポインタの位置とホイールの回転量、左クリックの状態を更新する

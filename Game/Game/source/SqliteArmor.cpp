@@ -1,4 +1,4 @@
-﻿#include "SqliteArmor.h"
+#include "SqliteArmor.h"
 #include "SqliteUtill.h"
 #include "SqliteTextUtill.h"
 

@@ -6,45 +6,45 @@ public:
     CameraBase();
     ~CameraBase();
 
-    // ‰Šú‰»EI—¹ˆ—
+    // åˆæœŸåŒ–ãƒ»çµ‚äº†å‡¦ç†
     bool Initialize();
     bool Terminate();
 
-    // XVˆ—
+    // æ›´æ–°å‡¦ç†
     void Update(VECTOR playerPos, int& key);
 
-    // ƒJƒƒ‰İ’è‚Ì“K—p
+    // ã‚«ãƒ¡ãƒ©è¨­å®šã®é©ç”¨
     void ApplyCamera();
 
-    // ƒAƒNƒZƒT
+    // ã‚¢ã‚¯ã‚»ã‚µ
     VECTOR GetPosition() const { return _vPos; }
     VECTOR GetTarget() const { return _vTarget; }
     VECTOR GetDirection() const;
     float GetYaw() const { return _camYaw; }
     float GetPitch() const { return _camPitch; }
 
-    // İ’è
+    // è¨­å®š
     void SetPosition(VECTOR pos) { _vPos = pos; }
     void SetTarget(VECTOR target) { _vTarget = target; }
     void SetClip(float nearClip, float farClip) { _clipNear = nearClip; _clipFar = farClip; }
 
 private:
-    // ƒJƒƒ‰ƒpƒ‰ƒ[ƒ^
-    VECTOR _vPos;                   // ˆÊ’u
-    VECTOR _vTarget;                // ’‹“_
-    float _clipNear, _clipFar;      // ƒNƒŠƒbƒv‹——£
+    // ã‚«ãƒ¡ãƒ©ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿
+    VECTOR _vPos;                   // ä½ç½®
+    VECTOR _vTarget;                // æ³¨è¦–ç‚¹
+    float _clipNear, _clipFar;      // ã‚¯ãƒªãƒƒãƒ—è·é›¢
 
-    // ƒ}ƒEƒX§Œä—p
-    int _prevMouseX, _prevMouseY;   // ‘O‰ñ‚Ìƒ}ƒEƒXˆÊ’u
-    float _camYaw, _camPitch;       // ƒJƒƒ‰‚ÌŠp“x
-    float _mouseSensitivity;        // ƒ}ƒEƒXŠ´“x
+    // ãƒã‚¦ã‚¹åˆ¶å¾¡ç”¨
+    int _prevMouseX, _prevMouseY;   // å‰å›ã®ãƒã‚¦ã‚¹ä½ç½®
+    float _camYaw, _camPitch;       // ã‚«ãƒ¡ãƒ©ã®è§’åº¦
+    float _mouseSensitivity;        // ãƒã‚¦ã‚¹æ„Ÿåº¦
 
-    // FPS‹“_—pƒpƒ‰ƒ[ƒ^
-    static const float FPS_CAMERA_HEIGHT;  // ƒJƒƒ‰‚Ì‚‚³
-    static const int SCREEN_CENTER_X;       // ‰æ–Ê’†‰›XÀ•W
-    static const int SCREEN_CENTER_Y;       // ‰æ–Ê’†‰›YÀ•W
+    // FPSè¦–ç‚¹ç”¨ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿
+    static const float FPS_CAMERA_HEIGHT;  // ã‚«ãƒ¡ãƒ©ã®é«˜ã•
+    static const int SCREEN_CENTER_X;       // ç”»é¢ä¸­å¤®Xåº§æ¨™
+    static const int SCREEN_CENTER_Y;       // ç”»é¢ä¸­å¤®Yåº§æ¨™
 
-    // “à•”ˆ—
+    // å†…éƒ¨å‡¦ç†
     void HandleMouseInput();
     void UpdateFPSCamera(VECTOR playerPos);
     void ResetMouseToCenter();

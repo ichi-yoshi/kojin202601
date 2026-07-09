@@ -1,4 +1,4 @@
-﻿#include "GachaBase.h"
+#include "GachaBase.h"
 #include "SqliteStatus.h"
 #include "SqliteBasicStatus.h"
 #include "SqliteArmor.h"

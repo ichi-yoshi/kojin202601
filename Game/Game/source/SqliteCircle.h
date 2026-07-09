@@ -3,13 +3,13 @@
 
 struct CircleRow
 {
-	std::string id;			// 円ID
-	int minX;
-	int maxX;
-	int minY;
-	int maxY;
-	int radius;
-	int count;
+	std::string id;		// 円ID
+	int minX;			// 円の最小X座標
+	int maxX;			// 円の最大X座標
+	int minY;			// 円の最小Y座標
+	int maxY;			// 円の最大Y座標
+	int radius;			// 円の半径
+	int count;			// 円の点の数
 };
 
 struct CircleContext
