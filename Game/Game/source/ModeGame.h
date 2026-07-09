@@ -32,10 +32,12 @@ public:
 	virtual bool Process();
 	virtual bool Render();
 
+	// データベースの初期化
+	bool SqliteInitialize();
+
 	// データベースの変更
 	bool ChangeDatabase(const std::string& newDbPath);
 
-	bool SqliteInitialize();
 protected:
 	float deltaTime;
 
