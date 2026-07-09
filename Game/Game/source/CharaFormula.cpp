@@ -9,7 +9,7 @@ bool CharaFormula::Initialize(const std::string& dbPath, std::string* outError)
 std::string CharaFormula::ReplaceVar(std::string sourceStr, const std::string& status, double value)
 {
 	std::ostringstream ss;
-	ss << std::fixed << std::setprecision(4) << value;
+	ss << std::fixed << std::setprecision(2) << value;	// 小数点以下2桁まで表示
 	std::string replaceStr = ss.str();
 
 	size_t pos = sourceStr.find(status);
@@ -81,6 +81,7 @@ double CharaFormula::CalculateFinalDamage(const CharaAfterStatus& afterstatus, c
 		return temp;
 	}
 
+	// 各種計算式の評価結果を取得
 	double res_defense = GetDefenseMultiplier(afterstatus, enemy);
 	double res_decay = GetDecayRate(afterstatus);
 	double res_critical = GetLiveCriticalMultiplier(afterstatus);
@@ -89,6 +90,7 @@ double CharaFormula::CalculateFinalDamage(const CharaAfterStatus& afterstatus, c
 	CharaFormulasRow rowFinal;
 	if(!_charaFormula.GetCharaFormula("最終ダメージ", rowFinal)) return 0.0;
 
+	// 最終ダメージ計算式の文字列を取得し、各種ステータス値で置換
 	std::string exprFinal = rowFinal.formula;
 	exprFinal = ReplaceVar(exprFinal, "攻撃", afterstatus.GetAfterStatus().attack);
 	exprFinal = ReplaceVar(exprFinal, "敵防御倍率", res_defense);

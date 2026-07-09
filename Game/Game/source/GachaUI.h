@@ -18,9 +18,9 @@ struct PendingGachaResult
 class GachaUI
 {
 public:
-	const ButtonUI::ButtonRect& GetGachaButtonRect() const;
-	const ButtonUI::ButtonRect& GetSaveButtonRect() const;
-	const ButtonUI::ButtonRect& GetKeepButtonRect() const;
+	const ButtonUI::ButtonRect& GetGachaButtonRect() const { return _gachaButton; }
+	const ButtonUI::ButtonRect& GetSaveButtonRect() const { return _saveButton; }
+	const ButtonUI::ButtonRect& GetKeepButtonRect() const { return _keepButton; }
 
 	void UpdatePendingButtons(const Gacha& gacha,
 		const GachaBasicStatus& gachaBasic,

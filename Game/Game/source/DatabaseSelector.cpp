@@ -53,6 +53,7 @@ void DatabaseSelector::Update()
 void DatabaseSelector::Draw() const
 {
 	if(_inputHandle == -1) { return; }
+
 	int screenW = 1280;
 	int screenH = 720;
 	int boxW = 520;

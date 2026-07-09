@@ -3,8 +3,8 @@
 // ガチャシステムの処理
 void GachaSystem::Process(GachaContext& ctx)
 {
-	ProcessRoll(ctx);
-	ProcessPendingSelection(ctx);
+	ProcessRoll(ctx);				// ガチャの抽選処理
+	ProcessPendingSelection(ctx);	// ガチャ結果の保存・破棄処理
 }
 
 // ガチャの抽選処理
@@ -18,11 +18,7 @@ void GachaSystem::ProcessRoll(GachaContext& ctx)
 
 	auto constRows = ctx.saveData.GetRows();
 	SaveData::AccountData account{};
-	if(constRows.empty())
-	{
-	
-	}
-	else
+	if(!constRows.empty())
 	{
 		// 既存のデータをベースにする
 		account = constRows[0];
@@ -38,11 +34,13 @@ void GachaSystem::ProcessRoll(GachaContext& ctx)
 		// ガチャ結果の装備名を取得して、保存待ち状態にする
 		if(ctx.gachaArmor.HasResult() && !ctx.gachaArmor.GetResultLines().empty())
 		{
+			// ガチャ結果の装備名を取得
 			const std::string& armorName = ctx.gachaArmor.GetResultLines().front();
 			const std::vector<std::string> Empty;
 			const auto& basicLines = ctx.gachaBasic.HasResult() ? ctx.gachaBasic.GetResultLines() : Empty;
 			const auto& statusLines = ctx.gacha.HasResult() ? ctx.gacha.GetResultLines() : Empty;
 
+			// ガチャ結果を保存待ち状態にする
 			ctx.pendingResult.hasPending = true;
 			ctx.pendingResult.part = SaveEquipment::GetPartFromName(armorName);
 			ctx.pendingResult.armorName = armorName;
@@ -50,13 +48,14 @@ void GachaSystem::ProcessRoll(GachaContext& ctx)
 			ctx.pendingResult.statusLines = statusLines;
 		}
 
-		account.coin -= 3000; // ガチャコストを引く
-		account.gachaCount += 1;
+		account.coin -= 3000;		// ガチャコストを引く
+		account.gachaCount += 1;	// ガチャ回数を増やす
 		std::vector<SaveData::AccountData> updatedVector;
 		updatedVector.push_back(account); // 編集し終わったデータを格納
 		std::string errStr;
 		bool success = false;
 
+		// アカウントデータを更新して保存する
 		success = ctx.saveData.UpdateAccountAndSave(account, &errStr);
 	}
 }
@@ -73,28 +72,33 @@ void GachaSystem::ProcessPendingSelection(GachaContext& ctx)
 	const auto& saveBtn = ctx.gachaUI.GetSaveButtonRect();
 	const auto& keepBtn = ctx.gachaUI.GetKeepButtonRect();
 
+	// 保存ボタンと破棄ボタンのクリック判定
 	const bool saveClicked = ctx.mouse.IsLeftTrig() && ctx.mouse.IsInRect(saveBtn.x, saveBtn.y, saveBtn.w, saveBtn.h);
 	const bool keepClicked = ctx.mouse.IsLeftTrig() && ctx.mouse.IsInRect(keepBtn.x, keepBtn.y, keepBtn.w, keepBtn.h);
 
 	// 保存ボタンがクリックされた場合は装備を保存して最終ステータスを更新
 	// 破棄ボタンがクリックされた場合はガチャ結果をクリア
-	// どちらもクリックされた場合はガチャ結果の表示をクリア
+	// どちらかがクリックされた時にガチャ結果の表示をクリア
 	if(saveClicked)
 	{
+		// 装備を保存して最終ステータスを更新
 		ctx.saveEquipment.SaveResult(ctx.pendingResult.armorName,
 			ctx.pendingResult.basicStatusLines,
 			ctx.pendingResult.statusLines);
 		ctx.saveEquipment.SaveToSqlite();
 
+		// 最終ステータスを更新
 		ctx.afterStatus.UpdateFrom(ctx.charaBase, ctx.saveEquipment);
 
+		// 最終ステータスを保存
 		ctx.saveCharaStatus.SetFromAfterStatus(ctx.afterStatus);
 		ctx.saveCharaStatus.SaveToSqlite();
 
+		// ガチャ結果をクリア
 		ctx.gacha.ClearResult();
 		ctx.gachaBasic.ClearResult();
 		ctx.gachaArmor.ClearResult();
-		ctx.pendingResult = PendingGachaResult{};
+		ctx.pendingResult = PendingGachaResult{};// クリア後は保存待ち状態を解除
 	}
 	else if(keepClicked)
 	{

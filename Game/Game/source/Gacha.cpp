@@ -12,7 +12,7 @@ bool Gacha::LoadRows(std::vector<StatusRow>& outRows, std::string* outError)
 
 std::string Gacha::MakeResultLine(const StatusRow& row, std::mt19937& rng)
 {
-	double value = PickRandomValue(row, rng);
+	double value = PickRandomValue(row, rng);	// ランダムに値を選択
 	std::ostringstream os;
 	os << row.name << ": " << std::fixed << std::setprecision(1) << value;
 	return os.str();

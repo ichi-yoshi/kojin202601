@@ -11,6 +11,8 @@ public:
 	bool Initialize(const std::string& dbPath, std::string* outError = nullptr);
 	double CalculateFinalDamage(const CharaAfterStatus& player, const Enemy& enemy, bool isGaugeSuccess);
 	double CalculateEnemyDamage(const CharaAfterStatus& afterstatus, const Enemy& enemy);
+
+	// 文字列中の変数を置換する関数
 	std::string ReplaceVar(std::string sourceStr, const std::string& status, double value);
 
 	// 各種計算式の評価関数

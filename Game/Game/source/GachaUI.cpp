@@ -1,21 +1,6 @@
 ﻿#include "GachaUI.h"
 #include "ButtonUI.h"
 
-const ButtonUI::ButtonRect& GachaUI::GetGachaButtonRect() const
-{
-	return _gachaButton;
-}
-
-const ButtonUI::ButtonRect& GachaUI::GetSaveButtonRect() const
-{
-	return _saveButton;
-}
-
-const ButtonUI::ButtonRect& GachaUI::GetKeepButtonRect() const
-{
-	return _keepButton;
-}
-
 // ガチャ結果の下端Y座標を計算する
 int GachaUI::GetGachaResultBottomY(const Gacha& gacha,
 	const GachaBasicStatus& gachaBasic,
@@ -25,15 +10,22 @@ int GachaUI::GetGachaResultBottomY(const Gacha& gacha,
 	int lineHeight = 20;
 
 	int lineCount = 0;
-	if(gachaArmor.HasResult() && !gachaArmor.GetResultLines().empty()) { lineCount += 1; }
+
+	if(gachaArmor.HasResult() && !gachaArmor.GetResultLines().empty()) 
+	{ 
+		lineCount += 1; 
+	}
+
 	if(gachaBasic.HasResult() && !gachaBasic.GetResultLines().empty())
 	{
 		lineCount += static_cast<int>(gachaBasic.GetResultLines().size());
 	}
+
 	if(gacha.HasResult() && !gacha.GetResultLines().empty())
 	{
 		lineCount += static_cast<int>(gacha.GetResultLines().size());
 	}
+
 	return y + lineCount * lineHeight;
 }
 
@@ -65,10 +57,10 @@ void GachaUI::Draw(const Gacha& gacha,
 	const SaveEquipment& saveEquipment,
 	const PendingGachaResult& pending) const
 {
-	DrawGachaResult(gacha, gachaBasic, gachaArmor);
-	DrawPendingSelection(pending, saveEquipment);
-	DrawSavedEquipment(saveEquipment);
-	DrawGachaButton();
+	DrawGachaResult(gacha, gachaBasic, gachaArmor);	// ガチャ結果の描画
+	DrawPendingSelection(pending, saveEquipment);	// 保存・破棄ボタンの描画
+	DrawSavedEquipment(saveEquipment);				// 保存済み装備の描画
+	DrawGachaButton();								// ガチャボタンの描画
 }
 
 void GachaUI::DrawGachaResult(const Gacha& gacha,
@@ -80,7 +72,12 @@ void GachaUI::DrawGachaResult(const Gacha& gacha,
 	int y = 440;
 
 	int lineCount = 0;
-	if(gachaArmor.HasResult() && !gachaArmor.GetResultLines().empty()) { lineCount += 1; }
+
+	if(gachaArmor.HasResult() && !gachaArmor.GetResultLines().empty()) 
+	{ 
+		lineCount += 1; 
+	}
+
 	if(gachaBasic.HasResult() && !gachaBasic.GetResultLines().empty())
 	{
 		lineCount += static_cast<int>(gachaBasic.GetResultLines().size());
@@ -138,8 +135,8 @@ void GachaUI::DrawSavedEquipment(const SaveEquipment& saveEquipment) const
 	int lineHeight = fontSize + 2;
 	int padding = 8;
 	int boxW = 360;
-
 	int totalLines = 0;
+
 	for(int i = 0; i < static_cast<int>(SaveEquipment::EquipPart::_EOT_); ++i)
 	{
 		auto part = static_cast<SaveEquipment::EquipPart>(i);

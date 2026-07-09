@@ -9,11 +9,11 @@ class CircleUI
 public:
 	struct CircleInstance
 	{
-		int x;
-		int y;
-		int radius;
-		unsigned int color;
-		bool isAlive;
+		int x;				// 円の中心のX座標
+		int y;				// 円の中心のY座標
+		int radius;			// 円の半径
+		unsigned int color;	// 円の色
+		bool isAlive;		// 円が生きているかどうか
 	};
 
 	const ButtonUI::ButtonRect& GetGaugeButtonRect() const;

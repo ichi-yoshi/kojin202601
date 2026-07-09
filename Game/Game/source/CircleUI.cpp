@@ -42,6 +42,7 @@ void CircleUI::Reset()
 	_hasResult = false;
 	_circles.clear();
 
+	// SQLiteからランダムに円のパターンを取得して設定
 	if(_sqliteCircle.RollrandomCircle())
 	{
 		CircleRow row;
@@ -88,7 +89,7 @@ bool CircleUI::Update(MouseInput& mouse)
 			int dy = my - it->y;
 			int distanceSq = (dx * dx) + (dy * dy);
 
-			// 半径の2乗以下ならクリック成功！
+			// 半径の2乗以下ならクリック成功
 			if(distanceSq <= (it->radius * it->radius))
 			{
 				it->isAlive = false; // 円を消す
@@ -121,7 +122,7 @@ bool CircleUI::Update(MouseInput& mouse)
 
 void CircleUI::Draw()
 {
-	// 生成範囲の枠を薄くデバッグ表示したい場合はここを有効にしてください
+	// 生成範囲の枠を薄くデバッグ表示したい場合はここを有効にする
 	DrawBox(_circleButton.x, _circleButton.y, _circleButton.x + _circleButton.w, _circleButton.y + _circleButton.h, GetColor(100,100,100), FALSE);
 
 	// 生きている円だけを順番に描画する

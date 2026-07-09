@@ -51,6 +51,7 @@ void CharaAfterStatus::UpdateFrom(const CharaBase& base, const SaveEquipment& sa
 		const auto basic = Chara::ParseStatusLines(result.basicStatusLines);
 		const auto sub = Chara::ParseStatusLines(result.statusLines);
 
+		// 基礎ステータスと装備ステータスを合計する
 		AddStatusLocal(equipTotal, basic);
 		AddStatusLocal(equipTotal, sub);
 	}
