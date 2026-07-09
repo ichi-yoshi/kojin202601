@@ -17,15 +17,6 @@ bool CreateSqliteTables(sqlite3* dbh)
 			"Val1 REAL"
 			");",
 			NULL, NULL, &errorMessage);
-		if(ret == SQLITE_OK) 
-		{
-			printf("basic_status生成：成功\n");
-		}
-		else 
-		{
-			printf("basic_status生成：失敗(%d)\n", ret);
-			//err = 1;
-		}
 	}
 
 	// サブステータス
@@ -39,15 +30,6 @@ bool CreateSqliteTables(sqlite3* dbh)
 			"Val1 REAL, Val2 REAL, Val3 REAL, Val4 REAL, Val5 REAL"
 			");",
 			NULL, NULL, &errorMessage);
-		if(ret == SQLITE_OK)
-		{
-			printf("status生成：成功\n");
-		}
-		else
-		{
-			printf("status生成：失敗(%d)\n", ret);
-			//err = 1;
-		}
 	}
 
 	// 装備
@@ -60,15 +42,6 @@ bool CreateSqliteTables(sqlite3* dbh)
 			"probability REAL"
 			");",
 			NULL, NULL, &errorMessage);
-		if(ret == SQLITE_OK) 
-		{
-			printf("armor生成：成功\n");
-		}
-		else 
-		{
-			printf("armor生成：失敗(%d)\n", ret);
-			//err = 1;
-		}
 	}
 
 	// 保存された装備
@@ -84,15 +57,6 @@ bool CreateSqliteTables(sqlite3* dbh)
 			"statusLines TEXT"
 			");",
 			NULL, NULL, &errorMessage);
-		if(ret == SQLITE_OK) 
-		{
-			printf("save_equipment生成：成功\n");
-		}
-		else 
-		{
-			printf("save_equipment生成：失敗(%d)\n", ret);
-			//err = 1;
-		}
 	}
 
 	// キャラの基礎ステータス
@@ -105,14 +69,6 @@ bool CreateSqliteTables(sqlite3* dbh)
 			"Val1 REAL"
 			");",
 			NULL, NULL, &errorMessage);
-		if(ret == SQLITE_OK)
-		{
-			printf("chara_status生成：成功\n");
-		}
-		else
-		{
-			printf("chara_status生成：失敗(%d)\n", ret);
-		}
 	}
 
 	//キャラの装備後最終ステータス
@@ -126,15 +82,6 @@ bool CreateSqliteTables(sqlite3* dbh)
 			"hasResult INTEGER"
 			");",
 			NULL, NULL, &errorMessage);
-		if(ret == SQLITE_OK)
-		{
-			printf("chara_afterstatus生成：成功\n");
-		}
-		else
-		{
-			printf("chara_afterstatus生成：失敗(%d)\n", ret);
-			//err = 1;
-		}
 	}
 
 	// ゲージの初期データ
@@ -150,15 +97,6 @@ bool CreateSqliteTables(sqlite3* dbh)
 			"speed REAL"
 			");",
 			NULL, NULL, &errorMessage);
-		if(ret == SQLITE_OK)
-		{
-			printf("gauge生成：成功\n");
-		}
-		else
-		{
-			printf("gauge生成：失敗(%d)\n", ret);
-			//err = 1;
-		}
 	}
 
 	// 円の初期データ
@@ -176,18 +114,9 @@ bool CreateSqliteTables(sqlite3* dbh)
 			"count INTEGER"
 			");",
 			NULL, NULL, &errorMessage);
-		if(ret == SQLITE_OK)
-		{
-			printf("circle生成：成功\n");
-		}
-		else
-		{
-			printf("circle生成：失敗(%d)\n", ret);
-			//err = 1;
-		}
 	}
 
-	// 速度とボーナスタイムの対応表
+	// 速度とそれに応じたボーナスの対応表
 	if(err == 0) 
 	{
 		char* errorMessage;
@@ -198,15 +127,6 @@ bool CreateSqliteTables(sqlite3* dbh)
 			"BonusTime REAL"
 			");",
 			NULL, NULL, &errorMessage);
-		if(ret == SQLITE_OK)
-		{
-			printf("speed_list生成：成功\n");
-		}
-		else
-		{
-			printf("speed_list生成：失敗(%d)\n", ret);
-			//err = 1;
-		}
 	}
 
 	// 敵の基礎データ
@@ -223,16 +143,6 @@ bool CreateSqliteTables(sqlite3* dbh)
 			"LevelBonus REAL"
 			");",
 			NULL, NULL, &errorMessage);
-		if (ret == SQLITE_OK)
-		{
-			printf("enemybase生成：成功\n");
-		}
-		else
-		{
-			printf("enemybase生成：失敗(%d)\n", ret);
-			//err = 1;
-		}
-
 	}
 
 	// キャラのダメージ計算式
@@ -247,16 +157,6 @@ bool CreateSqliteTables(sqlite3* dbh)
 			"gaugeFail REAL"
 			");",
 			NULL, NULL, &errorMessage);
-		if(ret == SQLITE_OK) 
-		{
-			printf("charaFormulas生成：成功\n");
-
-		}
-		else
-		{
-			printf("charaFormulas生成：失敗(%d)\n", ret);
-			//err = 1;
-		}
 	}
 
 	// アカウントデータ
@@ -273,15 +173,6 @@ bool CreateSqliteTables(sqlite3* dbh)
 			"gachaCount INTEGER"
 			");",
 			NULL, NULL, &errorMessage);
-		if(ret == SQLITE_OK)
-		{
-			printf("AccountData生成：成功\n");
-		}
-		else
-		{
-			printf("AccountData生成：失敗(%d)\n", ret);
-			//err = 1;
-		}
 	}
 
 	return err == 0;

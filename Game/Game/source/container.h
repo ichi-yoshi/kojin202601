@@ -11,7 +11,6 @@
 #include <sstream>			// （文字列ストリーム用）
 #include <iomanip>			// （小数点桁数固定用）
 #include <iostream>			// （標準入出力用）
-#include <windows.h>		//（Windows API用）
 #include <regex>			// （正規表現用）
 #include <array>			// （固定長配列用）
 #include "DxLib.h"

@@ -87,18 +87,18 @@ void BattleUI::Render(
 
     // 右側：最終ダメージ履歴
     int rightY = 100;
-    DrawString(RIGHT_X, rightY, "--- [右側] 最終ダメージ履歴 ---", GetColor(100, 100, 100));
+    DrawString(RIGHT_X, rightY, "--- 最終ダメージ履歴 ---", GetColor(100, 100, 100));
     rightY += 25;
 
     for(size_t i = 0; i < damageHistory.size(); ++i)
     {
         if(i == damageHistory.size() - 1)
         {
-            DrawFormatString(RIGHT_X, rightY, GetColor(255, 255, 255), "Hit %02d: %.0f ダメージ!", i + 1, damageHistory[i]);
+            DrawFormatString(RIGHT_X, rightY, GetColor(255, 255, 255), " %.0f ダメージ!", damageHistory[i]);
         }
         else
         {
-            DrawFormatString(RIGHT_X, rightY, GetColor(120, 200, 255), "Hit %02d: %.0f ダメージ!", i + 1, damageHistory[i]);
+            DrawFormatString(RIGHT_X, rightY, GetColor(120, 200, 255), " %.0f ダメージ!", damageHistory[i]);
         }
         rightY += 22;
 

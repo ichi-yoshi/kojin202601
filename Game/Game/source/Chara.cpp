@@ -67,9 +67,11 @@ CharaStatus Chara::ParseStatusLines(const std::vector<std::string>& lines)
 		const auto pos = line.find(':');
 		if(pos == std::string::npos) { continue; }
 
+		// ステータス名と値の文字列を分割
 		const std::string name = line.substr(0, pos);
 		const std::string valueText = line.substr(pos + 1);
 
+		// 文字列を数値に変換してステータスに反映
 		try 
 		{
 			const double value = std::stod(valueText);

@@ -32,6 +32,7 @@ public:
 	virtual bool Process();
 	virtual bool Render();
 
+	// データベースの変更
 	bool ChangeDatabase(const std::string& newDbPath);
 protected:
 	float deltaTime;

@@ -28,7 +28,6 @@ bool Enemy::LoadEnemy(SqliteEnemy& sqliteEnemy, const SaveData& saveData)
 	EnemyBaseRow baseRow;
 	if(!sqliteEnemy.GetEnemyBase(baseRow))
 	{
-		std::cerr << "エラー: マスタデータがありません。" << std::endl;
 		return false;
 	}
 
@@ -39,8 +38,7 @@ bool Enemy::LoadEnemy(SqliteEnemy& sqliteEnemy, const SaveData& saveData)
 	{
 		additionalEnemyLevel = accountRows[0].enemylevel;
 	}
-
-	_currentLevel = baseRow.startLevel + additionalEnemyLevel;
+	_currentLevel = baseRow.startLevel + additionalEnemyLevel;	// 現在の敵レベルを計算
 
 	// レベル差を計算し、負の値にならないようにする
 	int levelDiff = _currentLevel - baseRow.startLevel;
@@ -68,7 +66,7 @@ void Enemy::SetupModel(const std::string& modelPath)
 	_modelHandle = MV1LoadModel(modelPath.c_str());
 	if(_modelHandle != -1)
 	{
-		// 3D空間の中央（0, 0, 0）に配置
+		// 3D空間に配置
 		MV1SetPosition(_modelHandle, VGet(0.0f, 0.0f, 0.0f));
 
 		_status = EnemyStatus::idle;
@@ -78,7 +76,7 @@ void Enemy::SetupModel(const std::string& modelPath)
 
 void Enemy::UpdateAnimation(double deltaTime)
 {
-	// 1. ステータスに変化があったかチェック
+	// ステータスに変化があったかチェック
 	if(_status != _prevStatus)
 	{
 		// 古いアニメーションを停止
@@ -94,16 +92,16 @@ void Enemy::UpdateAnimation(double deltaTime)
 		switch(_status)
 		{
 		case EnemyStatus::idle:
-			animName = "walk";      // 
+			animName = "walk";    // 待機
 			break;
 		case EnemyStatus::attack:
-			animName = "henge";    // 攻撃モーション名
+			animName = "henge";   // 攻撃
 			break;
 		case EnemyStatus::defend:
-			animName = "idle";   // 防御モーション名
+			animName = "idle";	  // 防御
 			break;
 		case EnemyStatus::winner:
-			animName = "takarabako_open";       // 勝利モーション名
+			animName = "takarabako_open";  // 勝利
 			break;
 		default:
 			animName = "walk";
@@ -113,16 +111,14 @@ void Enemy::UpdateAnimation(double deltaTime)
 		// 新しいアニメーションを再生 (モデルハンドルが有効な場合のみ)
 		if(_modelHandle != -1)
 		{
-			// winner（リザルト）などはループさせない(false)にする等もここで制御可能です
-			bool isLoop = (_status != EnemyStatus::winner);
-			_animId = AnimationManager::GetInstance()->Play(_modelHandle, animName, isLoop, 21.0f);
+			_animId = AnimationManager::GetInstance()->Play(_modelHandle, animName, true, 21.0f);
 		}
 
 		// 前回のステータスを更新
 		_prevStatus = _status;
 	}
 
-	// 2. 既存のアニメーションマネージャーの更新処理
+	// 既存のアニメーションマネージャーの更新処理
 	AnimationManager::GetInstance()->Update(static_cast<float>(deltaTime));
 }
 

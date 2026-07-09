@@ -7,26 +7,24 @@ class SaveData
 public:
 	struct AccountData
 	{
-		int uid;
-		int level;
-		int exp;
-		int coin;
-		int enemylevel;
-		int gachaCount;
+		int uid;		// ユーザーID
+		int level;		// プレイヤーレベル
+		int exp;		// 経験値
+		int coin;		// コイン
+		int enemylevel;	// 敵レベル
+		int gachaCount;	// ガチャ回数
 	};
 
 	const std::vector<AccountData>& GetRows()const;
-	bool SaveToSqlite(std::string* outError = nullptr) const;
-	bool LoadFromSqlite(std::string* outError = nullptr);
+	bool SaveToSqlite(std::string* outError = nullptr) const;	// データベースに保存
+	bool LoadFromSqlite(std::string* outError = nullptr);		// データベースからロード
 
-	bool HasResult() const;
-	bool IncrementEnemyLevelAndSave(std::string* outError = nullptr);
-	
-	bool UpdateAccountAndSave(const AccountData& data, std::string* outError = nullptr);
+	bool HasResult() const { return _hasResult; }				// データベースに結果があるかどうか
+	bool IncrementEnemyLevelAndSave(std::string* outError = nullptr);	// 敵レベルを +1 して保存する
+	bool UpdateAccountAndSave(const AccountData& data, std::string* outError = nullptr);	// アカウントデータを更新して保存する
 
 	int GetPlayerLevel() const;
-	/*int GetGachaCount(AccountData& accountData) const;
-	int GetGachaCost(AccountData& accountData) const;*/
+
 	std::vector<std::string> ToLines() const;
 private:
 	std::vector<AccountData> _accountData;

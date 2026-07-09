@@ -17,7 +17,6 @@ CameraBase::CameraBase()
 	_camYaw = 0.0f;
 	_camPitch = 0.0f;
 	_mouseSensitivity = 0.005f;
-
 }
 
 CameraBase::~CameraBase()

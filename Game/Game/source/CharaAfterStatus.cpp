@@ -37,11 +37,6 @@ void CharaAfterStatus::SetAfterStatus(const CharaStatus& status)
 	_afterStatus = status;
 }
 
-const CharaStatus& CharaAfterStatus::GetAfterStatus() const
-{
-	return _afterStatus;
-}
-
 // 装備から最終ステータスを更新する
 void CharaAfterStatus::UpdateFrom(const CharaBase& base, const SaveEquipment& saveEquipment)
 {

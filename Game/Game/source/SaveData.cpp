@@ -22,16 +22,20 @@ bool SaveData::SaveToSqlite(std::string* outError) const
 {
 	sqlite3* dbh = nullptr;
 	if(!OpenSqliteConnection(&dbh, outError)) { return false; }
+
 	int ret = -1;
 	int err = 0;
+
 	if(err == 0)
 	{
 		char* errorMessage;
 		ret = sqlite3_exec(dbh, "DELETE FROM AccountData;", NULL, NULL, &errorMessage);
 		if(ret != SQLITE_OK) { err = 1; }
 	}
+
 	if(err == 0)
 	{
+		// _accountData の各行を SQLite に挿入する
 		for(const auto& row : _accountData)
 		{
 			char sql[256];
@@ -44,6 +48,7 @@ bool SaveData::SaveToSqlite(std::string* outError) const
 		}
 	}
 	sqlite3_close(dbh);
+
 	if(err != 0 && outError)
 	{
 		*outError = "SQLite save failed";
@@ -59,14 +64,18 @@ bool SaveData::LoadFromSqlite(std::string* outError)
 	sqlite3* dbh = nullptr;
 	if(!OpenSqliteConnection(&dbh, outError)) { return false; }
 	LoadContext ctx{ &_accountData };
+
+	// SQLiteのSELECT文を実行して、LoadCallbackで結果を取得
 	char* errorMessage;
 	int ret = sqlite3_exec(dbh,
 		"SELECT uid, level, exp, coin, ClearCount, gachaCount FROM AccountData;",
 		LoadCallback, &ctx, &errorMessage);
+
 	if(ret != SQLITE_OK && outError)
 	{
 		*outError = errorMessage ? errorMessage : "SQLite load failed";
 	}
+
 	sqlite3_free(errorMessage);
 	sqlite3_close(dbh);
 	return ret == SQLITE_OK;
@@ -77,6 +86,8 @@ int SaveData::LoadCallback(void* param, int col_cnt, char** row_txt, char**)
 	if(!param || col_cnt < 6) { return 0; }
 	auto* ctx = static_cast<LoadContext*>(param);
 	SaveData::AccountData data;
+
+	// row_txt の各列の値を整数に変換して AccountData に格納
 	data.uid = row_txt[0] ? std::atoi(row_txt[0]) : 0;
 	data.level = row_txt[1] ? std::atoi(row_txt[1]) : 0;
 	data.exp = row_txt[2] ? std::atoi(row_txt[2]) : 0;
@@ -85,11 +96,6 @@ int SaveData::LoadCallback(void* param, int col_cnt, char** row_txt, char**)
 	data.gachaCount = (row_txt[5]) ? std::atoi(row_txt[5]) : 0;
 	ctx->accountData->push_back(data);
 	return 0;
-}
-
-bool SaveData::HasResult() const
-{
-	return _hasResult;
 }
 
 bool SaveData::IncrementEnemyLevelAndSave(std::string* outError)
@@ -137,6 +143,7 @@ std::vector<std::string> SaveData::ToLines() const
 			lines.push_back(os.str());
 		};
 
+	// 先頭のアカウントデータを行に追加
 	push("uid", _accountData[0].uid);
 	push("level", _accountData[0].level);
 	push("exp", _accountData[0].exp);

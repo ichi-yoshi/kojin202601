@@ -8,8 +8,6 @@
 #include "Resource.h"
 #include "SqliteConfig.h"
 
-ModeGame _modeGame;
-
 bool ModeGame::Initialize()
 {
 	if (!base::Initialize()) { return false; }
@@ -31,41 +29,42 @@ bool ModeGame::Initialize()
 	// コリジョンのフレームを描画しない設定
 	MV1SetFrameVisible(_handleMap, _frameMapCollision, FALSE);
 
-	SetMouseDispFlag(TRUE);	// マウスポインタを表示する
+	// マウスポインタを表示する
+	SetMouseDispFlag(TRUE);	
 
 	// SQLite初期化
 	{
 		sqlite3* dbh = nullptr;
 		std::string error;
-		if (!OpenSqliteConnection(&dbh, &error)) { return false; }
-		if (!CreateSqliteTables(dbh)) { sqlite3_close(dbh); return false; }
+		if(!OpenSqliteConnection(&dbh, &error)) { return false; }			// データベース接続
+		if(!CreateSqliteTables(dbh)) { sqlite3_close(dbh); return false; }	// テーブル作成
+
+		// セーブデータのロード
 		_saveData.LoadFromSqlite();
 		if(_saveData.GetRows().empty())
 		{
-			if(!SeedSqliteData(dbh)) { sqlite3_close(dbh); return false; }
-			printf("新規データベースのため、初期値を投入しました。\n");
-		}
-		else
-		{
-			printf("既存のセーブデータを発見したため、初期化をスキップしました。\n");
+			if(!SeedSqliteData(dbh)) { sqlite3_close(dbh); return false; }	// シードデータ投入
 		}
 		sqlite3_close(dbh);
 
+		//ガチャデータの初期化
 		if (!_gacha.Initialize("", &error)) { return false; }
 		if (!_gachaBasic.Initialize("", &error)) { return false; }
 		if (!_gachaArmor.Initialize("", &error)) { return false; }
 
+		// キャラクターステータスの初期化
 		CharaStatus base{};
 		if (!LoadCharaBaseStatusSqlite(base, &error)) { return false; }
 		_charaBase.SetBaseStatus(base);
 
+		// バトルシステムの初期化
 		if(!_battleSystem.Initialize("", &error)) { return false; }
 		if(!_afterStatus.InitializeSpeedTable("", &error)) { return false; }
 	}
 	
 	// 保存済みデータをロード（なければ無視）
-	_saveEquipment.LoadFromSqlite();
-	_saveData.LoadFromSqlite();
+	_saveEquipment.LoadFromSqlite();	// 装備データのロード
+	_saveData.LoadFromSqlite();			// アカウントデータのロード
 
 	// 最終ステータス計算
 	_afterStatus.UpdateFrom(_charaBase, _saveEquipment);
@@ -83,8 +82,6 @@ bool ModeGame::Terminate()
 
 bool ModeGame::ChangeDatabase(const std::string& newDbPath)
 {
-	printf("データベースを %s に切り替えます...\n", newDbPath.c_str());
-
 	// パスの変更
 	SqliteConfig::SetSqliteDbPath(newDbPath);
 
@@ -92,32 +89,28 @@ bool ModeGame::ChangeDatabase(const std::string& newDbPath)
 	{
 		sqlite3 * dbh = nullptr;
 		std::string error;
+		if(!OpenSqliteConnection(&dbh, &error)) { return false; }			// データベース接続
+		if(!CreateSqliteTables(dbh)) { sqlite3_close(dbh); return false; }	// テーブル作成
 
-		if(!OpenSqliteConnection(&dbh, &error)) { return false; }
-		if(!CreateSqliteTables(dbh)) { sqlite3_close(dbh); return false; }
-
+		// セーブデータのロード
 		_saveData.LoadFromSqlite();
-
 		if(_saveData.GetRows().empty())
 		{
 			if(!SeedSqliteData(dbh)) { sqlite3_close(dbh); return false; }
-			printf("新規データベースのため、初期値を投入しました。\n");
 		}
-		else
-		{
-			printf("既存のセーブデータを発見したため、初期化をスキップしました。\n");
-		}
-
 		sqlite3_close(dbh);
 
-		// マスタ・設定データの再ロード
+		// ガチャデータの初期化
 		if(!_gacha.Initialize("", &error)) { return false; }
 		if(!_gachaBasic.Initialize("", &error)) { return false; }
 		if(!_gachaArmor.Initialize("", &error)) { return false; }
 
+		// キャラクターステータスの初期化
 		CharaStatus base{};
 		if(!LoadCharaBaseStatusSqlite(base, &error)) { return false; }
 		_charaBase.SetBaseStatus(base);
+
+		// バトルシステムの初期化
 		if(!_battleSystem.Initialize("", &error)) { return false; }
 		if(!_afterStatus.InitializeSpeedTable("", &error)) { return false; }
 	}
@@ -128,8 +121,7 @@ bool ModeGame::ChangeDatabase(const std::string& newDbPath)
 	
 	// ステータス再計算
 	_afterStatus.UpdateFrom(_charaBase, _saveEquipment);
-	
-	printf("データベースの切り替えが完了しました。\n");
+
 	return true;
 }
 
@@ -139,9 +131,6 @@ bool ModeGame::Process()
 
 	// マウス入力の更新
 	_mouse.Update();
-
-	// ホイール利用
-	int wheel = _mouse.GetWheel();
 
 	// ゲームフェーズごとの処理
 	if(_gamePhase == GamePhase::Gacha)// ガチャフェーズ
@@ -153,6 +142,7 @@ bool ModeGame::Process()
 		_saveDataUI.Update(_mouse);
 		_dbSelectorButtonUI.Update(_mouse);
 
+		//クリック判定
 		if (_statusUI.IsCharaClicked())
 		{
 			_showCharaStatus = !_showCharaStatus;
@@ -179,6 +169,7 @@ bool ModeGame::Process()
 	}
 	else if(_gamePhase == GamePhase::Battle)// バトルフェーズ
 	{
+		// バトルシステムの処理
 		_battleSystem.Process(_mouse, _afterStatus, _saveData, deltaTime);
 
 		// 戦闘終了判定
@@ -217,9 +208,8 @@ bool ModeGame::Process()
 	{
 		_saveEquipment.ClearResults();							// 装備セーブデータの削除
 		_afterStatus.UpdateFrom(_charaBase, _saveEquipment);	// 最終ステータスの更新
-
-		_saveCharaStatus.SetFromAfterStatus(_afterStatus);
-		_saveCharaStatus.SaveToSqlite();
+		_saveCharaStatus.SetFromAfterStatus(_afterStatus);		// キャラクターステータスの更新
+		_saveCharaStatus.SaveToSqlite();						// キャラクターステータスの保存
 	}
 	return true;
 }

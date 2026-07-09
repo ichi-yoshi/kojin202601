@@ -8,7 +8,7 @@ class CharaAfterStatus
 {
 public:
 	void SetAfterStatus(const CharaStatus& status);
-	const CharaStatus& GetAfterStatus() const;
+	const CharaStatus& GetAfterStatus() const { return _afterStatus; }
 
 	bool InitializeSpeedTable(const std::string& dbPath, std::string* outError = nullptr);
 

@@ -54,7 +54,7 @@ struct CircleSeed
 	int maxX;			//			 最大X座標
 	int minY;			//			 最小Y座標
 	int maxY;			//			 最大Y座標
-	int radius;			// 半径
+	int radius;			// 円の半径
 	int count;			// 生成する円の数
 };
 
