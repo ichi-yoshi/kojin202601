@@ -23,11 +23,6 @@ void SaveCharaStatus::SetFromAfterStatus(const CharaAfterStatus& afterStatus)
 	_hasResult = true;
 }
 
-const std::vector<SaveCharaStatus::StatusRow>& SaveCharaStatus::GetRows() const
-{
-	return _rows;
-}
-
 bool SaveCharaStatus::SaveToSqlite(std::string* outError) const
 {
 	sqlite3* dbh = nullptr;
@@ -109,9 +104,4 @@ void SaveCharaStatus::ClearStatus()
 {
 	_rows.clear();
 	_hasResult = false;
-}
-
-bool SaveCharaStatus::HasResult() const
-{
-	return _hasResult;
 }

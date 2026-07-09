@@ -8,3 +8,9 @@ namespace mv1
 	inline constexpr const char* GroundNavMesh = "ground_navmesh.mv1";
 	inline constexpr const char* Tanuki = "res/Tanuki/SK_goepon_multimotion_4.mv1";
 }
+
+namespace Collision
+{
+	inline constexpr const char* DungeonCollision = "dungeon_collision";
+	inline constexpr const char* GroundNavMesh = "ground_navmesh";
+}

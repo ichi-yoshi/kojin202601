@@ -34,6 +34,8 @@ public:
 
 	// データベースの変更
 	bool ChangeDatabase(const std::string& newDbPath);
+
+	bool SqliteInitialize();
 protected:
 	float deltaTime;
 

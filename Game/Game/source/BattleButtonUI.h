@@ -5,7 +5,7 @@
 class BattleButtonUI
 {
 public:
-	const ButtonUI::ButtonRect& GetBattleButtonRect() const;
+	const ButtonUI::ButtonRect& GetBattleButtonRect() const { return _battleButton; }
 	bool IsBattleClicked() const { return _isBattleClicked; }
 	void Update(MouseInput& mouse);
 	void Draw() const;

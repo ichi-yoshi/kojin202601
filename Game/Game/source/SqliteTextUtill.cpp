@@ -2,6 +2,7 @@
 
 namespace
 {
+	// 文字コード変換（fromCP -> toCP）
 	std::string ConvertCodePage(const std::string& text, UINT fromCP, UINT toCP)
 	{
 		if(text.empty()) { return {}; }

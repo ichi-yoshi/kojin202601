@@ -15,7 +15,7 @@ public:
 		int gachaCount;	// ガチャ回数
 	};
 
-	const std::vector<AccountData>& GetRows()const;
+	const std::vector<AccountData>& GetRows()const { return _accountData; }
 	bool SaveToSqlite(std::string* outError = nullptr) const;	// データベースに保存
 	bool LoadFromSqlite(std::string* outError = nullptr);		// データベースからロード
 

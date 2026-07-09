@@ -3,11 +3,6 @@
 #include "SqliteTextUtill.h"
 #include "container.h"
 
-const std::vector<SaveData::AccountData>& SaveData::GetRows() const
-{
-	return _accountData;
-}
-
 bool SaveData::UpdateAccountAndSave(const AccountData& data, std::string* outError)
 {
 	// 内部の _accountData をクリアして、ModeGameBattleでまとめた新しいデータに入れ替える

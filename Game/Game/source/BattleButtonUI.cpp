@@ -1,11 +1,6 @@
 ﻿#include "BattleButtonUI.h"
 #include "container.h"
 
-const ButtonUI::ButtonRect& BattleButtonUI::GetBattleButtonRect() const
-{
-	return _battleButton;
-}
-
 void BattleButtonUI::Update(MouseInput& mouse)
 {
 	// バトルボタンのクリック判定

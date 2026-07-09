@@ -31,6 +31,7 @@ void ModeGameBattle::Reset(const SaveData& saveData, CharaAfterStatus& afterStat
 		_enemy = nullptr;
 	}
 
+	// 新しい敵を生成してロードする
 	_enemy = new Enemy("ゴエポン");
 
 	if(_enemy != nullptr)
@@ -55,11 +56,13 @@ void ModeGameBattle::Process(MouseInput& mouse, CharaAfterStatus& afterStatus, S
 
 	_enemy->UpdateAnimation(deltaTime);
 
+	// ダメージフラッシュのタイマーを更新
 	if(_damageFlashTimer > 0.0)
 	{
 		_damageFlashTimer -= deltaTime;
 	}
 
+	// バトルフェーズの更新
 	if(_battleTimer.GetCurrentPhase() != BattleTimer::BattlePhase::Result) 
 	{
 		if(_enemyCurrentHP <= 0.0 || _charaCurrentHP <= 0.0) 
@@ -77,6 +80,7 @@ void ModeGameBattle::Process(MouseInput& mouse, CharaAfterStatus& afterStatus, S
 
 	_battleTimer.Update(deltaTime);
 
+	// フェーズに応じた処理関数を呼び出す
 	if(_phaseUpdateFunc != nullptr)
 	{
 		_phaseUpdateFunc(mouse, afterStatus);
@@ -101,11 +105,13 @@ void ModeGameBattle::SetPhase(BattleTimer::BattlePhase nextPhase)
 	{
 		if(_enemy)
 		{
-			// 敵のHPが0以下ならプレイヤーの勝ち（敵の負け）、そうでなければ敵の勝ち
-			if(_enemyCurrentHP <= 0.0) {
-				_enemy->SetStatus(EnemyStatus::idle); // 負けモーションがなければidleなど
+			// リザルトフェーズに入ったときの敵のステータスを設定
+			if(_enemyCurrentHP <= 0.0) 
+			{
+				_enemy->SetStatus(EnemyStatus::idle);	// 負けモーションがなければidleなど
 			}
-			else {
+			else 
+			{
 				_enemy->SetStatus(EnemyStatus::winner); // 敵の勝利
 			}
 		}

@@ -1,11 +1,6 @@
 ﻿#include "GaugeUI.h"
 #include "ButtonUI.h"
 
-const ButtonUI::ButtonRect& GaugeUI::GetGaugeButtonRect() const
-{
-	return _gaugeButton;
-}
-
 bool GaugeUI::Initialize(const std::string& dbPath, std::string* outError)
 {
 	// ゲージのマスターデータをロード

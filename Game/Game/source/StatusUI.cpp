@@ -1,10 +1,5 @@
 ﻿#include "StatusUI.h"
 
-const ButtonUI::ButtonRect& StatusUI::GetCharaButtonRect() const
-{
-	return _charaButton;
-}
-
 void StatusUI::Update(MouseInput& mouse)
 {
 	const auto& charaBtn = GetCharaButtonRect();

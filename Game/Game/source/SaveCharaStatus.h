@@ -12,13 +12,13 @@ public:
 	};
 
 	void SetFromAfterStatus(const CharaAfterStatus& afterStatus);
-	const std::vector<StatusRow>& GetRows()const;
+	const std::vector<StatusRow>& GetRows()const { return _rows; }
 
 	bool SaveToSqlite(std::string* outError = nullptr) const;
 	bool LoadFromSqlite(std::string* outError = nullptr);
 
 	void ClearStatus();
-	bool HasResult() const;
+	bool HasResult() const { return _hasResult; }
 
 private:
 	std::vector<StatusRow> _rows;

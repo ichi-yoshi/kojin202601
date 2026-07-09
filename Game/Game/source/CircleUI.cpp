@@ -1,11 +1,6 @@
 #include "CircleUI.h"
 #include "ButtonUI.h"
 
-const ButtonUI::ButtonRect& CircleUI::GetGaugeButtonRect() const
-{
-	return _circleButton;
-}
-
 bool CircleUI::Initialize(const std::string& dbPath, std::string* outError)
 {
 	// 円のマスターデータをロード

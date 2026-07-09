@@ -18,11 +18,11 @@ bool ModeGame::Initialize()
 #if 1
 	// ダンジョン
 	_handleMap = MV1LoadModel(mv1::Dungeon);
-	_frameMapCollision = MV1SearchFrame(_handleMap, "dungeon_collision");
+	_frameMapCollision = MV1SearchFrame(_handleMap, Collision::DungeonCollision);
 #else
 	// フィールド
 	_handleMap = MV1LoadModel(mv1::Ground);
-	_frameMapCollision = MV1SearchFrame(_handleMap, "ground_navmesh");
+	_frameMapCollision = MV1SearchFrame(_handleMap, Collision::GroundNavMesh);
 #endif
 	// コリジョン情報の生成
 	MV1SetupCollInfo(_handleMap, _frameMapCollision, 16, 16, 16);
@@ -32,6 +32,24 @@ bool ModeGame::Initialize()
 	// マウスポインタを表示する
 	SetMouseDispFlag(TRUE);	
 
+	SqliteInitialize();
+
+	// 最終ステータス計算
+	_afterStatus.UpdateFrom(_charaBase, _saveEquipment);
+
+	deltaTime = 1.0f / 60.0f;
+
+	return true;
+}
+
+bool ModeGame::Terminate()
+{
+	base::Terminate();
+	return true;
+}
+
+bool ModeGame::SqliteInitialize()
+{
 	// SQLite初期化
 	{
 		sqlite3* dbh = nullptr;
@@ -48,59 +66,6 @@ bool ModeGame::Initialize()
 		sqlite3_close(dbh);
 
 		//ガチャデータの初期化
-		if (!_gacha.Initialize("", &error)) { return false; }
-		if (!_gachaBasic.Initialize("", &error)) { return false; }
-		if (!_gachaArmor.Initialize("", &error)) { return false; }
-
-		// キャラクターステータスの初期化
-		CharaStatus base{};
-		if (!LoadCharaBaseStatusSqlite(base, &error)) { return false; }
-		_charaBase.SetBaseStatus(base);
-
-		// バトルシステムの初期化
-		if(!_battleSystem.Initialize("", &error)) { return false; }
-		if(!_afterStatus.InitializeSpeedTable("", &error)) { return false; }
-	}
-	
-	// 保存済みデータをロード（なければ無視）
-	_saveEquipment.LoadFromSqlite();	// 装備データのロード
-	_saveData.LoadFromSqlite();			// アカウントデータのロード
-
-	// 最終ステータス計算
-	_afterStatus.UpdateFrom(_charaBase, _saveEquipment);
-
-	deltaTime = 1.0f / 60.0f;
-
-	return true;
-}
-
-bool ModeGame::Terminate()
-{
-	base::Terminate();
-	return true;
-}
-
-bool ModeGame::ChangeDatabase(const std::string& newDbPath)
-{
-	// パスの変更
-	SqliteConfig::SetSqliteDbPath(newDbPath);
-
-	// 新しいデータベースに対するテーブル作成およびシードデータの確認
-	{
-		sqlite3 * dbh = nullptr;
-		std::string error;
-		if(!OpenSqliteConnection(&dbh, &error)) { return false; }			// データベース接続
-		if(!CreateSqliteTables(dbh)) { sqlite3_close(dbh); return false; }	// テーブル作成
-
-		// セーブデータのロード
-		_saveData.LoadFromSqlite();
-		if(_saveData.GetRows().empty())
-		{
-			if(!SeedSqliteData(dbh)) { sqlite3_close(dbh); return false; }
-		}
-		sqlite3_close(dbh);
-
-		// ガチャデータの初期化
 		if(!_gacha.Initialize("", &error)) { return false; }
 		if(!_gachaBasic.Initialize("", &error)) { return false; }
 		if(!_gachaArmor.Initialize("", &error)) { return false; }
@@ -114,13 +79,23 @@ bool ModeGame::ChangeDatabase(const std::string& newDbPath)
 		if(!_battleSystem.Initialize("", &error)) { return false; }
 		if(!_afterStatus.InitializeSpeedTable("", &error)) { return false; }
 	}
-	
-	// セーブデータの再ロード
-	_saveEquipment.LoadFromSqlite();
-	_saveData.LoadFromSqlite();
-	
-	// ステータス再計算
+
+	// 保存済みデータをロード（なければ無視）
+	_saveEquipment.LoadFromSqlite();	// 装備データのロード
+	_saveData.LoadFromSqlite();			// アカウントデータのロード
+
+	// 最終ステータス計算
 	_afterStatus.UpdateFrom(_charaBase, _saveEquipment);
+
+	return true;
+}
+
+bool ModeGame::ChangeDatabase(const std::string& newDbPath)
+{
+	// パスの変更
+	SqliteConfig::SetSqliteDbPath(newDbPath);
+
+	SqliteInitialize();
 
 	return true;
 }

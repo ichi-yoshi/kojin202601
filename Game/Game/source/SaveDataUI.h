@@ -7,7 +7,7 @@
 class SaveDataUI
 {
 public:
-	const ButtonUI::ButtonRect& GetSaveDataButtonRect() const;
+	const ButtonUI::ButtonRect& GetSaveDataButtonRect() const { return _saveDataButton; }
 	void Update(MouseInput& mouse);
 	void Draw(const SaveData& saveData,bool visible) const;
 	bool IsSaveDataClicked() const { return _isSaveDataClicked; }

@@ -1,15 +1,11 @@
 ﻿#include "SaveDataUI.h"
 
-const ButtonUI::ButtonRect& SaveDataUI::GetSaveDataButtonRect() const
-{
-	return _saveDataButton;
-}
-
 void SaveDataUI::Update(MouseInput& mouse)
 {
 	const auto& btn = GetSaveDataButtonRect();
 	_isSaveDataClicked = mouse.IsLeftTrig() && mouse.IsInRect(btn.x, btn.y, btn.w, btn.h);
 }
+
 void SaveDataUI::Draw(const SaveData& saveData, bool visible) const
 {
 	DrawSaveDataButton();

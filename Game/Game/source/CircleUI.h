@@ -16,7 +16,7 @@ public:
 		bool isAlive;		// 円が生きているかどうか
 	};
 
-	const ButtonUI::ButtonRect& GetGaugeButtonRect() const;
+	const ButtonUI::ButtonRect& GetGaugeButtonRect() const { return _circleButton; }
 	void SetPattern(int minX, int maxX, int minY, int maxY, int radius, int count);
 	bool Initialize(const std::string& dbPath, std::string* outError = nullptr);
 	bool Update(MouseInput& mouse);

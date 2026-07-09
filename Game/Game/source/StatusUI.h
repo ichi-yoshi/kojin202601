@@ -7,7 +7,7 @@
 class StatusUI
 {
 public:
-	const ButtonUI::ButtonRect& GetCharaButtonRect() const;
+	const ButtonUI::ButtonRect& GetCharaButtonRect() const { return _charaButton; }
 	void Update(MouseInput& mouse);
 	void Draw(const CharaAfterStatus& afterStatus, bool visible) const;
 	bool IsCharaClicked() const { return _isCharaClicked; }

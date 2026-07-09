@@ -7,7 +7,7 @@
 class GaugeUI
 {
 public:
-	const ButtonUI::ButtonRect& GetGaugeButtonRect() const;
+	const ButtonUI::ButtonRect& GetGaugeButtonRect() const { return _gaugeButton; }
 	void SetPattern(int targetX,int targetW,double speed);
 	bool Initialize(const std::string& dbPath, std::string* outError = nullptr);
 	void Update(MouseInput& mouse);
