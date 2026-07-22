@@ -19,28 +19,33 @@ void CharaAfterStatus::SetAfterStatus(const CharaStatus& status)
 // 装備から最終ステータスを更新する
 void CharaAfterStatus::UpdateFrom(const CharaBase& base, const SaveEquipment& saveEquipment)
 {
+	// 装備ステータスの合計を計算する
 	CharaStatus equipTotal{};
 
 	// 名前空間の使用宣言
 	using namespace Status;
 
+	// 装備部位ごとにステータスを取得して合計する
 	for(int i = 0; i < static_cast<int>(SaveEquipment::EquipPart::_EOT_); ++i)
 	{
 		const auto part = static_cast<SaveEquipment::EquipPart>(i);
 		const auto& result = saveEquipment.GetResult(part);
 		if(!result.hasResult) { continue; }
 
-		const auto basic = Chara::ParseStatusLines(result.basicStatusLines);
-		const auto sub = Chara::ParseStatusLines(result.statusLines);
+		// 装備のステータスを取得する
+		const auto basic = Chara::ParseStatusLines(result.basicStatusLines);	// 基礎ステータス
+		const auto sub = Chara::ParseStatusLines(result.statusLines);			// 装備ステータス
 
-		// 基礎ステータスと装備ステータスを合計する
-		Status::AddStatus(equipTotal, basic);
-		Status::AddStatus(equipTotal, sub);
+		// 基礎のステータスを合計する
+		Status::AddStatus(equipTotal, basic);	// 基礎ステータスは装備の基本値として加算する
+		Status::AddStatus(equipTotal, sub);		// 装備ステータスを合計する
 	}
 
+	// 基礎ステータスと装備ステータスの合計から最終ステータスを計算する
 	const auto after = Chara::CalculateAfterStatus(base, equipTotal);
 	_afterStatus = after.GetAfterStatus();
 
+	// 速度ステータスからボーナスタイムを取得する
 	_bonusTime = _sqliteSpeed.GetBonusTime(_afterStatus.speed);
 	_coolTime = 1.0 + _bonusTime;
 }
@@ -58,6 +63,7 @@ std::vector<std::string> CharaAfterStatus::ToLines() const
 			lines.push_back(os.str());
 	};
 
+	// ステータスを行に追加
 	push("HP", _afterStatus.hp);
 	push("攻撃", _afterStatus.attack);
 	push("防御", _afterStatus.defense);

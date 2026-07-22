@@ -21,11 +21,14 @@ namespace Color
     inline unsigned int White() { return GetColor(255, 255, 255); }
     inline unsigned int Gray() { return GetColor(150, 150, 150); }
     inline unsigned int DarkGray() { return GetColor(100, 100, 100); }
-    inline unsigned int LightBlue() { return GetColor(120, 200, 255); }
-    inline unsigned int Green() { return GetColor(0, 255, 0); }
     inline unsigned int TextGray() { return GetColor(200, 200, 200); }
+    inline unsigned int DimGray() { return GetColor(128, 128, 128); }
+    inline unsigned int Green() { return GetColor(0, 255, 0); }
+    inline unsigned int LightBlue() { return GetColor(120, 200, 255); }
+    inline unsigned int Blue() { return GetColor(0, 0, 255); }
     inline unsigned int HPBlue() { return GetColor(50, 150, 255); }
 	inline unsigned int Black() { return GetColor(0, 0, 0); }
+    inline unsigned int BoxBg() { return GetColor(235, 235, 235); }
 }
 
 // レイアウトの定数を定義
@@ -80,4 +83,29 @@ namespace SystemParam
     constexpr double FlashMaxTime = 0.2;       // フラッシュの最大時間
     constexpr int FlashMaxAlpha = 120;         // フラッシュの最大透明度
 	constexpr int MaxAlphaByte = 255;          // 最大のアルファ値
+}
+
+namespace LayoutGacha
+{
+    // ガチャ結果表示
+    constexpr int ResultBaseX = 480;
+    constexpr int ResultBaseY = 440;
+    constexpr int ResultLineHeight = 20;
+    constexpr int ResultSubTextXOffset = 120;
+    constexpr int ResultBoxPadding = 8;
+    constexpr int ResultBoxWidth = 320;
+
+    // 保留・確定ボタン
+    constexpr int ButtonWidth = 160;
+    constexpr int ButtonHeight = 36;
+    constexpr int ButtonTopMargin = 12;
+    constexpr int ButtonSpacing = 6;
+
+   
+    constexpr int MarginRight = 20;
+    constexpr int MarginTop = 20;
+    constexpr int Width = 360;
+    constexpr int Padding = 8;
+    constexpr int IndentX = 20;
+    constexpr int LineSpacingExtra = 2;
 }

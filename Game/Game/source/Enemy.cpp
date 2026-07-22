@@ -13,10 +13,13 @@ Enemy::Enemy(const std::string& name)
 
 Enemy::~Enemy()
 {
+	// アニメーションを停止
 	if(_animId != -1)
 	{
 		AnimationManager::GetInstance()->Stop(_animId);
 	}
+
+	// モデルを解放
 	if(_modelHandle != -1)
 	{
 		MV1DeleteModel(_modelHandle);
@@ -25,15 +28,15 @@ Enemy::~Enemy()
 
 bool Enemy::LoadEnemy(SqliteEnemy& sqliteEnemy, const SaveData& saveData)
 {
+	// 敵の基本情報を取得する
 	EnemyBaseRow baseRow;
-	if(!sqliteEnemy.GetEnemyBase(baseRow))
-	{
-		return false;
-	}
+	if(!sqliteEnemy.GetEnemyBase(baseRow)) { return false; }
 
 	// SaveDataから敵レベルの追加値を取得する
-	int additionalEnemyLevel = 0;
-	const auto& accountRows = saveData.GetRows();
+	int additionalEnemyLevel = 0;					// デフォルトは0
+	const auto& accountRows = saveData.GetRows();	// SaveDataからアカウントデータを取得
+
+	// アカウントデータが存在する場合、最初の行の敵レベルを取得
 	if(!accountRows.empty())
 	{
 		additionalEnemyLevel = accountRows[0].enemylevel;
@@ -89,6 +92,7 @@ void Enemy::UpdateAnimation(double deltaTime)
 		// 新しいステータスに応じたアニメーション名を決定
 		std::string animName = "Idle"; // デフォルト
 
+		// ステータスに応じてアニメーション名を設定
 		switch(_status)
 		{
 		case EnemyStatus::idle:

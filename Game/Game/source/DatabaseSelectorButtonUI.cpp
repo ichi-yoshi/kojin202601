@@ -15,6 +15,7 @@ void DatabaseSelectorButtonUI::Update(MouseInput& mouse)
 
 void DatabaseSelectorButtonUI::Draw() const
 {
+	// データベース選択ボタンの描画
 	DrawDbSelectButton();
 }
 

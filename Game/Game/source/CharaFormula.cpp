@@ -9,13 +9,22 @@ bool CharaFormula::Initialize(const std::string& dbPath, std::string* outError)
 std::string CharaFormula::ReplaceVar(std::string sourceStr, const std::string& status, double value)
 {
 	std::ostringstream ss;
-	ss << std::fixed << std::setprecision(2) << value;	// 小数点以下2桁まで表示
+
+	// 小数点以下2桁までの文字列に変換
+	ss << std::fixed << std::setprecision(2) << value;	
+
+	// 置換する文字列を取得
 	std::string replaceStr = ss.str();
 
+	// 文字列中のキーワードをすべて置換する
 	size_t pos = sourceStr.find(status);
+
+	// キーワードが見つからなくなるまでループ
 	while(pos != std::string::npos)
 	{
+		// キーワードを置換する
 		sourceStr.replace(pos, status.length(), replaceStr);
+
 		// 次のキーワードを検索（同じ文字が複数あってもすべて置換する）
 		pos = sourceStr.find(status, pos + replaceStr.length());
 	}
@@ -25,6 +34,7 @@ std::string CharaFormula::ReplaceVar(std::string sourceStr, const std::string& s
 
 double CharaFormula::GetLiveCriticalMultiplier(const CharaAfterStatus& afterstatus)
 {
+	// キャラクターの会心率を取得
 	double charaCritRate = afterstatus.GetAfterStatus().critRate;
 
 	// 0〜9999のサイコロを振り、会心率(%)未満なら当選
@@ -38,7 +48,9 @@ double CharaFormula::GetLiveCriticalMultiplier(const CharaAfterStatus& afterstat
 
 double CharaFormula::GetLiveLuckMultiplier(const CharaAfterStatus& afterstatus)
 {
+	// キャラクターの運値を取得
 	double charaLuck = afterstatus.GetAfterStatus().luck;
+
 	// ご指定の数式で『発動確率(%)』を算出する (例: 114.0 -> 5.7%)
 	double luckProbability = (charaLuck / 10.0) / 2.0;
 
@@ -56,28 +68,41 @@ double CharaFormula::GetLiveLuckMultiplier(const CharaAfterStatus& afterstatus)
 
 double CharaFormula::GetDefenseMultiplier(const CharaAfterStatus& afterstatus, const Enemy& enemy)
 {
+	// 敵防御倍率の計算式を取得
 	CharaFormulasRow row;
-	if(!_charaFormula.GetCharaFormula("敵防御倍率", row))return 1.0;
+	if(!_charaFormula.GetCharaFormula("敵防御倍率", row)){return 1.0;}
+
+	// プレイヤーレベルを取得して、計算式の文字列中のキーワードを置換
 	int playerLevel = _saveData.GetPlayerLevel();
+
+	// 計算式の文字列中のキーワードを置換
 	std::string expr = ReplaceVar(row.formula, "キャラレベル", playerLevel);
+
+	// 敵レベルを取得して、計算式の文字列中のキーワードを置換
 	expr = ReplaceVar(expr, "敵レベル", enemy.GetLevel());
+
 	return EvaluateFormula::Evaluate(expr);
 }
 
 double CharaFormula::GetDecayRate(const CharaAfterStatus& afterstatus)
 {
+	// ダメージ減衰率の計算式を取得
 	CharaFormulasRow row;
 	if(!_charaFormula.GetCharaFormula("ダメージ減衰率", row))return 1.0;
+
+	// 計算式の文字列中のキーワードを置換
 	std::string expr = ReplaceVar(row.formula, "Poop", afterstatus.GetAfterStatus().poop);
+
 	return EvaluateFormula::Evaluate(expr);
 }
 
 double CharaFormula::CalculateFinalDamage(const CharaAfterStatus& afterstatus, const Enemy& enemy, bool isGaugeSuccess)
 {
+	// すでに計算済みの最終ダメージがある場合は、それを返す
 	if(_evaluatedDamage > 0.0)
 	{
-		double temp = _evaluatedDamage;
-		_evaluatedDamage = 0.0; // 次の計算のために 0 にリセットしておく
+		double temp = _evaluatedDamage;	// 計算済みの最終ダメージを一時変数に保存
+		_evaluatedDamage = 0.0;			// 次の計算のために 0 にリセット
 		return temp;
 	}
 
@@ -87,6 +112,7 @@ double CharaFormula::CalculateFinalDamage(const CharaAfterStatus& afterstatus, c
 	double res_critical = GetLiveCriticalMultiplier(afterstatus);
 	double res_luck = GetLiveLuckMultiplier(afterstatus);
 
+	// 最終ダメージ計算式の行を取得
 	CharaFormulasRow rowFinal;
 	if(!_charaFormula.GetCharaFormula("最終ダメージ", rowFinal)) return 0.0;
 
@@ -110,9 +136,11 @@ double CharaFormula::CalculateFinalDamage(const CharaAfterStatus& afterstatus, c
 
 double CharaFormula::CalculateEnemyDamage(const CharaAfterStatus& afterstatus, const Enemy& enemy)
 {
+	// 敵の攻撃ダメージ計算式の行を取得
 	CharaFormulasRow row;
 	if(!_charaFormula.GetCharaFormula("敵の攻撃ダメージ", row)) return 0.0;
 
+	// 計算式の文字列を取得
 	std::string expr = row.formula; 
 
 	// 長いキーワードから順番に完全置換

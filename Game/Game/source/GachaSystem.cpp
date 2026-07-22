@@ -43,17 +43,17 @@ void GachaSystem::ProcessRoll(GachaContext& ctx)
 			const auto& statusLines = ctx.gacha.HasResult() ? ctx.gacha.GetResultLines() : Empty;
 
 			// ガチャ結果を保存待ち状態にする
-			ctx.pendingResult.hasPending = true;
-			ctx.pendingResult.part = SaveEquipment::GetPartFromName(armorName);
-			ctx.pendingResult.armorName = armorName;
-			ctx.pendingResult.basicStatusLines = basicLines;
-			ctx.pendingResult.statusLines = statusLines;
+			ctx.pendingResult.hasPending = true;								// 保存待ち状態にする
+			ctx.pendingResult.part = SaveEquipment::GetPartFromName(armorName);	// 装備部位を取得して保存待ち状態にする
+			ctx.pendingResult.armorName = armorName;							// 装備名を保存待ち状態にする
+			ctx.pendingResult.basicStatusLines = basicLines;					// 基礎ステータスの行を保存待ち状態にする
+			ctx.pendingResult.statusLines = statusLines;						// 装備ステータスの行を保存待ち状態にする
 		}
 
 		account.coin -= 3000;		// ガチャコストを引く
 		account.gachaCount += 1;	// ガチャ回数を増やす
 
-		std::vector<SaveData::AccountData> updatedVector;
+		std::vector<SaveData::AccountData> updatedVector;	
 		updatedVector.push_back(account); // 編集し終わったデータを格納
 		std::string errStr;
 		bool success = false;

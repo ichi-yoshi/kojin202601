@@ -12,7 +12,11 @@ bool GachaBasicStatus::LoadRows(std::vector<BasicStatusRow>& outRows, std::strin
 
 std::string GachaBasicStatus::MakeResultLine(const BasicStatusRow& row, std::mt19937&)
 {
+	// 結果の行を作成する
 	std::ostringstream os;
+
+	// 小数点第1位までの精度で表示する
 	os << row.name << ": " << std::fixed << std::setprecision(1) << row.value;
+
 	return os.str();
 }

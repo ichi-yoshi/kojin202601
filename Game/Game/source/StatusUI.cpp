@@ -1,4 +1,8 @@
 ﻿#include "StatusUI.h"
+#include "MagicNumberConfig.h"
+
+using namespace FontSize;
+using namespace Color;
 
 void StatusUI::Update(MouseInput& mouse)
 {

@@ -1,5 +1,9 @@
 ﻿#include "GaugeUI.h"
 #include "ButtonUI.h"
+#include "MagicNumberConfig.h"
+
+// 名前空間の使用の宣言
+using namespace Color;
 
 bool GaugeUI::Initialize(const std::string& dbPath, std::string* outError)
 {
@@ -83,7 +87,7 @@ void GaugeUI::Update(MouseInput& mouse)
 			_isSuccess = false; 
 		}
 	}
-	_prevKeyF = currentKeyF;
+	_prevKeyF = currentKeyF;	// 前回のFキーの状態を更新
 }
 
 void GaugeUI::Draw() 
@@ -93,24 +97,26 @@ void GaugeUI::Draw()
 	int by = _gaugeButton.y;
 	int bw = _gaugeButton.w;
 	int bh = _gaugeButton.h;
-	DrawBox(bx, by, bx + bw, by + bh, GetColor(255, 255, 255), false);
+	DrawBox(bx, by, bx + bw, by + bh, Color::White(), false);
 
+	// 赤枠の座標とサイズを計算して描画
 	int targetLeft = bx + _targetX;
 	int targetRight = targetLeft + _targetW;
-	DrawBox(targetLeft, by, targetRight, by + bh, GetColor(255,120,120), true);
+	DrawBox(targetLeft, by, targetRight, by + bh, Color::Red(), true);
 
+	// バーの座標を計算して描画
 	int barX = bx + static_cast<int>(bw * _currentValue);
-	DrawBox(barX - 1, by - 2, barX + 2, by + bh + 2, GetColor(255, 255, 255), true);
+	DrawBox(barX - 1, by - 2, barX + 2, by + bh + 2, Color::White(), true);
 
 	if(_hasResult) 
 	{
 		if (_isSuccess) 
 		{
-			DrawString(bx,by-20, "成功", GetColor(0, 255, 0));
+			DrawString(bx,by-20, "成功", Color::Green());
 		}
 		else 
 		{
-			DrawString(bx,by-20, "失敗", GetColor(255, 0, 0));
+			DrawString(bx,by-20, "失敗", Color::Red());
 		}
 	}
 }

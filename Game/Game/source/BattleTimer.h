@@ -28,8 +28,11 @@ public:
 	void ChangePhase(BattlePhase nextPhase);
 
 	bool IsTimeUp() const { return _time <= 0.0; }
+
 private:
 	double _time;					// 現在の残り時間
+
+private:
 	BattlePhase _currentPhase;		// 現在の戦闘フェーズ
 };
 

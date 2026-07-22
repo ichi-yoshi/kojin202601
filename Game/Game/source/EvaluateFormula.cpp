@@ -7,19 +7,15 @@ double EvaluateFormula::Evaluate(const std::string& expression)
 
 	// 一番内側のカッコ () を探して、その中身を先に計算して数字に置き換える処理を繰り返す
 	std::smatch match;
+
+	// カッコの中身を計算して置換するループ
 	while(std::regex_search(expr, match, std::regex("\\(([^()]+)\\)")))
 	{
+		// カッコの中身を計算する
 		double subResult = EvaluateSimpleFormula(match[1].str());
+
 		// カッコで囲まれた部分を計算結果の文字列に置換
 		expr = std::regex_replace(expr, std::regex("\\(" + std::regex_replace(match[1].str(), std::regex("[\\+\\-\\*\\/]"), "\\$&") + "\\)"), std::to_string(subResult));
-		//std::string target = match[0].str(); // カッコを含んだ全体の文字列（例: "(2561.5000*敵防御倍率*ダメージ減衰率)"）
-		//std::string replacement = std::to_string(subResult); // 計算結果の数値文字列
-
-		//size_t pos = expr.find(target);
-		//if(pos != std::string::npos)
-		//{
-		//	expr.replace(pos, target.length(), replacement);
-		//}
 	}
 
 	// カッコがすべて消えたら、残った四則演算を計算する
@@ -31,21 +27,26 @@ double EvaluateFormula::Evaluate(const std::string& expression)
 
 double EvaluateFormula::EvaluateSimpleFormula(const std::string& expr)
 {
+	// 数式を解析して、数値と演算子を分離する
 	std::vector<double> values;
 	std::vector<char> ops;
 
+	// 文字列ストリームを使って数値と演算子を順番に読み取る
 	std::stringstream ss(expr);
 	double val;
 	char op;
 
+	// 最初の数値を読み取る
 	if(ss >> val) { values.push_back(val); }
 
+	// その後、演算子と数値を交互に読み取る
 	while(ss >> op >> val)
 	{
-		ops.push_back(op);
-		values.push_back(val);
+		ops.push_back(op);		// 演算子を保存
+		values.push_back(val);	// 数値を保存
 	}
 
+	// 数値が空の場合は 0.0 を返す
 	if(values.empty()) return 0.0;
 
 	// 掛け算（*）と割り算（/）を先に処理

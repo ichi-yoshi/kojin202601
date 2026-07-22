@@ -6,14 +6,19 @@
 template <typename TRow>
 bool GachaBase<TRow>::Initialize(const std::string& Path, std::string* outError)
 {
+	// SQLiteの行データをロードする
 	(void)Path;
+
+	// 乱数生成器を初期化する
 	_rng = std::mt19937(std::random_device{}());
+
 	return LoadRows(_rows, outError);
 }
 
 template <typename TRow>
 bool GachaBase<TRow>::Roll(int count)
 {
+	// 結果をクリアする
 	_resultLines.clear();
 
 	// 行がない場合はエラー
@@ -25,10 +30,10 @@ bool GachaBase<TRow>::Roll(int count)
 	}
 
 	// 確率に基づいて行をランダムに選ぶ
-	std::vector<double> probability;
-	probability.reserve(_rows.size());
-	for (const auto& r : _rows) { probability.push_back(r.probability); }
-	std::discrete_distribution<size_t> distRow(probability.begin(), probability.end());
+	std::vector<double> probability;													// 確率の配列を作成
+	probability.reserve(_rows.size());													// 事前に容量を確保しておく
+	for(const auto& r : _rows) { probability.push_back(r.probability); }				// 確率を配列に追加
+	std::discrete_distribution<size_t> distRow(probability.begin(), probability.end());	// 確率に基づく離散分布を作成
 
 	// 指定された回数だけ行を選んで結果を作る
 	for(int i = 0; i < count; ++i)

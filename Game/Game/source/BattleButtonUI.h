@@ -9,9 +9,14 @@ public:
 	bool IsBattleClicked() const { return _isBattleClicked; }
 	void Update(MouseInput& mouse);
 	void Draw() const;
+
 private:
 	void DrawBattleButton() const;
+
+	// バトルボタンの矩形
 	ButtonUI::ButtonRect _battleButton{ 360, 40, 160, 40 };
-	bool _isBattleClicked = false;
+
+private:
+	bool _isBattleClicked = false;	// バトルボタンがクリックされたか
 };
 
