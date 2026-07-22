@@ -1,4 +1,8 @@
 #include "GachaSystem.h"
+#include "MagicNumberConfig.h"
+
+// 名前空間の使用宣言
+using namespace UIConfig;
 
 // ガチャシステムの処理
 void GachaSystem::Process(GachaContext& ctx)
@@ -26,7 +30,7 @@ void GachaSystem::ProcessRoll(GachaContext& ctx)
 	}
 
 	// ガチャ結果が未表示でガチャボタンがクリックされた場合は抽選を行う
-	if(!ctx.pendingResult.hasPending && (CheckHitKey(KEY_INPUT_R) || gachaClicked) && account.coin >= 3000)
+	if(!ctx.pendingResult.hasPending && (CheckHitKey(KEY_INPUT_R) || gachaClicked) && account.coin >= Param::coinCost)
 	{
 		// ガチャの抽選を行う
 		ctx.gacha.Roll();		// サブステータスガチャの抽選
@@ -50,8 +54,8 @@ void GachaSystem::ProcessRoll(GachaContext& ctx)
 			ctx.pendingResult.statusRows = statusRows;							// 装備ステータスの行を保存待ち状態にする
 		}
 
-		account.coin -= 3000;		// ガチャコストを引く
-		account.gachaCount += 1;	// ガチャ回数を増やす
+		account.coin -= Param::coinCost;	// ガチャコストを引く
+		account.gachaCount += 1;			// ガチャ回数を増やす
 
 		std::vector<SaveData::AccountData> updatedVector;	
 		updatedVector.push_back(account); // 編集し終わったデータを格納

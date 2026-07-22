@@ -24,6 +24,7 @@ void SaveEquipment::SaveResult(const std::string& armorName,
 {
 	if (armorName.empty()) { return; }
 
+	// 装備部位を判定して結果を保存する
 	EquipPart part = GetPartFromName(armorName);
 	auto& result = _results[static_cast<int>(part)];
 
@@ -86,6 +87,7 @@ bool SaveEquipment::SaveToSqlite(std::string* outError) const
 			std::string basic = SqliteTextUtill::EscapeSqlString(basicUtf8);
 			std::string status = SqliteTextUtill::EscapeSqlString(statusUtf8);
 
+			// SQL文を作成してデータを挿入する
 			char sql[1024];
 			snprintf(sql, sizeof(sql),
 				"INSERT INTO save_equipment(part, hasResult, armorName, basicStatusLines, statusLines) "
@@ -107,26 +109,33 @@ bool SaveEquipment::SaveToSqlite(std::string* outError) const
 int SaveEquipment::LoadCallback(void* param, int col_cnt, char** row_txt, char**)
 {
 	if (!param || col_cnt < 5) { return 0; }
-	auto* ctx = static_cast<LoadContext*>(param);
-	auto* self = ctx->self;
 
+	auto* ctx = static_cast<LoadContext*>(param);	
+	auto* self = ctx->self;							
+
+	// 装備部位のインデックスを取得する
 	int index = row_txt[0] ? std::atoi(row_txt[0]) : 0;
 	if (index < 0 || index >= static_cast<int>(SaveEquipment::EquipPart::_EOT_)) { return 0; }
 
+	// 結果をロードする
 	auto& result = self->_results[index];
 	result = SaveEquipment::PartResult{};
 	result.hasResult = (row_txt[1] ? std::atoi(row_txt[1]) : 0) == 1;
 	if (!result.hasResult) { return 0; }
 
+	// UTF-8 -> CP932 に変換する
 	std::string armorUtf8 = row_txt[2] ? row_txt[2] : "";
 	std::string basicUtf8 = row_txt[3] ? row_txt[3] : "";
 	std::string statusUtf8 = row_txt[4] ? row_txt[4] : "";
 
+	// CP932 に変換して結果に格納する
 	result.armorName = SqliteTextUtill::FromUtf8(armorUtf8);
 
+	// 基礎ステータスと装備ステータスの行を分割して格納する
 	std::string basicSjis = SqliteTextUtill::FromUtf8(basicUtf8);
 	SqliteTextUtill::SplitRows(basicSjis, result.basicStatusRows);
 
+	// 装備ステータスの行を分割して格納する
 	std::string statusSjis = SqliteTextUtill::FromUtf8(statusUtf8);
 	SqliteTextUtill::SplitRows(statusSjis, result.statusRows);
 	return 0;
@@ -142,7 +151,6 @@ bool SaveEquipment::LoadFromSqlite(std::string* outError)
 
 	sqlite3* dbh = nullptr;
 	if (!OpenSqliteConnection(&dbh, outError)) { return false; }
-
 	LoadContext ctx{ this };
 
 	char* errorMessage;

@@ -7,18 +7,23 @@ namespace
 	{
 		if(text.empty()) { return {}; }
 
+		// まず、fromCPからワイド文字列に変換するためのバッファサイズを取得
 		int wlen = MultiByteToWideChar(fromCP, 0, text.c_str(), -1, nullptr, 0);
 		if(wlen <= 0) { return {}; }
 
+		// ワイド文字列に変換するためのバッファを確保
 		std::wstring wbuf(static_cast<size_t>(wlen), L'\0');
 		MultiByteToWideChar(fromCP, 0, text.c_str(), -1, &wbuf[0], wlen);
 
+		// 次に、ワイド文字列からtoCPに変換するためのバッファサイズを取得
 		int blen = WideCharToMultiByte(toCP, 0, wbuf.c_str(), -1, nullptr, 0, nullptr, nullptr);
 		if(blen <= 0) { return {}; }
 
+		// toCPに変換するためのバッファを確保
 		std::string buf(static_cast<size_t>(blen), '\0');
 		WideCharToMultiByte(toCP, 0, wbuf.c_str(), -1, &buf[0], blen, nullptr, nullptr);
 
+		// 末尾のヌル文字を削除して返す
 		if(!buf.empty() && buf.back() == '\0') { buf.pop_back(); }
 		return buf;
 	}
@@ -59,11 +64,13 @@ std::string SqliteTextUtill::EscapeSqlString(const std::string& text)
 	return out;
 }
 
+// CP932 -> UTF-8
 std::string SqliteTextUtill::ToUtf8(const std::string& text)
 {
 	return ConvertCodePage(text, 932, CP_UTF8);
 }
 
+// UTF-8 -> CP932
 std::string SqliteTextUtill::FromUtf8(const std::string& text)
 {
 	return ConvertCodePage(text, CP_UTF8, 932);

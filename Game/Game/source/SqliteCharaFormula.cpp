@@ -17,6 +17,8 @@ static int CharaFormulasCallback(void* param, int col_cnt, char** row_txt, char*
 	if(!param || col_cnt < 4) { return 0; }
 	auto* ctx = static_cast<CharaFormulaContext*>(param);
 	CharaFormulasRow row;
+
+	// SQLiteの結果をCharaFormulasRowに変換してリストに追加
 	row.formulaName = SqliteTextUtill::FromUtf8(row_txt[0] ? row_txt[0] : "");
 	row.formula = SqliteTextUtill::FromUtf8(row_txt[1] ? row_txt[1] : "");
 	row.successValue = row_txt[2] ? std::atof(row_txt[2]) : 0.0;
@@ -28,10 +30,14 @@ static int CharaFormulasCallback(void* param, int col_cnt, char** row_txt, char*
 bool SqliteCharaFormula::LoadCharaFormulasSqlite(std::vector<CharaFormulasRow>& outRows, std::string* outError)
 {
 	outRows.clear();
+
+	// SQLiteデータベースに接続
 	sqlite3* dbh = nullptr;
 	if(!OpenSqliteConnection(&dbh, outError)) { return false; }
 	CharaFormulaContext context;
 	context.rows = &outRows;
+
+	// SQLiteのクエリを実行してデータを取得
 	char* errorMessage = nullptr;
 	int ret = sqlite3_exec(dbh,
 		"SELECT FormulaName, Formula, gaugeSuccess, gaugeFail FROM charaFormulas;",
@@ -49,6 +55,7 @@ bool SqliteCharaFormula::GetCharaFormula(const std::string& name, CharaFormulasR
 {
 	for(const auto& row : _rows)
 	{
+		// 名前が一致する行を見つけた場合、outRowにコピーしてtrueを返す
 		if(row.formulaName == name)
 		{
 			outRow = row;

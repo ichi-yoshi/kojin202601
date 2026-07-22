@@ -12,6 +12,7 @@ static int BasicStatusCallback(void* param, int col_cnt, char** row_txt, char**)
 	if(!param || col_cnt < 3) { return 0; }
 	auto* ctx = static_cast<BasicStatusContext*>(param);
 
+	// SQLiteの結果をBasicStatusRowに変換してリストに追加
 	BasicStatusRow row;
 	row.name = SqliteTextUtill::FromUtf8(row_txt[0] ? row_txt[0] : "");
 	row.probability = row_txt[1] ? std::atof(row_txt[1]) : 0.0;
@@ -25,11 +26,13 @@ bool LoadBasicStatusSqlite(std::vector<BasicStatusRow>& outRows, std::string* ou
 {
 	outRows.clear();
 
+	// SQLiteデータベースに接続
 	sqlite3* dbh = nullptr;
 	if (!OpenSqliteConnection(&dbh, outError)) { return false; }
 
 	BasicStatusContext ctx{ &outRows };
 
+	// SQLiteのクエリを実行してデータを取得
 	char* errorMessage;
 	int ret = sqlite3_exec(dbh,
 		"SELECT StatusName, probability, Val1 FROM basic_status;",

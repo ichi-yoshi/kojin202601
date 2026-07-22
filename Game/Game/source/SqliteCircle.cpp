@@ -5,6 +5,7 @@ bool SqliteCircle::Initialize(const std::string& Path, std::string* outError)
 {
 	// 乱数生成器にシードを設定
 	_rng = std::mt19937(std::random_device{}());
+
 	// データベースから全行を読み込んでクラスのメンバ変数 _rows に保存する
 	return LoadCircleSqlite(_rows, outError);
 }
@@ -13,6 +14,8 @@ static int CircleCallback(void* param, int col_cnt, char** row_txt, char**)
 {
 	if(!param || col_cnt < 7) { return 0; }
 	auto* ctx = static_cast<CircleContext*>(param);
+
+	// SQLiteの結果をCircleRowに変換して保存
 	CircleRow row;
 	row.id = row_txt[0] ? row_txt[0] : "";
 	row.minX = row_txt[1] ? std::atoi(row_txt[1]) : 0;
@@ -28,9 +31,13 @@ static int CircleCallback(void* param, int col_cnt, char** row_txt, char**)
 bool SqliteCircle::LoadCircleSqlite(std::vector<CircleRow>& outRows, std::string* outError)
 {
 	outRows.clear();
+
+	// SQLiteデータベースに接続
 	sqlite3* dbh = nullptr;
 	if(!OpenSqliteConnection(&dbh, outError)) { return false; }
 	CircleContext ctx{ &outRows };
+
+	// SQLiteのクエリを実行してデータを取得
 	char* errorMessage = nullptr;
 	int ret = sqlite3_exec(dbh,
 		"SELECT id, min_x, max_x, min_y, max_y, radius, count FROM circle;",
@@ -51,9 +58,11 @@ bool SqliteCircle::RollrandomCircle()
 		_hasCircle = false;
 		return false;
 	}
-	std::uniform_int_distribution<int> dist(0, static_cast<int>(_rows.size() - 1));
-	int index = dist(_rng);
-	_currentCircle = _rows[index];
+
+	// 乱数生成器を使ってランダムにインデックスを選択
+	std::uniform_int_distribution<int> dist(0, static_cast<int>(_rows.size() - 1));	// 乱数の範囲を設定
+	int index = dist(_rng);			// ランダムなインデックスを生成
+	_currentCircle = _rows[index];	// 選択された円データを現在の円データとして保存
 	_hasCircle = true;
 	return true;
 }

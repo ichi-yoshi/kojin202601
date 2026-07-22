@@ -7,9 +7,9 @@ public:
 	// ゲージの初期データ
 	struct SpeedRow
 	{
-	    double minSpeed;
-	    double maxSpeed;
-		double bonusTime;
+		double minSpeed;	// 最小速度
+		double maxSpeed;	// 最大速度
+		double bonusTime;	// ボーナスタイム
 	};
 
 	bool Initialize(const std::string& dbPath, std::string* outError = nullptr);

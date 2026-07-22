@@ -30,15 +30,15 @@ void StatusUI::DrawStatusBox(const CharaAfterStatus& afterStatus) const
 	const auto rows = afterStatus.ToRows();
 	if(rows.empty()) { return; }
 
-	int fontSize = Font::Normal;
-	int rowHeight = fontSize + Common::RowSpacingExtra;
-	int padding = Common::DefaultPadding;
-	int rowSpace = Common::RowSpacingExtra;
-	int boxW = Layout::StatusBoxWidth;
+	int fontSize = Font::Normal;			// フォントサイズを取得
+	int rowSpace = Common::RowSpacingExtra;	// 行間の追加スペースを取得
+	int rowHeight = fontSize + rowSpace;	// 行の高さを計算
+	int padding = Common::DefaultPadding;	// ボックス内の余白を取得
+	int boxW = Layout::StatusBoxWidth;		// ボックスの幅を取得
 	int boxH = static_cast<int>(rows.size()) * rowHeight + padding * rowSpace;	// ボックスの高さを計算
 
-	int x = Layout::StatusBoxPos.x;
-	int y = Layout::StatusBoxPos.y;
+	int x = Layout::StatusBoxPos.x;	// ボックスのX座標を取得
+	int y = Layout::StatusBoxPos.y;	// ボックスのY座標を取得
 
 	DrawBox(x, y, x + boxW, y + boxH, Color::BoxBg(), TRUE);
 

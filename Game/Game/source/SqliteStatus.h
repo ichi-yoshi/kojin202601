@@ -3,9 +3,9 @@
 
 struct StatusRow
 {
-	std::string name;
-	double probability;
-	std::array<double, 5> values{};
+	std::string name;				// ステータス名
+	double probability;				// 確率
+	std::array<double, 5> values{};	// Val1～Val5
 };
 
 // SQLiteからサブステータスのデータを読み込む

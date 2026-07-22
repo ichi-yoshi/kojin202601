@@ -47,7 +47,7 @@ void CharaAfterStatus::UpdateFrom(const CharaBase& base, const SaveEquipment& sa
 
 	// 速度ステータスからボーナスタイムを取得する
 	_bonusTime = _sqliteSpeed.GetBonusTime(_afterStatus.speed);
-	_coolTime = 1.0 + _bonusTime;
+	_coolTime =_basicCoolTime + _bonusTime;	// クールタイムは1秒 + ボーナスタイム
 }
 
 // ステータスを行の文字列配列に変換する

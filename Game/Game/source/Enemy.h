@@ -45,8 +45,8 @@ private:
 	int _currentLevel;		// 敵の現在のレベル
 	double _finalHP;		// 敵の最終HP
 	double _finalAttack;	// 敵の最終攻撃力
-	int _modelHandle = -1;	// モデルハンドル
-	int _animId = -1;		// アニメーションID
+	int _modelHandle;	// モデルハンドル
+	int _animId;		// アニメーションID
 
 private:
 	// 敵の状態管理

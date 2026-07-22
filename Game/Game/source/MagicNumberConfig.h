@@ -95,6 +95,9 @@ namespace UIConfig
 
 			constexpr Point HistoryPos = { 900, 100 };	// ダメージ履歴の表示位置
 			constexpr int   HistoryMaxY = 650;			// ダメージ履歴の最大Y座標
+
+			constexpr Point SaveDataPos = { 520, 100 };	// セーブデータの表示位置
+			constexpr int   SaveDataWidth = 260;		// セーブデータの表示幅
         }
 
 		// ガチャ画面のUI要素の位置やサイズを定義する名前空間
@@ -110,13 +113,15 @@ namespace UIConfig
 		constexpr int   StatusBoxWidth = 260;			// ステータスボックスの幅
     }
 
-	// ゲージUIに関するパラメータをまとめた名前空間
+	// パラメータをまとめた名前空間
     namespace Param
     {
 		constexpr double PinchHpRate = 0.2;				// ピンチ状態と判定するHPの割合
-		constexpr double FlashTime = 0.2;				// 被ダメージ時の画面フラッシュの時間（秒）
+		constexpr float  FlashTime = 0.2f;				// 被ダメージ時の画面フラッシュの時間（秒）
 		constexpr int    FlashAlpha = 120;				// 被ダメージ時の画面フラッシュの透明度（0～255）
 		constexpr int    MaxAlphaByte = 255;			// 透明度の最大値（255）
 		constexpr double GaugeSpeedDivider = 1000.0;	// ゲージの速度を調整するための除数
+		constexpr float  HpPercentThreshold = 0.2f;		// HPバーの色を赤にする閾値（20%）
+		constexpr int    coinCost = 3000;				// ガチャのコスト
     }
 }

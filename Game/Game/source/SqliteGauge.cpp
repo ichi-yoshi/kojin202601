@@ -15,6 +15,7 @@ static int GaugeCallback(void* param, int col_cnt, char** row_txt, char**)
 	if(!param || col_cnt < 4) { return 0; }
 	auto* ctx = static_cast<GaugeContext*>(param);
 
+	// SQLiteの結果をGaugeRowに変換して保存
 	GaugeRow row;
     row.id = row_txt[0] ? row_txt[0] : "";
 	row.targetX = row_txt[1] ? std::atoi(row_txt[1]) : 0;
@@ -29,11 +30,12 @@ bool SqliteGauge::LoadGaugeSqlite(std::vector<GaugeRow>& outRows, std::string* o
 {
     outRows.clear();
 
+	// SQLiteデータベースに接続
     sqlite3* dbh = nullptr;
     if (!OpenSqliteConnection(&dbh, outError)) { return false; }
-
     GaugeContext ctx{ &outRows };
 
+	// SQLiteのクエリを実行してデータを取得
     char* errorMessage = nullptr;
     // SQL文でId, target_x, target_w, speed を指定（partは除外）
     int ret = sqlite3_exec(dbh,

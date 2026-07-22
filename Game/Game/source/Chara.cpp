@@ -19,10 +19,7 @@ namespace Status
 		dst.luck += src.luck;
 		dst.poop += src.poop;
 	}
-}
 
-namespace ApplyStatusName 
-{
 	// ステータス名に対応するステータスに値を加算する
 	void ApplyStatusName(CharaStatus& status, const std::string& name, double value)
 	{
@@ -82,7 +79,7 @@ CharaStatus Chara::ParseStatusRows(const std::vector<std::string>& rows)
 		try 
 		{
 			const double value = std::stod(valueText);	// 変換失敗時は例外が発生する
-			ApplyStatusName::ApplyStatusName(status, name, value);
+			Status::ApplyStatusName(status, name, value);
 		}
 		catch(...)
 		{

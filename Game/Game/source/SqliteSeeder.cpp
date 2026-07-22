@@ -4,6 +4,7 @@
 // SQLを実行するユーティリティ関数
 static bool ExecSql(sqlite3* dbh, const char* sql, const char* label, int& err)
 {
+	// SQLを実行してエラーがあれば表示
 	char* errorMessage = nullptr;
 	int ret = sqlite3_exec(dbh, sql, nullptr, nullptr, &errorMessage);
 	if(ret == SQLITE_OK)
@@ -25,6 +26,7 @@ static bool InsertSeeds(sqlite3* dbh, const std::vector<T>& seeds, const char* l
 {
 	for(const auto& s : seeds)
 	{
+		// SQL文を構築して実行
 		char sql[512];
 		build(sql, sizeof(sql), s);
 		if(!ExecSql(dbh, sql, label, err))

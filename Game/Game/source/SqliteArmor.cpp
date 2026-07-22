@@ -13,6 +13,7 @@ static int ArmorCallback(void* param, int col_cnt, char** row_txt, char**)
 	if(!param || col_cnt < 2) { return 0; }
 	auto* ctx = static_cast<ArmorContext*>(param);
 
+	// SQLiteの結果をArmorRowに変換してリストに追加
 	ArmorRow row;
 	row.name = SqliteTextUtill::FromUtf8(row_txt[0] ? row_txt[0] : "");
 	row.probability = row_txt[1] ? std::atof(row_txt[1]) : 0.0;
@@ -26,11 +27,13 @@ bool LoadArmorSqlite(std::vector<ArmorRow>& outRows, std::string* outError)
 {
 	outRows.clear();
 
+	// SQLiteデータベースに接続
 	sqlite3* dbh = nullptr;
 	if(!OpenSqliteConnection(&dbh, outError)) { return false; }
 
 	ArmorContext ctx{ &outRows };
 
+	// SQLiteのクエリを実行してデータを取得
 	char* errorMessage;
 	int ret = sqlite3_exec(dbh,
 		"SELECT ArmorName, probability FROM armor;",

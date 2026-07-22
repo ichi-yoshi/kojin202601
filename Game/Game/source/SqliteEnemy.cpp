@@ -13,6 +13,7 @@ static int EnemyBaseCallback(void* param, int col_cnt, char** row_txt, char**)
 	if(!param || col_cnt < 6) { return 0; }
 	auto* ctx = static_cast<std::vector<EnemyBaseRow>*>(param);
 
+	// SQLiteの結果をEnemyBaseRowに変換して保存
 	EnemyBaseRow row;
 	row.enemyName = SqliteTextUtill::FromUtf8(row_txt[0] ? row_txt[0] : "");
 	row.hp = row_txt[1] ? std::atof(row_txt[1]) : 0.0;
@@ -29,6 +30,8 @@ bool SqliteEnemy::LoadEnemyBaseSqlite(std::vector<EnemyBaseRow>& outRows, std::s
 	outRows.clear();
 	sqlite3* dbh = nullptr;
 	if(!OpenSqliteConnection(&dbh, outError)) { return false; }
+
+	// SQLiteのクエリを実行してデータを取得
 	char* errorMessage = nullptr;
 	int ret = sqlite3_exec(dbh,
 		"SELECT EnemyName, HP, Attack, Lv, StartLevel, LevelBonus FROM enemybase;",

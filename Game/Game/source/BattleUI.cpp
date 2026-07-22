@@ -21,21 +21,20 @@ void BattleUI::Render(
 	// 敵のモデルを描画する
     enemy->DrawModel();
 
-	int phaseMsgX = Layout::Battle::PhaseMsg.x;
-	int phaseMsgY = Layout::Battle::PhaseMsg.y;
-	int phaseTimerY = Layout::Battle::PhaseTimer.y;
-	int resultMsgX = Layout::Battle::ResultMsg.x;
+	int phaseMsgX = Layout::Battle::PhaseMsg.x;     // フェーズメッセージの表示位置X座標
+	int phaseMsgY = Layout::Battle::PhaseMsg.y;     // フェーズメッセージの表示位置Y座標
+	int phaseTimerY = Layout::Battle::PhaseTimer.y; // フェーズタイマーの表示位置Y座標
+	int resultMsgX = Layout::Battle::ResultMsg.x;   // 結果メッセージの表示位置X座標
 
     // フェーズに応じて画面の文字やUIの描画を切り替える
     if(battleTimer.GetCurrentPhase() == BattleTimer::BattlePhase::Defense) 
     {
-        //防御フェーズ
-        SetFontSize(Font::Large);
-
-		// 防御フェーズのメッセージを描画
+        // 防御フェーズ
+        // 防御フェーズのメッセージを描画
+        SetFontSize(Font::Large);		
         DrawString(phaseMsgX, phaseMsgY, 
             "【 敵の防御ターン！ 丸を消して時間を進めろ！ 】",
-            Color::Yellow());
+            Color::LightRed());
 
 		// 防御フェーズの残り時間を描画
         DrawFormatString(phaseMsgX, phaseTimerY, 
@@ -47,10 +46,9 @@ void BattleUI::Render(
     }
 	else if(battleTimer.GetCurrentPhase() == BattleTimer::BattlePhase::Attack)  
     {
-        //攻撃フェーズ
-        SetFontSize(Font::Large);
-
-		// 攻撃フェーズのメッセージを描画
+        // 攻撃フェーズ
+        // 攻撃フェーズのメッセージを描画
+        SetFontSize(Font::Large);	
         DrawString(phaseMsgX, phaseMsgY, 
             "【 自分の攻撃ターン！ ゲージを合わせてダメージを与えろ！ 】", 
             Color::LightRed());
@@ -65,7 +63,8 @@ void BattleUI::Render(
     }
 	else if(battleTimer.GetCurrentPhase() == BattleTimer::BattlePhase::Start)  
     {
-        //戦闘開始前のカウントダウン
+        // 戦闘開始前のカウントダウン
+		// 戦闘開始前のメッセージを描画
         SetFontSize(Font::Large);
         DrawFormatString(phaseMsgX, phaseTimerY, 
             Color::Red(), 
@@ -74,10 +73,9 @@ void BattleUI::Render(
     }
 	else if(battleTimer.GetCurrentPhase() == BattleTimer::BattlePhase::Result)  
     {
-        //戦闘結果表示
+        // 戦闘結果表示
+        // 勝敗に応じてメッセージを表示する
         SetFontSize(Font::ExtraLarge);
-        
-		// 勝敗に応じてメッセージを表示する
         if(enemyCurrentHP <= 0.0)
         {
             DrawString(resultMsgX, Layout::Battle::ResultTitleY, 
@@ -91,7 +89,6 @@ void BattleUI::Render(
                 Color::Red());
         }
 
-		// 最大ダメージと残りHPボーナスを表示する
         SetFontSize(Font::Large);
 
 		// 最大ダメージを表示する
@@ -118,9 +115,9 @@ void BattleUI::Render(
         return;
     }
 
-	int enemyPosX = Layout::Battle::EnemyPos.x;
-	int enemyBarTop = Layout::Battle::EnemyBarTop;
-	int enemyBarBottom = Layout::Battle::EnemyBarBottom;
+	int enemyPosX = Layout::Battle::EnemyPos.x;             // 敵の情報表示の基準位置X座標
+	int enemyBarTop = Layout::Battle::EnemyBarTop;          // 敵のHPバーの上端Y座標
+	int enemyBarBottom = Layout::Battle::EnemyBarBottom;    // 敵のHPバーの下端Y座標
 
     // 敵が存在すれば、画面上部に敵の情報とHPバーを表示する
     if(enemy)
@@ -171,25 +168,28 @@ void BattleUI::Render(
         if(historyY > Layout::Battle::HistoryMaxY) { break; }
     }
 
-	int playerPosX = Layout::Battle::PlayerPos.x;
-	int playerBarTop = Layout::Battle::PlayerBarTop;
-	int playerBarBottom = Layout::Battle::PlayerBarBottom;
+	int playerPosX = Layout::Battle::PlayerPos.x;           // プレイヤーの情報表示の基準位置X座標
+	int playerBarTop = Layout::Battle::PlayerBarTop;        // プレイヤーのHPバーの上端Y座標
+	int playerBarBottom = Layout::Battle::PlayerBarBottom;  // プレイヤーのHPバーの下端Y座標
 
     // プレイヤーのHPバーを描画する
     {
+		// プレイヤーの最大HPを取得する
         double maxHp = afterStatus.GetAfterStatus().hp;
-        if(maxHp < 1.0) { maxHp = 1.0; }
 
         SetFontSize(Font::Medium);
         DrawString(playerPosX, Layout::Battle::PlayerNameY, 
             "プレイヤー", Color::LightBlue());
+
         DrawBox(playerPosX, playerBarTop, playerPosX + Common::HPBar.w,
             playerBarBottom, Color::Gray(), FALSE);
 
+		// プレイヤーのHPの割合を計算し、HPバーの幅を決定する
         double playerHpRate = charaCurrentHP / maxHp;
         int playerBarWidth = static_cast<int>(Common::HPBar.w * playerHpRate);
 
-        /**/unsigned int barColor = (playerHpRate > 0.2) ? Color::HPBlue() : Color::Red();
+        // HPが一定%以下なら赤色にする
+		unsigned int barColor = (playerHpRate > Param::HpPercentThreshold) ? Color::HPBlue() : Color::Red();  
         DrawBox(playerPosX, playerBarTop, playerPosX + playerBarWidth, 
             playerBarBottom, barColor, TRUE);
 

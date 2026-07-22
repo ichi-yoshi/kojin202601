@@ -23,7 +23,7 @@ public:
 	bool IncrementEnemyLevelAndSave(std::string* outError = nullptr);	// 敵レベルを +1 して保存する
 	bool UpdateAccountAndSave(const AccountData& data, std::string* outError = nullptr);	// アカウントデータを更新して保存する
 
-	int GetPlayerLevel() const;
+	int GetPlayerLevel() const;	// プレイヤーレベルを取得する
 
 	std::vector<std::string> ToRows() const;
 private:

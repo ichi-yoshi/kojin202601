@@ -43,6 +43,8 @@ private:
 	int _targetW;			// 赤枠の幅
 	double _speed;			// バーの移動速度
 	double _currentValue;	// バーの現在位置
+	double _maxValue;		// バーの最大値
+	double _minValue;		// バーの最小値
 	bool _isMoving;			// バーが動いているかどうか
 	bool _isSuccess;		// 成功かどうか
 	bool _hasResult;		// 結果があるかどうか

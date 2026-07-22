@@ -1,4 +1,8 @@
 ﻿#include "SaveDataUI.h"
+#include "MagicNumberConfig.h"
+
+// 名前空間の使用宣言
+using namespace UIConfig;
 
 void SaveDataUI::Update(MouseInput& mouse)
 {
@@ -9,6 +13,7 @@ void SaveDataUI::Update(MouseInput& mouse)
 void SaveDataUI::Draw(const SaveData& saveData, bool visible) const
 {
 	DrawSaveDataButton();
+
 	if(visible)
 	{
 		DrawSaveDataBox(saveData);
@@ -22,26 +27,28 @@ void SaveDataUI::DrawSaveDataButton() const
 
 void SaveDataUI::DrawSaveDataBox(const SaveData& saveData) const
 {
+	// セーブデータの行を取得
 	const auto rows = saveData.ToRows();
 	if(rows.empty()) { return; }
 
-	int fontSize = 18;
-	int rowHeight = fontSize + 4;
-	int padding = 12;
-	int boxW = 260; 
-	int boxH = static_cast<int>(rows.size()) * rowHeight + padding * 2;
+	int fontSize = Font::Normal;
+	int rowSpace = Common::RowSpacingExtra;
+	int rowHeight = fontSize + rowSpace;
+	int padding = Common::DefaultPadding;
+	int boxW = Layout::Battle::SaveDataWidth;
+	int boxH = static_cast<int>(rows.size()) * rowHeight + padding * rowSpace;
 
-	int x = 520;	
-	int y = 100;    
+	int x = Layout::Battle::SaveDataPos.x;
+	int y = Layout::Battle::SaveDataPos.y;
 
 	// 背景ボックスの描画
-	DrawBox(x, y, x + boxW, y + boxH, GetColor(235, 235, 235), TRUE);
+	DrawBox(x, y, x + boxW, y + boxH, Color::BoxBg(), TRUE);
 	SetFontSize(fontSize);
 
 	int textY = y + padding;
 	for(const auto& row : rows)
 	{
-		DrawString(x + padding, textY, row.c_str(), GetColor(0, 0, 0));
+		DrawString(x + padding, textY, row.c_str(), Color::Black());
 		textY += rowHeight;
 	}
 }

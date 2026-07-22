@@ -7,10 +7,10 @@ class SaveEquipment
 public:
 	enum class EquipPart
 	{
-		Head,
-		Body,
-		Arms,
-		Feet,
+		Head,	// 頭
+		Body,	// 胴
+		Arms,	// 腕
+		Feet,	// 靴
 		_EOT_
 	};
 

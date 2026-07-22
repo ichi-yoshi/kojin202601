@@ -12,6 +12,7 @@ static int StatusCallback(void* param, int col_cnt, char** row_txt, char**)
 	if(!param || col_cnt < 7) { return 0; }
 	auto* ctx = static_cast<StatusContext*>(param);
 
+	// SQLiteの結果をStatusRowに変換して保存
 	StatusRow row;
 	row.name = SqliteTextUtill::FromUtf8(row_txt[0] ? row_txt[0] : "");
 	row.probability = row_txt[1] ? std::atof(row_txt[1]) : 0.0;
@@ -30,11 +31,12 @@ bool LoadStatusSqlite(std::vector<StatusRow>& outRows, std::string* outError)
 {
 	outRows.clear();
 
+	// SQLiteデータベースに接続
 	sqlite3* dbh = nullptr;
 	if (!OpenSqliteConnection(&dbh, outError)) { return false; }
-
 	StatusContext ctx{ &outRows };
 
+	// SQLiteのクエリを実行してデータを取得
 	char* errorMessage;
 	int ret = sqlite3_exec(dbh,
 		"SELECT StatusName, probability, Val1, Val2, Val3, Val4, Val5 FROM status;",
@@ -53,6 +55,7 @@ bool LoadStatusSqlite(std::vector<StatusRow>& outRows, std::string* outError)
 // サブステータスの行からランダムに値を1つ選ぶ
 double PickRandomValue(const StatusRow& row, std::mt19937& rng)
 {
+	// 0～4の範囲でランダムなインデックスを生成
 	std::uniform_int_distribution<int> dist(0, 4);
 	return row.values[dist(rng)];
 }

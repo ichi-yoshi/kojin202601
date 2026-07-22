@@ -20,8 +20,10 @@ void GaugeUI::SetPattern(int targetX, int targetW, double speed)
 {
 	_targetX = targetX;
 	_targetW = targetW;
-	/**/_speed = speed / 1000;	// 速度をミリ秒単位から秒単位に変換
-	
+	_speed = speed / 1000;	// 速度をミリ秒単位から秒単位に変換
+	_maxValue = 1.0;
+	_minValue = 0.0;
+
 }
 
 void GaugeUI::SetPos(int x, int y, int w, int h)
@@ -59,10 +61,10 @@ void GaugeUI::Update(MouseInput& mouse)
 	// ゲージの値を更新
 	_currentValue += _speed;
 
-	// 1.0を超えたらリセットしてループさせる
-	/**/if(_currentValue>1.0)
+	// _maxValueを超えたらリセットしてループさせる
+	if(_currentValue > _maxValue)
 	{
-		_currentValue = 0.0;
+		_currentValue = _minValue;
 	}
 
 	// ゲージの矩形範囲が左クリックされた時の判定

@@ -30,7 +30,8 @@ public:
 	bool IsTimeUp() const { return _time <= 0.0; }
 
 private:
-	double _time;					// 現在の残り時間
+	float _time;			// 現在の残り時間
+	float _minTime=0.0f;	// 最小時間
 
 private:
 	BattlePhase _currentPhase;		// 現在の戦闘フェーズ

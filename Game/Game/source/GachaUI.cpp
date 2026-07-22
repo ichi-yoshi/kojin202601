@@ -11,25 +11,28 @@ int GachaUI::GetGachaResultBottomY(const Gacha& gacha,
 	const GachaArmor& gachaArmor) const
 {
 	// ガチャ結果の描画開始位置と行間隔を取得
-	int y = Layout::Gacha::ResultBase.y;
-	int RowHeight = Common::RowHeight;
-	int RowCount = 0;
+	int y = Layout::Gacha::ResultBase.y;	// ガチャ結果の描画開始位置Y座標
+	int RowHeight = Common::RowHeight;		// 行の高さを取得
+	int RowCount = 0;						// ガチャ結果の行数を初期化
 
 	// 装備ガチャの結果がある場合、行数を加算
 	if(gachaArmor.HasResult() && !gachaArmor.GetResultRows().empty()) 
 	{ 
+		// 装備名の行数を加算
 		RowCount += 1; 
 	}
 
 	// メインステータスガチャの結果がある場合、行数を加算
 	if(gachaBasic.HasResult() && !gachaBasic.GetResultRows().empty())
 	{
+		// メインステータスの行数を加算
 		RowCount += static_cast<int>(gachaBasic.GetResultRows().size());
 	}
 
 	// サブステータスガチャの結果がある場合、行数を加算
 	if(gacha.HasResult() && !gacha.GetResultRows().empty())
 	{
+		// サブステータスの行数を加算
 		RowCount += static_cast<int>(gacha.GetResultRows().size());
 	}
 
@@ -47,11 +50,13 @@ void GachaUI::UpdatePendingButtons(const Gacha& gacha,
 	int x = Layout::Gacha::ResultBase.x;
 	int y = GetGachaResultBottomY(gacha, gachaBasic, gachaArmor) + Common::ButtonTopMargin;
 
+	// 保存ボタンの位置とサイズを設定
 	_saveButton.x = x;
 	_saveButton.y = y;
 	_saveButton.w = Common::StandardButton.w;
 	_saveButton.h = Common::StandardButton.h;
 
+	// 破棄ボタンの位置とサイズを設定
 	_keepButton.x = x;
 	_keepButton.y = y + _saveButton.h + Common::ButtonSpacing;
 	_keepButton.w = Common::StandardButton.w;
@@ -75,30 +80,33 @@ void GachaUI::DrawGachaResult(const Gacha& gacha,
 	const GachaArmor& gachaArmor) const
 {
 	SetFontSize(Font::Normal);
-	int x = Layout::Gacha::ResultBase.x;
-	int y = Layout::Gacha::ResultBase.y;
-	int subTextXOffset = Layout::Gacha::SubTextXOffset;
-	int RowCount = 0;
+	int x = Layout::Gacha::ResultBase.x;				// ガチャ結果の描画開始位置X座標を取得
+	int y = Layout::Gacha::ResultBase.y;				// ガチャ結果の描画開始位置Y座標を取得
+	int subTextXOffset = Layout::Gacha::SubTextXOffset;	// サブテキストのX座標オフセットを取得
+	int RowCount = 0;									// ガチャ結果の行数を初期化
 
 	// 装備ガチャの結果がある場合、行数を加算
 	if(gachaArmor.HasResult() && !gachaArmor.GetResultRows().empty()) 
 	{ 
-		RowCount += 1; 
+		// 装備名の行数を加算
+		RowCount += 1;	
 	}
 
 	// メインステータスガチャの結果がある場合、行数を加算
 	if(gachaBasic.HasResult() && !gachaBasic.GetResultRows().empty())
 	{
-		RowCount += static_cast<int>(gachaBasic.GetResultRows().size());
+		// メインステータスの行数を加算
+		RowCount += static_cast<int>(gachaBasic.GetResultRows().size());	
 	}
 
 	// サブステータスガチャの結果がある場合、行数を加算
 	if(RowCount > 0)
 	{
-		int RowHeight = Layout::Gacha::SubTextXOffset;	// 行の高さを取得
-		int padding = Common::DefaultPadding;		// ボックスの内側の余白を取得
+		int RowHeight = Layout::Gacha::SubTextXOffset;			// 行の高さを取得
+		int padding = Common::DefaultPadding;					// ボックスの内側の余白を取得
+		int rowSpace = Common::RowSpacingExtra;					// 行間の追加スペースを取得
 		int boxW = Layout::Gacha::ResultBoxWidth;				// ボックスの幅を取得
-		/**/int boxH = RowCount * RowHeight + padding * 2;	// ボックスの高さを計算
+		int boxH = RowCount * RowHeight + padding * rowSpace;	// ボックスの高さを計算
 		DrawBox(x - padding, y - padding,
 			x - padding + boxW,	y - padding + boxH, 
 			Color::BoxBg(), TRUE);

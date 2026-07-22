@@ -4,6 +4,7 @@
 
 bool ModeGameBattle::Initialize(const std::string& dbPath, std::string* outError)
 {
+	// 各UIとデータベースの初期化
 	if(!_gaugeUI.Initialize(dbPath, outError)) { return false; }
 	if(!_circleUI.Initialize(dbPath, outError)) { return false; }
 	if(!_sqliteEnemy.Initialize(dbPath, outError)) { return false; }
@@ -50,7 +51,7 @@ void ModeGameBattle::Reset(const SaveData& saveData, CharaAfterStatus& afterStat
 	}
 }
 	
-void ModeGameBattle::Process(MouseInput& mouse, CharaAfterStatus& afterStatus, SaveData& saveData, double deltaTime)
+void ModeGameBattle::Process(MouseInput& mouse, CharaAfterStatus& afterStatus, SaveData& saveData, float deltaTime)
 {
 	if(_enemy == nullptr) { return; }
 

@@ -3,8 +3,8 @@
 
 struct ArmorRow
 {
-	std::string name;
-	double probability = 1.0;
+	std::string name;	// 装備名
+	double probability;	// 確率
 };
 
 // SQLiteから装備のデータを読み込む

@@ -28,7 +28,8 @@ private:
 	SqliteSpeed _sqliteSpeed;
 
 private:
-	double _coolTime = 0.0;		// クールタイム
-	double _bonusTime = 0.0;	// ボーナスタイム
+	double _basicCoolTime = 1.0;	// 基礎クールタイム
+	double _coolTime = 0.0;			// クールタイム
+	double _bonusTime = 0.0;		// ボーナスタイム
 };
 

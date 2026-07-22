@@ -57,7 +57,7 @@ bool SaveData::LoadFromSqlite(std::string* outError)
 	_accountData.clear();
 	_hasResult = false;
 	sqlite3* dbh = nullptr;
-	if(!OpenSqliteConnection(&dbh, outError)) { return false; }
+	if(!OpenSqliteConnection(&dbh, outError)) { return false; }	
 	LoadContext ctx{ &_accountData };
 
 	// SQLiteのSELECT文を実行して、LoadCallbackで結果を取得
@@ -83,7 +83,7 @@ int SaveData::LoadCallback(void* param, int col_cnt, char** row_txt, char**)
 	SaveData::AccountData data;
 
 	// row_txt の各列の値を整数に変換して AccountData に格納
-	data.uid = row_txt[0] ? std::atoi(row_txt[0]) : 0;
+	data.uid = row_txt[0] ? std::atoi(row_txt[0]) : 0;			
 	data.level = row_txt[1] ? std::atoi(row_txt[1]) : 0;
 	data.exp = row_txt[2] ? std::atoi(row_txt[2]) : 0;
 	data.coin = row_txt[3] ? std::atoi(row_txt[3]) : 0;
