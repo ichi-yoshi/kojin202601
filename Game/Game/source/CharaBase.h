@@ -1,5 +1,6 @@
 #pragma once
 
+// キャラクターの基本ステータスを表す構造体
 struct CharaStatus
 {
 	double hp = 0.0;				//HP
@@ -14,7 +15,7 @@ struct CharaStatus
 	double critDamage = 0.0;		//会心ダメージ
 	double speed = 0.0;				//速度
 	double luck = 0.0;				//運値
-	double poop = 0.0;				//Poop
+	double poop = 0.0;				//Poop(ダメージ減衰率)
 };
 
 class CharaBase

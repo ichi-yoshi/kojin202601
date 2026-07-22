@@ -10,6 +10,7 @@ public:
 	void SetAfterStatus(const CharaStatus& status);
 	const CharaStatus& GetAfterStatus() const { return _afterStatus; }
 
+	// SQLiteの速度テーブルを初期化する
 	bool InitializeSpeedTable(const std::string& dbPath, std::string* outError = nullptr);
 
 	// 装備から最終ステータスを更新する
@@ -18,12 +19,16 @@ public:
 	// ステータスを行の文字列配列に変換する
 	std::vector<std::string> ToLines() const;
 
+	// ステータスを行の文字列配列に変換する
 	double GetcoolTime() const { return _coolTime; };
 	double GetBonusTime()const { return _bonusTime; };
+
 private:
 	CharaStatus _afterStatus;
 	SqliteSpeed _sqliteSpeed;
-	double _coolTime = 0.0;
-	double _bonusTime = 0.0;
+
+private:
+	double _coolTime = 0.0;		// クールタイム
+	double _bonusTime = 0.0;	// ボーナスタイム
 };
 

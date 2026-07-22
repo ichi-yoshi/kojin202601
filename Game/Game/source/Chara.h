@@ -3,6 +3,12 @@
 #include "CharaBase.h"
 #include "CharaAfterStatus.h"
 
+namespace Status
+{
+	// ステータスを加算する（％は加算後に反映される前提）
+	void AddStatus(CharaStatus& dst, const CharaStatus& src);
+}
+
 class Chara
 {
 public:

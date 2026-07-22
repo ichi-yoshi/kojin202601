@@ -2,27 +2,6 @@
 #include "Chara.h"
 #include "SaveEquipment.h"
 
-namespace
-{
-	// ステータスを加算する（％は加算後に反映される前提）
-	void AddStatusLocal(CharaStatus& dst, const CharaStatus& src)
-	{
-		dst.hp += src.hp;			
-		dst.attack += src.attack;
-		dst.defense += src.defense;
-
-		dst.hpPercent += src.hpPercent;
-		dst.attackPercent += src.attackPercent;
-		dst.defensePercent += src.defensePercent;
-
-		dst.critRate += src.critRate;
-		dst.critDamage += src.critDamage;
-		dst.speed += src.speed;
-		dst.luck += src.luck;
-		dst.poop += src.poop;
-	}
-}
-
 bool CharaAfterStatus::InitializeSpeedTable(const std::string& dbPath, std::string* outError)
 {
 	if(!_sqliteSpeed.LoadSpeedSqlite(_sqliteSpeed._rows, outError))
@@ -42,6 +21,9 @@ void CharaAfterStatus::UpdateFrom(const CharaBase& base, const SaveEquipment& sa
 {
 	CharaStatus equipTotal{};
 
+	// 名前空間の使用宣言
+	using namespace Status;
+
 	for(int i = 0; i < static_cast<int>(SaveEquipment::EquipPart::_EOT_); ++i)
 	{
 		const auto part = static_cast<SaveEquipment::EquipPart>(i);
@@ -52,8 +34,8 @@ void CharaAfterStatus::UpdateFrom(const CharaBase& base, const SaveEquipment& sa
 		const auto sub = Chara::ParseStatusLines(result.statusLines);
 
 		// 基礎ステータスと装備ステータスを合計する
-		AddStatusLocal(equipTotal, basic);
-		AddStatusLocal(equipTotal, sub);
+		Status::AddStatus(equipTotal, basic);
+		Status::AddStatus(equipTotal, sub);
 	}
 
 	const auto after = Chara::CalculateAfterStatus(base, equipTotal);
