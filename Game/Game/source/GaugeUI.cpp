@@ -2,9 +2,6 @@
 #include "ButtonUI.h"
 #include "MagicNumberConfig.h"
 
-// 名前空間の使用の宣言
-using namespace Color;
-
 bool GaugeUI::Initialize(const std::string& dbPath, std::string* outError)
 {
 	// ゲージのマスターデータをロード
@@ -92,6 +89,9 @@ void GaugeUI::Update(MouseInput& mouse)
 
 void GaugeUI::Draw() 
 {
+	// 名前空間の使用の宣言
+	using namespace UIConfig;
+
 	// 基準となるゲージの座標とサイズを取得
 	int bx = _gaugeButton.x;
 	int by = _gaugeButton.y;
@@ -104,19 +104,28 @@ void GaugeUI::Draw()
 	int targetRight = targetLeft + _targetW;
 	DrawBox(targetLeft, by, targetRight, by + bh, Color::Red(), true);
 
-	// バーの座標を計算して描画
+	//// バーの座標を計算して描画
+	//int barX = bx + static_cast<int>(bw * _currentValue);
+	//DrawBox(barX - 1, by - 2, barX + 2, by + bh + 2, Color::White(), true);
+
+	// バーを描画 (太さオフセット適用)
 	int barX = bx + static_cast<int>(bw * _currentValue);
-	DrawBox(barX - 1, by - 2, barX + 2, by + bh + 2, Color::White(), true);
+	DrawBox(barX - Common::GaugeBarThickness,
+		by - Common::GaugeBarOverflow,
+		barX + Common::GaugeBarThickness,
+		by + bh + Common::GaugeBarOverflow,
+		Color::White(), TRUE);
 
 	if(_hasResult) 
 	{
+		int textY = by - Common::TextMarginTop;
 		if (_isSuccess) 
 		{
-			DrawString(bx,by-20, "成功", Color::Green());
+			DrawString(bx, textY, "成功", Color::Green());
 		}
 		else 
 		{
-			DrawString(bx,by-20, "失敗", Color::Red());
+			DrawString(bx, textY, "失敗", Color::Red());
 		}
 	}
 }

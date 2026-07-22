@@ -1,8 +1,8 @@
 ﻿#include "StatusUI.h"
 #include "MagicNumberConfig.h"
 
-using namespace FontSize;
-using namespace Color;
+// 名前空間の使用の宣言
+using namespace UIConfig;
 
 void StatusUI::Update(MouseInput& mouse)
 {
@@ -29,22 +29,22 @@ void StatusUI::DrawStatusBox(const CharaAfterStatus& afterStatus) const
 	const auto lines = afterStatus.ToLines();
 	if(lines.empty()) { return; }
 
-	int fontSize = 18;
-	int lineHeight = fontSize + 2;
-	int padding = 8;
-	int boxW = 260;
+	int fontSize = Font::Normal;
+	int lineHeight = fontSize + Common::LineSpacingExtra;
+	int padding = Common::DefaultPadding;
+	int boxW = Layout::StatusBoxWidth;
 	int boxH = static_cast<int>(lines.size()) * lineHeight + padding * 2;
 
-	int x = 20;	// 左側
-	int y = 100;
+	int x = Layout::StatusBoxPos.x;
+	int y = Layout::StatusBoxPos.y;
 
-	DrawBox(x, y, x + boxW, y + boxH, GetColor(235, 235, 235), TRUE);
+	DrawBox(x, y, x + boxW, y + boxH, Color::BoxBg(), TRUE);
 	SetFontSize(fontSize);
 
 	int textY = y + padding;
 	for(const auto& line : lines)
 	{
-		DrawString(x + padding, textY, line.c_str(), GetColor(0, 0, 0));
+		DrawString(x + padding, textY, line.c_str(), Color::Black());
 		textY += lineHeight;
 	}
 }

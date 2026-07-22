@@ -1,5 +1,9 @@
 #include "CircleUI.h"
 #include "ButtonUI.h"
+#include "MagicNumberConfig.h"
+
+// 名前空間の使用の宣言
+using namespace UIConfig;
 
 bool CircleUI::Initialize(const std::string& dbPath, std::string* outError)
 {
@@ -8,8 +12,10 @@ bool CircleUI::Initialize(const std::string& dbPath, std::string* outError)
 	{
 		return false;
 	}
+
 	// 最初のパターンをロードしてリセット
 	Reset();
+
 	return true;
 }
 
@@ -54,7 +60,7 @@ void CircleUI::Reset()
 		c.y = _targetY + (_targetH == 0 ? 0 : (rand() % (_targetH + 1)));
 
 		c.radius = _radius;
-		c.color = GetColor(255, 120, 120); // 弱点っぽい赤色（お好みで変えてください）
+		c.color = Color::WeakRed(); 
 		c.isAlive = true;
 
 		_circles.push_back(c);
@@ -66,6 +72,7 @@ bool CircleUI::Update(MouseInput& mouse)
 	// すでにゲームが終わっている（結果が出ている）なら何もしない
 	if(_hasResult) return false;
 
+	// マウスの左クリックが当たったかどうかを判定するフラグ
 	bool isHit = false;
 
 	// 左クリックされた瞬間だけ当たり判定をチェック
@@ -118,7 +125,7 @@ bool CircleUI::Update(MouseInput& mouse)
 void CircleUI::Draw()
 {
 	// 生成範囲の枠を薄くデバッグ表示したい場合はここを有効にする
-	DrawBox(_circleButton.x, _circleButton.y, _circleButton.x + _circleButton.w, _circleButton.y + _circleButton.h, GetColor(100,100,100), FALSE);
+	DrawBox(_circleButton.x, _circleButton.y, _circleButton.x + _circleButton.w, _circleButton.y + _circleButton.h, Color::DarkGray(), FALSE);
 
 	// 生きている円だけを順番に描画する
 	for(const auto& c : _circles)
@@ -128,7 +135,7 @@ void CircleUI::Draw()
 			// 塗りつぶしの円
 			DrawCircle(c.x, c.y, c.radius, c.color, TRUE);
 			// 円の外枠（黒）
-			DrawCircle(c.x, c.y, c.radius, GetColor(0, 0, 0), FALSE);
+			DrawCircle(c.x, c.y, c.radius, Color::Black(), FALSE);
 		}
 	}
 
@@ -136,6 +143,6 @@ void CircleUI::Draw()
 	if(_hasResult && _isSuccess)
 	{
 		SetFontSize(32);
-		DrawString(_circleButton.x + 50, _circleButton.y + 150, "CLEAR!!", GetColor(0, 255, 0));
+		DrawString(_circleButton.x + Common::ClearMsgOffset.x, _circleButton.y + Common::ClearMsgOffset.y, "CLEAR!!", Color::Green());
 	}
 }

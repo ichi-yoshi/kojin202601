@@ -1,111 +1,116 @@
 #pragma once
 #include "container.h"
 
-// フォントサイズの定数を定義
-namespace FontSize 
+namespace UIConfig
 {
-	constexpr int Small = 16;
-	constexpr int History = 18;
-	constexpr int Medium = 20;
-	constexpr int Large = 24;
-	constexpr int ExtraLarge = 36;
-}
+    struct Point { int x, y; };
+    struct Size { int w, h; };
 
-// 色の定数を定義
-namespace Color
-{
-    inline unsigned int Yellow() { return GetColor(255, 255, 0); }
-    inline unsigned int Red() { return GetColor(255, 0, 0); }
-    inline unsigned int LightRed() { return GetColor(255, 50, 50); }
-    inline unsigned int Gold() { return GetColor(255, 215, 0); }
-    inline unsigned int White() { return GetColor(255, 255, 255); }
-    inline unsigned int Gray() { return GetColor(150, 150, 150); }
-    inline unsigned int DarkGray() { return GetColor(100, 100, 100); }
-    inline unsigned int TextGray() { return GetColor(200, 200, 200); }
-    inline unsigned int DimGray() { return GetColor(128, 128, 128); }
-    inline unsigned int Green() { return GetColor(0, 255, 0); }
-    inline unsigned int LightBlue() { return GetColor(120, 200, 255); }
-    inline unsigned int Blue() { return GetColor(0, 0, 255); }
-    inline unsigned int HPBlue() { return GetColor(50, 150, 255); }
-	inline unsigned int Black() { return GetColor(0, 0, 0); }
-    inline unsigned int BoxBg() { return GetColor(235, 235, 235); }
-}
+    namespace Font
+    {
+        constexpr int Small = 16;
+        constexpr int Normal = 18;
+        constexpr int Medium = 20;
+        constexpr int Large = 24;
+        constexpr int Title = 32;
+        constexpr int ExtraLarge = 36;
+    }
 
-// レイアウトの定数を定義
-namespace Layout
-{
-    // フェーズメッセージ関連
-    constexpr int PhaseMsgX = 100;
-    constexpr int PhaseMsgY = 50;
-    constexpr int PhaseTimerY = 80;
+    namespace Color
+    {
+        inline unsigned int Yellow() { return GetColor(255, 255, 0); }
+        inline unsigned int Red() { return GetColor(255, 0, 0); }
+        inline unsigned int LightRed() { return GetColor(255, 50, 50); }
+        inline unsigned int Gold() { return GetColor(255, 215, 0); }
+        inline unsigned int White() { return GetColor(255, 255, 255); }
+        inline unsigned int Gray() { return GetColor(150, 150, 150); }
+        inline unsigned int DarkGray() { return GetColor(100, 100, 100); }
+        inline unsigned int TextGray() { return GetColor(200, 200, 200); }
+        inline unsigned int DimGray() { return GetColor(128, 128, 128); }
+        inline unsigned int Green() { return GetColor(0, 255, 0); }
+        inline unsigned int LightBlue() { return GetColor(120, 200, 255); }
+        inline unsigned int Blue() { return GetColor(0, 0, 255); }
+        inline unsigned int HPBlue() { return GetColor(50, 150, 255); }
+        inline unsigned int Black() { return GetColor(0, 0, 0); }
+        inline unsigned int BoxBg() { return GetColor(235, 235, 235); }
+        inline unsigned int WeakRed() { return GetColor(255, 120, 120); }
+    }
 
-    // リザルト画面
-    constexpr int ResultMsgX = 200;
-    constexpr int ResultTitleY = 250;
-    constexpr int ResultMaxDmgY = 330;
-    constexpr int ResultHpBonusY = 370;
-    constexpr int ResultCoinY = 420;
-    constexpr int ResultNextSceneY = 500;
+    namespace Common
+    {
+        constexpr Size  StandardButton = { 160, 36 };
+        constexpr Point ButtonPadding = { 10, 10 };
+        constexpr Size  HPBar = { 400, 20 };
 
-    // 敵UI
-    constexpr int EnemyInfoX = 100;
-    constexpr int EnemyNameY = 140;
-    constexpr int EnemyBarTop = 170;
-    constexpr int EnemyBarBottom = 190;
-    constexpr int EnemyBarWidth = 400;
-    constexpr int EnemyHpTextY = 200;
+        constexpr int DefaultPadding = 8;
+        constexpr int DefaultIndent = 20;
+        constexpr int LineHeight = 20;
+        constexpr int LineSpacingExtra = 2;
+        constexpr int MarginRight = 20;
+        constexpr int MarginTop = 20;
+        constexpr int ButtonTopMargin = 12;
+        constexpr int ButtonSpacing = 6;
 
-    // プレイヤーUI
-    constexpr int PlayerInfoX = 100;
-    constexpr int PlayerNameY = 240;
-    constexpr int PlayerBarTop = 270;
-    constexpr int PlayerBarBottom = 290;
-    constexpr int PlayerBarWidth = 400;
-    constexpr int PlayerHpTextY = 300;
+        constexpr int GaugeBarThickness = 1;
+        constexpr int GaugeBarOverflow = 2;
+        constexpr int TextMarginTop = 20;
 
-    // ダメージ履歴
-    constexpr int DHistoryX = 900;
-    constexpr int DHistoryStartY = 100;
-    constexpr int DHistoryTitleSpacing = 25;
-    constexpr int DHistoryLineSpacing = 22;
-    constexpr int DHistoryMaxY = 650;
+        constexpr Point ClearMsgOffset = { 50, 150 };
+        constexpr int HistoryTitleSpacing = 25;
+        constexpr int HistoryLineSpacing = 22;
+    }
 
-	constexpr int ScreenWidth = 1920;
-	constexpr int ScreenHeight = 1080;
-	constexpr int ScreenCenterX = ScreenWidth / 2;
-	constexpr int ScreenCenterY = ScreenHeight / 2;
-}
+    namespace Layout
+    {
+        constexpr Size Screen = { 1920, 1080 };
 
-// ゲーム内のシステムパラメータを定義
-namespace SystemParam
-{
-    constexpr double PlayerPinchHpRate = 0.2;  // HPが20%以下でピンチ色に変更
-    constexpr double FlashMaxTime = 0.2;       // フラッシュの最大時間
-    constexpr int FlashMaxAlpha = 120;         // フラッシュの最大透明度
-	constexpr int MaxAlphaByte = 255;          // 最大のアルファ値
-}
+        namespace Battle
+        {
+            constexpr Point PhaseMsg = { 100, 50 };
+            constexpr Point PhaseTimer = { 100, 80 };
+            constexpr Point ResultMsg = { 200, 250 };
+            constexpr int   ResultTitleY = 250;
+            constexpr int   ResultMaxDmgY = 330;
+            constexpr int   ResultHpBonusY = 370;
+            constexpr int   ResultCoinY = 420;
+            constexpr int   ResultNextSceneY = 500;
 
-namespace LayoutGacha
-{
-    // ガチャ結果表示
-    constexpr int ResultBaseX = 480;
-    constexpr int ResultBaseY = 440;
-    constexpr int ResultLineHeight = 20;
-    constexpr int ResultSubTextXOffset = 120;
-    constexpr int ResultBoxPadding = 8;
-    constexpr int ResultBoxWidth = 320;
+            constexpr Point EnemyPos = { 100, 140 };
+            constexpr int   EnemyNameY = 140;
+            constexpr int   EnemyBarTop = 170;
+            constexpr int   EnemyBarBottom = 190;
+            constexpr int   EnemyHpTextY = 200;
 
-    // 保留・確定ボタン
-    constexpr int ButtonWidth = 160;
-    constexpr int ButtonHeight = 36;
-    constexpr int ButtonTopMargin = 12;
-    constexpr int ButtonSpacing = 6;
+            constexpr Point PlayerPos = { 100, 240 };
+            constexpr int   PlayerNameY = 240;
+            constexpr int   PlayerBarTop = 270;
+            constexpr int   PlayerBarBottom = 290;
+            constexpr int   PlayerHpTextY = 300;
 
-   
-    constexpr int MarginRight = 20;
-    constexpr int MarginTop = 20;
-    constexpr int Width = 360;
-    constexpr int Padding = 8;
-    constexpr int IndentX = 20;
-    constexpr int LineSpacingExtra = 2;
+            constexpr Point HistoryPos = { 900, 100 };
+            constexpr int   HistoryMaxY = 650;
+        }
+
+        namespace Gacha
+        {
+            constexpr Point ResultBase = { 480, 440 };
+            constexpr int   ResultBoxWidth = 320;
+            constexpr int   SubTextXOffset = 120;
+            constexpr int   SavedAreaWidth = 360;
+        }
+
+        constexpr Point StatusBoxPos = { 20, 100 };
+        constexpr int   StatusBoxWidth = 260;
+    }
+
+    namespace Param
+    {
+        constexpr double PinchHpRate = 0.2;
+        constexpr double FlashTime = 0.2;
+        constexpr int    FlashAlpha = 120;
+        constexpr int    MaxAlphaByte = 255;
+        constexpr double GaugeSpeedDivider = 1000.0;
+        constexpr float  DefaultMouseSensitivity = 0.005f;
+        constexpr int    MousePosUninitialized = -1;
+    }
 }

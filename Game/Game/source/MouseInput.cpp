@@ -2,6 +2,9 @@
 #include "MouseInput.h"
 #include "MagicNumberConfig.h"
 
+// 名前空間の使用の宣言
+using namespace UIConfig;
+
 MouseInput::MouseInput() 
 {
 	_x = 0;                     
@@ -10,9 +13,9 @@ MouseInput::MouseInput()
 	_leftDown = false;          
 	_leftTrig = false;          
 	_prevLeftDown = false;      
-	_prevMouseX = -1;           
-	_prevMouseY = -1;           
-	_mouseSensitivity = 0.005f; 
+	_prevMouseX = Param::MousePosUninitialized;           
+	_prevMouseY = Param::MousePosUninitialized;           
+	_mouseSensitivity = Param::DefaultMouseSensitivity; 
 	_Yaw = 0.0f;                
 	_Pitch = 0.0f;    
 }
@@ -61,8 +64,12 @@ void MouseInput::MousePointerControl()
 // マウスポインタを画面中央に戻す
 void MouseInput::ResetMousePointCenter()
 {
-    // 毎フレーム中央に戻す
-    SetMousePoint(Layout::ScreenCenterX, Layout::ScreenCenterY);
-    _prevMouseX = Layout::ScreenCenterX;
-    _prevMouseY = Layout::ScreenCenterY;
+	// UIConfigから画面中央の座標を求める
+	constexpr int centerX = Layout::Screen.w / 2;
+	constexpr int centerY = Layout::Screen.h / 2;
+
+	// 毎フレーム中央に戻す
+	SetMousePoint(centerX, centerY);
+	_prevMouseX = centerX;
+	_prevMouseY = centerY;
 }

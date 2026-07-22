@@ -3,9 +3,7 @@
 #include "MagicNumberConfig.h"
 
 // 名前空間の使用
-using namespace FontSize;
-using namespace Color;
-using namespace LayoutGacha;
+using namespace UIConfig;
 
 // ガチャ結果の下端Y座標を計算する
 int GachaUI::GetGachaResultBottomY(const Gacha& gacha,
@@ -13,8 +11,8 @@ int GachaUI::GetGachaResultBottomY(const Gacha& gacha,
 	const GachaArmor& gachaArmor) const
 {
 	// ガチャ結果の描画開始位置と行間隔を取得
-	int y = LayoutGacha::ResultBaseY;
-	int lineHeight = LayoutGacha::ResultLineHeight;
+	int y = Layout::Gacha::ResultBase.y;
+	int lineHeight = Common::LineHeight;
 	int lineCount = 0;
 
 	// 装備ガチャの結果がある場合、行数を加算
@@ -46,18 +44,18 @@ void GachaUI::UpdatePendingButtons(const Gacha& gacha,
 {
 	if(!pending.hasPending) { return; }
 
-	int x = LayoutGacha::ResultBaseX;
-	int y = GetGachaResultBottomY(gacha, gachaBasic, gachaArmor) + LayoutGacha::ButtonTopMargin;
+	int x = Layout::Gacha::ResultBase.x;
+	int y = GetGachaResultBottomY(gacha, gachaBasic, gachaArmor) + Common::ButtonTopMargin;
 
 	_saveButton.x = x;
 	_saveButton.y = y;
-	_saveButton.w = LayoutGacha::ButtonWidth;
-	_saveButton.h = LayoutGacha::ButtonHeight;
+	_saveButton.w = Common::StandardButton.w;
+	_saveButton.h = Common::StandardButton.h;
 
 	_keepButton.x = x;
-	_keepButton.y = y + _saveButton.h + LayoutGacha::ButtonSpacing;
-	_keepButton.w = LayoutGacha::ButtonWidth;
-	_keepButton.h = LayoutGacha::ButtonHeight;
+	_keepButton.y = y + _saveButton.h + Common::ButtonSpacing;
+	_keepButton.w = Common::StandardButton.w;
+	_keepButton.h = Common::StandardButton.h;
 }
 
 void GachaUI::Draw(const Gacha& gacha,
@@ -76,10 +74,10 @@ void GachaUI::DrawGachaResult(const Gacha& gacha,
 	const GachaBasicStatus& gachaBasic,
 	const GachaArmor& gachaArmor) const
 {
-	SetFontSize(FontSize::History);
-	int x = LayoutGacha::ResultBaseX;
-	int y = LayoutGacha::ResultBaseY;
-	int subTextXOffset = LayoutGacha::ResultSubTextXOffset;
+	SetFontSize(Font::Normal);
+	int x = Layout::Gacha::ResultBase.x;
+	int y = Layout::Gacha::ResultBase.y;
+	int subTextXOffset = Layout::Gacha::SubTextXOffset;
 	int lineCount = 0;
 
 	// 装備ガチャの結果がある場合、行数を加算
@@ -97,9 +95,9 @@ void GachaUI::DrawGachaResult(const Gacha& gacha,
 	// サブステータスガチャの結果がある場合、行数を加算
 	if(lineCount > 0)
 	{
-		int lineHeight = LayoutGacha::ResultSubTextXOffset;	// 行の高さを取得
-		int padding = LayoutGacha::ResultBoxPadding;		// ボックスの内側の余白を取得
-		int boxW = LayoutGacha::ResultBoxWidth;				// ボックスの幅を取得
+		int lineHeight = Layout::Gacha::SubTextXOffset;	// 行の高さを取得
+		int padding = Common::DefaultPadding;		// ボックスの内側の余白を取得
+		int boxW = Layout::Gacha::ResultBoxWidth;				// ボックスの幅を取得
 		int boxH = lineCount * lineHeight + padding * 2;	// ボックスの高さを計算
 		DrawBox(x - padding, y - padding, x - padding + boxW, y - padding + boxH, Color::BoxBg(), TRUE);
 	}
@@ -117,7 +115,7 @@ void GachaUI::DrawGachaResult(const Gacha& gacha,
 		for(const auto& line : gachaBasic.GetResultLines())
 		{
 			DrawString(x + subTextXOffset, y, line.c_str(), Color::Red());
-			y += LayoutGacha::ResultLineHeight;
+			y += Common::LineHeight;
 		}
 	}
 
@@ -127,7 +125,7 @@ void GachaUI::DrawGachaResult(const Gacha& gacha,
 		for(const auto& line : gacha.GetResultLines())
 		{
 			DrawString(x + subTextXOffset, y, line.c_str(), Color::Black());
-			y += LayoutGacha::ResultLineHeight;
+			y += Common::LineHeight;
 		}
 	}
 }
@@ -147,10 +145,10 @@ void GachaUI::DrawSavedEquipment(const SaveEquipment& saveEquipment) const
 	int screenW = 0, screenH = 0;
 	GetDrawScreenSize(&screenW, &screenH);
 
-	int fontSize = FontSize::History;
-	int lineHeight = fontSize + 2;
-	int padding = LayoutGacha::Padding;
-	int boxW = LayoutGacha::Width;
+	int fontSize = Font::Normal;
+	int lineHeight = fontSize + Common::LineSpacingExtra;
+	int padding = Common::DefaultPadding;
+	int boxW = Layout::Gacha::SavedAreaWidth;
 	int totalLines = 0;
 
 	// 保存済み装備の行数を計算
@@ -175,10 +173,10 @@ void GachaUI::DrawSavedEquipment(const SaveEquipment& saveEquipment) const
 	if(totalLines <= 0) { return; }
 
 	int boxH = totalLines * lineHeight + padding * 2;	// ボックスの高さを計算
-	int marginRight = LayoutGacha::MarginRight;			// 右側の余白を取得
+	int marginRight = Common::MarginRight;			// 右側の余白を取得
 	int x = screenW - boxW - marginRight;				// ボックスのX座標を計算
 	int y = marginRight;								// ボックスのY座標を計算
-	int indentX = LayoutGacha::IndentX;					// インデントのX座標を取得
+	int indentX = Common::DefaultIndent;					// インデントのX座標を取得
 
 	DrawBox(x, y, x + boxW, y + boxH, Color::BoxBg(), TRUE);
 	SetFontSize(fontSize);
