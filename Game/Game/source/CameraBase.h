@@ -1,10 +1,12 @@
 #pragma once
 #include "container.h"
+#include "MouseInput.h"
 
-class CameraBase {
+class CameraBase 
+{
 public:
     CameraBase();
-    ~CameraBase();
+    ~CameraBase() = default;
 
     // 初期化・終了処理
     bool Initialize();
@@ -17,36 +19,36 @@ public:
     void ApplyCamera();
 
     // アクセサ
-    VECTOR GetPosition() const { return _vPos; }
-    VECTOR GetTarget() const { return _vTarget; }
-    VECTOR GetDirection() const;
-    float GetYaw() const { return _camYaw; }
-    float GetPitch() const { return _camPitch; }
+	VECTOR GetPosition() const { return _vPos; }    // カメラの位置を取得
+	VECTOR GetTarget() const { return _vTarget; }   // カメラの注視点を取得
+	VECTOR GetDirection() const;                    // カメラの向きを取得
+	float GetYaw() const { return _camYaw; }        // カメラのヨー角を取得
+	float GetPitch() const { return _camPitch; }    // カメラのピッチ角を取得
 
     // 設定
-    void SetPosition(VECTOR pos) { _vPos = pos; }
-    void SetTarget(VECTOR target) { _vTarget = target; }
-    void SetClip(float nearClip, float farClip) { _clipNear = nearClip; _clipFar = farClip; }
+	void SetPosition(VECTOR pos) { _vPos = pos; }           // カメラの位置を設定
+	void SetTarget(VECTOR target) { _vTarget = target; }    // カメラの注視点を設定
+	void SetClip(float nearClip, float farClip) { _clipNear = nearClip; _clipFar = farClip; }   // クリップ距離を設定
 
 private:
-    // カメラパラメータ
-    VECTOR _vPos;                   // 位置
-    VECTOR _vTarget;                // 注視点
-    float _clipNear, _clipFar;      // クリップ距離
-
-    // マウス制御用
-    int _prevMouseX, _prevMouseY;   // 前回のマウス位置
-    float _camYaw, _camPitch;       // カメラの角度
-    float _mouseSensitivity;        // マウス感度
+    VECTOR _vPos;     // 位置
+    VECTOR _vTarget;  // 注視点
+	float _clipNear;  // 近クリップ距離
+	float _clipFar;   // 遠クリップ距離
+	float _camYaw;    // カメラのヨー角
+	float _camPitch;  // カメラのピッチ角
 
     // FPS視点用パラメータ
-    static const float FPS_CAMERA_HEIGHT;  // カメラの高さ
-    static const int SCREEN_CENTER_X;       // 画面中央X座標
-    static const int SCREEN_CENTER_Y;       // 画面中央Y座標
+	const float FPS_CAMERA_HEIGHT = 100.0f; // プレイヤーの頭部の高さ
 
-    // 内部処理
+private:
+	// マウス入力処理
     void HandleMouseInput();
+
+	// FPS視点カメラの更新
     void UpdateFPSCamera(VECTOR playerPos);
-    void ResetMouseToCenter();
+
+private:
+    MouseInput _mouse;
 };
 

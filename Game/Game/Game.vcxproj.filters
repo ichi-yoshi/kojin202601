@@ -293,5 +293,8 @@
     <ClInclude Include="source\DatabaseSelectorButtonUI.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
+    <ClInclude Include="source\MagicNumberConfig.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

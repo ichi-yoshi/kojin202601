@@ -10,16 +10,16 @@ class BattleUI
 {
 public:
     void Render(
-        CharaAfterStatus& afterStatus,
-        Enemy* enemy,
-        double enemyCurrentHP,
-        double charaCurrentHP,
-        BattleTimer& battleTimer,
-        CircleUI& circleUI,
-        GaugeUI& gaugeUI,
-        double maxDamageDealt,
-        const std::vector<double>& damageHistory,
-        double damageFlashTimer
+		CharaAfterStatus& afterStatus,              // 計算後のプレイヤーのステータス
+		Enemy* enemy,                               // 敵
+		double enemyCurrentHP,                      // 敵の現在HP
+		double charaCurrentHP,                      // プレイヤーの現在HP
+		BattleTimer& battleTimer,                   // 戦闘タイマー
+		CircleUI& circleUI,                         // 円UI
+		GaugeUI& gaugeUI,							// ゲージUI
+		double maxDamageDealt,						// 最大ダメージ
+		const std::vector<double>& damageHistory,	// ダメージ履歴
+		double damageFlashTimer						// 攻撃を受けたときの点滅タイマー
     );
 };
 

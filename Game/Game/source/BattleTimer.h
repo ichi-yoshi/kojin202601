@@ -6,19 +6,25 @@ class BattleTimer
 public:
 	enum class BattlePhase 
 	{
-		Attack,
-		Defense,
-		Result,
-		Start,
-		_EOT_
+		Attack,		// 攻撃フェーズ
+		Defense,	// 防御フェーズ
+		Result,		// 結果フェーズ
+		Start,		// 戦闘開始フェーズ
+		_EOT_		
 	};
 
 	void Update(double deltaTime);
 
+	// 攻撃フェーズかどうかを判定する
 	void IsClearCircle(const CharaAfterStatus& afterStatus);
+
+	// 残り時間を取得する
 	double GetTime() const { return _time; }
+
+	// 現在のフェーズを取得する
 	BattlePhase GetCurrentPhase() const { return _currentPhase; }
 
+	// フェーズを変更する
 	void ChangePhase(BattlePhase nextPhase);
 
 	bool IsTimeUp() const { return _time <= 0.0; }

@@ -234,6 +234,7 @@
     <ClInclude Include="source\GachaSystem.h" />
     <ClInclude Include="source\GachaUI.h" />
     <ClInclude Include="source\GaugeUI.h" />
+    <ClInclude Include="source\MagicNumberConfig.h" />
     <ClInclude Include="source\ModeGame.h" />
     <ClInclude Include="source\ModeGameBattle.h" />
     <ClInclude Include="source\MouseInput.h" />
