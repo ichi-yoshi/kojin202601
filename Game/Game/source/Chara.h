@@ -17,6 +17,6 @@ public:
 
 	// ステータスの行からステータスを作成する
 	//"攻撃: 12.0" 形式の文字列配列を数値化
-	static CharaStatus ParseStatusLines(const std::vector<std::string>& lines);
+	static CharaStatus ParseStatusRows(const std::vector<std::string>& rows);
 };
 

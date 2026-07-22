@@ -121,21 +121,21 @@ int SaveData::GetPlayerLevel() const
 	return 1;
 }
 
-std::vector<std::string> SaveData::ToLines() const
+std::vector<std::string> SaveData::ToRows() const
 {
-	std::vector<std::string> lines;
+	std::vector<std::string> rows;
 
 	if(_accountData.empty())
 	{
-		return lines;
+		return rows;
 	}
 
 	// ラベルと値を行に追加するラムダ
-	auto push = [&lines](const char* label, double value)
+	auto push = [&rows](const char* label, double value)
 		{
 			std::ostringstream os;
 			os << label << ":" << std::fixed << std::setprecision(1) << value;
-			lines.push_back(os.str());
+			rows.push_back(os.str());
 		};
 
 	// 先頭のアカウントデータを行に追加
@@ -146,5 +146,5 @@ std::vector<std::string> SaveData::ToLines() const
 	push("ClearCount", _accountData[0].enemylevel);
 	push("gachaCount", _accountData[0].gachaCount);
 
-	return lines;
+	return rows;
 }

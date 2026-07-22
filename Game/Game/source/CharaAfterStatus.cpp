@@ -33,8 +33,8 @@ void CharaAfterStatus::UpdateFrom(const CharaBase& base, const SaveEquipment& sa
 		if(!result.hasResult) { continue; }
 
 		// 装備のステータスを取得する
-		const auto basic = Chara::ParseStatusLines(result.basicStatusLines);	// 基礎ステータス
-		const auto sub = Chara::ParseStatusLines(result.statusLines);			// 装備ステータス
+		const auto basic = Chara::ParseStatusRows(result.basicStatusRows);	// 基礎ステータス
+		const auto sub = Chara::ParseStatusRows(result.statusRows);			// 装備ステータス
 
 		// 基礎のステータスを合計する
 		Status::AddStatus(equipTotal, basic);	// 基礎ステータスは装備の基本値として加算する
@@ -51,16 +51,16 @@ void CharaAfterStatus::UpdateFrom(const CharaBase& base, const SaveEquipment& sa
 }
 
 // ステータスを行の文字列配列に変換する
-std::vector<std::string> CharaAfterStatus::ToLines() const
+std::vector<std::string> CharaAfterStatus::ToRows() const
 {
-	std::vector<std::string> lines;
+	std::vector<std::string> rows;
 
 	// ラベルと値を行に追加するラムダ
-	auto push = [&lines](const char* label, double value)
+	auto push = [&rows](const char* label, double value)
 	{
 			std::ostringstream os;
 			os << label << ":" << std::fixed << std::setprecision(1) << value;
-			lines.push_back(os.str());
+			rows.push_back(os.str());
 	};
 
 	// ステータスを行に追加
@@ -76,5 +76,5 @@ std::vector<std::string> CharaAfterStatus::ToLines() const
 	push("運値", _afterStatus.luck);
 	push("Poop", _afterStatus.poop);
 
-	return lines;
+	return	rows;
 }

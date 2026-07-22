@@ -11,8 +11,8 @@ struct PendingGachaResult
 	bool hasPending = false;
 	SaveEquipment::EquipPart part = SaveEquipment::EquipPart::Head;
 	std::string armorName;
-	std::vector<std::string> basicStatusLines;
-	std::vector<std::string> statusLines;
+	std::vector<std::string> basicStatusRows;
+	std::vector<std::string> statusRows;
 };
 
 class GachaUI

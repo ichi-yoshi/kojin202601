@@ -8,10 +8,7 @@ using namespace UIConfig;
 bool CircleUI::Initialize(const std::string& dbPath, std::string* outError)
 {
 	// 円のマスターデータをロード
-	if(!_sqliteCircle.Initialize(dbPath, outError))
-	{
-		return false;
-	}
+	if(!_sqliteCircle.Initialize(dbPath, outError)) { return false; }
 
 	// 最初のパターンをロードしてリセット
 	Reset();
@@ -51,6 +48,7 @@ void CircleUI::Reset()
 		SetPattern(row.minX, row.maxX, row.minY, row.maxY, row.radius, row.count);
 	}
 
+	// 指定された数だけ円を生成
 	for(int i = 0; i < _spawnCount; ++i)
 	{
 		CircleInstance c;
@@ -125,7 +123,10 @@ bool CircleUI::Update(MouseInput& mouse)
 void CircleUI::Draw()
 {
 	// 生成範囲の枠を薄くデバッグ表示したい場合はここを有効にする
-	DrawBox(_circleButton.x, _circleButton.y, _circleButton.x + _circleButton.w, _circleButton.y + _circleButton.h, Color::DarkGray(), FALSE);
+	DrawBox(_circleButton.x, _circleButton.y,
+		_circleButton.x + _circleButton.w,
+		_circleButton.y + _circleButton.h, 
+		Color::DarkGray(), FALSE);
 
 	// 生きている円だけを順番に描画する
 	for(const auto& c : _circles)
@@ -142,7 +143,9 @@ void CircleUI::Draw()
 	// 成功時の文字表示（確認用）
 	if(_hasResult && _isSuccess)
 	{
-		SetFontSize(32);
-		DrawString(_circleButton.x + Common::ClearMsgOffset.x, _circleButton.y + Common::ClearMsgOffset.y, "CLEAR!!", Color::Green());
+		SetFontSize(Font::Title);
+		DrawString(_circleButton.x + Common::ClearMsgOffset.x,
+			_circleButton.y + Common::ClearMsgOffset.y,
+			"CLEAR!!", Color::Green());
 	}
 }

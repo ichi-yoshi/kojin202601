@@ -12,6 +12,7 @@ bool GaugeUI::Initialize(const std::string& dbPath, std::string* outError)
 
 	// 最初のゲージをロードしてリセット
 	Reset();
+
 	return true;
 }
 
@@ -19,7 +20,7 @@ void GaugeUI::SetPattern(int targetX, int targetW, double speed)
 {
 	_targetX = targetX;
 	_targetW = targetW;
-	_speed = speed/1000;
+	/**/_speed = speed / 1000;	// 速度をミリ秒単位から秒単位に変換
 	
 }
 
@@ -37,7 +38,6 @@ void GaugeUI::Reset()
 	_isMoving = true;
 	_isSuccess = false;
 	_hasResult = false;
-
 	_prevKeyF = (CheckHitKey(KEY_INPUT_F) == 1);
 
 	// SQLiteからランダムに1件抽選して適用する
@@ -60,7 +60,7 @@ void GaugeUI::Update(MouseInput& mouse)
 	_currentValue += _speed;
 
 	// 1.0を超えたらリセットしてループさせる
-	if(_currentValue>1.0)
+	/**/if(_currentValue>1.0)
 	{
 		_currentValue = 0.0;
 	}
@@ -104,10 +104,6 @@ void GaugeUI::Draw()
 	int targetRight = targetLeft + _targetW;
 	DrawBox(targetLeft, by, targetRight, by + bh, Color::Red(), true);
 
-	//// バーの座標を計算して描画
-	//int barX = bx + static_cast<int>(bw * _currentValue);
-	//DrawBox(barX - 1, by - 2, barX + 2, by + bh + 2, Color::White(), true);
-
 	// バーを描画 (太さオフセット適用)
 	int barX = bx + static_cast<int>(bw * _currentValue);
 	DrawBox(barX - Common::GaugeBarThickness,
@@ -116,6 +112,7 @@ void GaugeUI::Draw()
 		by + bh + Common::GaugeBarOverflow,
 		Color::White(), TRUE);
 
+	// 結果がある場合は成功・失敗の文字列を描画
 	if(_hasResult) 
 	{
 		int textY = by - Common::TextMarginTop;
@@ -137,8 +134,10 @@ bool GaugeUI::CheckHit()
 	_isMoving = false;
 	_hasResult = true;
 
+	// 現在のバーの「相対ピクセルX座標」を計算
 	int currentLocalX = static_cast<int>(_currentValue * _gaugeButton.w);
 
+	// バーのX座標が、ターゲットの赤枠範囲内（左端 ～ 右端）に収まっているか判定
 	if(currentLocalX >= _targetX && currentLocalX < _targetX + _targetW)
 	{
 		_isSuccess = true;

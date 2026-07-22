@@ -17,7 +17,7 @@ public:
 	void UpdateFrom(const CharaBase& base, const SaveEquipment& saveEquipment);
 
 	// ステータスを行の文字列配列に変換する
-	std::vector<std::string> ToLines() const;
+	std::vector<std::string> ToRows() const;
 
 	// ステータスを行の文字列配列に変換する
 	double GetcoolTime() const { return _coolTime; };

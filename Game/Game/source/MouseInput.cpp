@@ -13,9 +13,9 @@ MouseInput::MouseInput()
 	_leftDown = false;          
 	_leftTrig = false;          
 	_prevLeftDown = false;      
-	_prevMouseX = Param::MousePosUninitialized;           
-	_prevMouseY = Param::MousePosUninitialized;           
-	_mouseSensitivity = Param::DefaultMouseSensitivity; 
+	_prevMouseX = -1;           
+	_prevMouseY = -1;           
+	_mouseSensitivity = 0.005f; 
 	_Yaw = 0.0f;                
 	_Pitch = 0.0f;    
 }
@@ -51,10 +51,12 @@ void MouseInput::MousePointerControl()
     }
 
 	// マウスの移動量を計算
-    int deltaX = _x - _prevMouseX;
-    int deltaY = _y - _prevMouseY;
-    _prevMouseX = _x;
-    _prevMouseY = _y;
+	int deltaX = _x - _prevMouseX;	// X座標の移動量
+	int deltaY = _y - _prevMouseY;	// Y座標の移動量
+
+	// 前回のマウス位置を更新
+	_prevMouseX = _x;	// X座標
+	_prevMouseY = _y;	// Y座標
 
 	// マウス感度を考慮してYawとPitchを更新
     _Yaw = deltaX * _mouseSensitivity;
@@ -64,9 +66,8 @@ void MouseInput::MousePointerControl()
 // マウスポインタを画面中央に戻す
 void MouseInput::ResetMousePointCenter()
 {
-	// UIConfigから画面中央の座標を求める
-	constexpr int centerX = Layout::Screen.w / 2;
-	constexpr int centerY = Layout::Screen.h / 2;
+	int centerX = Layout::Screen.w / 2;
+	int centerY = Layout::Screen.h / 2;
 
 	// 毎フレーム中央に戻す
 	SetMousePoint(centerX, centerY);

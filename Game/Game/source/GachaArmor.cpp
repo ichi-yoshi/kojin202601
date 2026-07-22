@@ -10,7 +10,7 @@ bool GachaArmor::LoadRows(std::vector<ArmorRow>& outRows, std::string* outError)
 	return LoadArmorSqlite(outRows, outError);
 }
 
-std::string GachaArmor::MakeResultLine(const ArmorRow& row, std::mt19937&)
+std::string GachaArmor::MakeResultRow(const ArmorRow& row, std::mt19937&)
 {
 	return row.name;
 }

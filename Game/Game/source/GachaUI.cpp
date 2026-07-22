@@ -12,28 +12,28 @@ int GachaUI::GetGachaResultBottomY(const Gacha& gacha,
 {
 	// ガチャ結果の描画開始位置と行間隔を取得
 	int y = Layout::Gacha::ResultBase.y;
-	int lineHeight = Common::LineHeight;
-	int lineCount = 0;
+	int RowHeight = Common::RowHeight;
+	int RowCount = 0;
 
 	// 装備ガチャの結果がある場合、行数を加算
-	if(gachaArmor.HasResult() && !gachaArmor.GetResultLines().empty()) 
+	if(gachaArmor.HasResult() && !gachaArmor.GetResultRows().empty()) 
 	{ 
-		lineCount += 1; 
+		RowCount += 1; 
 	}
 
 	// メインステータスガチャの結果がある場合、行数を加算
-	if(gachaBasic.HasResult() && !gachaBasic.GetResultLines().empty())
+	if(gachaBasic.HasResult() && !gachaBasic.GetResultRows().empty())
 	{
-		lineCount += static_cast<int>(gachaBasic.GetResultLines().size());
+		RowCount += static_cast<int>(gachaBasic.GetResultRows().size());
 	}
 
 	// サブステータスガチャの結果がある場合、行数を加算
-	if(gacha.HasResult() && !gacha.GetResultLines().empty())
+	if(gacha.HasResult() && !gacha.GetResultRows().empty())
 	{
-		lineCount += static_cast<int>(gacha.GetResultLines().size());
+		RowCount += static_cast<int>(gacha.GetResultRows().size());
 	}
 
-	return y + lineCount * lineHeight;
+	return y + RowCount * RowHeight;
 }
 
 // ガチャ結果の保存・破棄ボタンの位置とサイズを更新する
@@ -78,54 +78,56 @@ void GachaUI::DrawGachaResult(const Gacha& gacha,
 	int x = Layout::Gacha::ResultBase.x;
 	int y = Layout::Gacha::ResultBase.y;
 	int subTextXOffset = Layout::Gacha::SubTextXOffset;
-	int lineCount = 0;
+	int RowCount = 0;
 
 	// 装備ガチャの結果がある場合、行数を加算
-	if(gachaArmor.HasResult() && !gachaArmor.GetResultLines().empty()) 
+	if(gachaArmor.HasResult() && !gachaArmor.GetResultRows().empty()) 
 	{ 
-		lineCount += 1; 
+		RowCount += 1; 
 	}
 
 	// メインステータスガチャの結果がある場合、行数を加算
-	if(gachaBasic.HasResult() && !gachaBasic.GetResultLines().empty())
+	if(gachaBasic.HasResult() && !gachaBasic.GetResultRows().empty())
 	{
-		lineCount += static_cast<int>(gachaBasic.GetResultLines().size());
+		RowCount += static_cast<int>(gachaBasic.GetResultRows().size());
 	}
 
 	// サブステータスガチャの結果がある場合、行数を加算
-	if(lineCount > 0)
+	if(RowCount > 0)
 	{
-		int lineHeight = Layout::Gacha::SubTextXOffset;	// 行の高さを取得
+		int RowHeight = Layout::Gacha::SubTextXOffset;	// 行の高さを取得
 		int padding = Common::DefaultPadding;		// ボックスの内側の余白を取得
 		int boxW = Layout::Gacha::ResultBoxWidth;				// ボックスの幅を取得
-		int boxH = lineCount * lineHeight + padding * 2;	// ボックスの高さを計算
-		DrawBox(x - padding, y - padding, x - padding + boxW, y - padding + boxH, Color::BoxBg(), TRUE);
+		/**/int boxH = RowCount * RowHeight + padding * 2;	// ボックスの高さを計算
+		DrawBox(x - padding, y - padding,
+			x - padding + boxW,	y - padding + boxH, 
+			Color::BoxBg(), TRUE);
 	}
 
 	// 装備ガチャの結果がある場合、装備名を描画
-	if(gachaArmor.HasResult() && !gachaArmor.GetResultLines().empty())
+	if(gachaArmor.HasResult() && !gachaArmor.GetResultRows().empty())
 	{
-		const std::string& armorName = gachaArmor.GetResultLines().front();
+		const std::string& armorName = gachaArmor.GetResultRows().front();
 		DrawString(x, y, armorName.c_str(), Color::Black());
 	}
 
 	// メインステータスガチャの結果がある場合、結果行を描画
-	if(gachaBasic.HasResult() && !gachaBasic.GetResultLines().empty())
+	if(gachaBasic.HasResult() && !gachaBasic.GetResultRows().empty())
 	{
-		for(const auto& line : gachaBasic.GetResultLines())
+		for(const auto& row : gachaBasic.GetResultRows())
 		{
-			DrawString(x + subTextXOffset, y, line.c_str(), Color::Red());
-			y += Common::LineHeight;
+			DrawString(x + subTextXOffset, y, row.c_str(), Color::Red());
+			y += Common::RowHeight;
 		}
 	}
 
 	// サブステータスガチャの結果がある場合、結果行を描画
 	if(gacha.HasResult())
 	{
-		for(const auto& line : gacha.GetResultLines())
+		for(const auto& row : gacha.GetResultRows())
 		{
-			DrawString(x + subTextXOffset, y, line.c_str(), Color::Black());
-			y += Common::LineHeight;
+			DrawString(x + subTextXOffset, y, row.c_str(), Color::Black());
+			y += Common::RowHeight;
 		}
 	}
 }
@@ -146,10 +148,11 @@ void GachaUI::DrawSavedEquipment(const SaveEquipment& saveEquipment) const
 	GetDrawScreenSize(&screenW, &screenH);
 
 	int fontSize = Font::Normal;
-	int lineHeight = fontSize + Common::LineSpacingExtra;
+	int RowHeight = fontSize + Common::RowSpacingExtra;
 	int padding = Common::DefaultPadding;
+	int rowSpace = Common::RowSpacingExtra;
 	int boxW = Layout::Gacha::SavedAreaWidth;
-	int totalLines = 0;
+	int totalRows = 0;
 
 	// 保存済み装備の行数を計算
 	for(int i = 0; i < static_cast<int>(SaveEquipment::EquipPart::_EOT_); ++i)
@@ -157,59 +160,65 @@ void GachaUI::DrawSavedEquipment(const SaveEquipment& saveEquipment) const
 		auto part = static_cast<SaveEquipment::EquipPart>(i);
 		const auto& result = saveEquipment.GetResult(part);
 
-		totalLines += 1;
+		totalRows += 1;
 		if(result.hasResult)
 		{
-			totalLines += 1;
-			totalLines += static_cast<int>(result.basicStatusLines.size());
-			totalLines += static_cast<int>(result.statusLines.size());
+			totalRows += 1;
+			totalRows += static_cast<int>(result.basicStatusRows.size());
+			totalRows += static_cast<int>(result.statusRows.size());
 		}
 		else
 		{
-			totalLines += 1;
+			totalRows += 1;
 		}
 	}
 
-	if(totalLines <= 0) { return; }
+	if(totalRows <= 0) { return; }
 
-	int boxH = totalLines * lineHeight + padding * 2;	// ボックスの高さを計算
-	int marginRight = Common::MarginRight;			// 右側の余白を取得
+	int boxH = totalRows * RowHeight + padding * rowSpace;	// ボックスの高さを計算
+	int marginRight = Common::MarginRight;				// 右側の余白を取得
 	int x = screenW - boxW - marginRight;				// ボックスのX座標を計算
 	int y = marginRight;								// ボックスのY座標を計算
-	int indentX = Common::DefaultIndent;					// インデントのX座標を取得
+	int indentX = Common::DefaultIndent;				// インデントのX座標を取得
 
 	DrawBox(x, y, x + boxW, y + boxH, Color::BoxBg(), TRUE);
+
 	SetFontSize(fontSize);
 
 	int textY = y + padding;
+
+	// 各装備部位の結果を描画
 	for(int i = 0; i < static_cast<int>(SaveEquipment::EquipPart::_EOT_); ++i)
 	{
 		auto part = static_cast<SaveEquipment::EquipPart>(i);
 		const auto& result = saveEquipment.GetResult(part);
 
 		DrawString(x + padding, textY, saveEquipment.GetPartLabel(part), Color::Black());
-		textY += lineHeight;
+		textY += RowHeight;
 
+		// 結果がない場合は「未取得」と表示
 		if(!result.hasResult)
 		{
 			DrawString(x + padding + indentX, textY, "未取得", Color::TextGray());
-			textY += lineHeight;
+			textY += RowHeight;
 			continue;
 		}
 
 		DrawString(x + padding + indentX, textY, result.armorName.c_str(), Color::Black());
-		textY += lineHeight;
+		textY += RowHeight;
 
-		for(const auto& line : result.basicStatusLines)
+		// 基礎ステータスの行を描画
+		for(const auto& row : result.basicStatusRows)
 		{
-			DrawString(x + padding + indentX, textY, line.c_str(), Color::Blue());
-			textY += lineHeight;
+			DrawString(x + padding + indentX, textY, row.c_str(), Color::Blue());
+			textY += RowHeight;
 		}
 
-		for(const auto& line : result.statusLines)
+		// 装備ステータスの行を描画
+		for(const auto& row : result.statusRows)
 		{
-			DrawString(x + padding + indentX, textY, line.c_str(), Color::Black());
-			textY += lineHeight;
+			DrawString(x + padding + indentX, textY, row.c_str(), Color::Black());
+			textY += RowHeight;
 		}
 	}
 }

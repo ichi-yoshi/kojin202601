@@ -21,6 +21,6 @@ private:
 	ButtonUI::ButtonRect _charaButton{ 190,40,160,40 };
 
 private:
-	bool _isCharaClicked = false;
+	bool _isCharaClicked = false;	// キャラボタンがクリックされたかどうか
 };
 

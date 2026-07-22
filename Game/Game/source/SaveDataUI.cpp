@@ -22,14 +22,14 @@ void SaveDataUI::DrawSaveDataButton() const
 
 void SaveDataUI::DrawSaveDataBox(const SaveData& saveData) const
 {
-	const auto lines = saveData.ToLines();
-	if(lines.empty()) { return; }
+	const auto rows = saveData.ToRows();
+	if(rows.empty()) { return; }
 
 	int fontSize = 18;
-	int lineHeight = fontSize + 4;
+	int rowHeight = fontSize + 4;
 	int padding = 12;
 	int boxW = 260; 
-	int boxH = static_cast<int>(lines.size()) * lineHeight + padding * 2;
+	int boxH = static_cast<int>(rows.size()) * rowHeight + padding * 2;
 
 	int x = 520;	
 	int y = 100;    
@@ -39,9 +39,9 @@ void SaveDataUI::DrawSaveDataBox(const SaveData& saveData) const
 	SetFontSize(fontSize);
 
 	int textY = y + padding;
-	for(const auto& line : lines)
+	for(const auto& row : rows)
 	{
-		DrawString(x + padding, textY, line.c_str(), GetColor(0, 0, 0));
-		textY += lineHeight;
+		DrawString(x + padding, textY, row.c_str(), GetColor(0, 0, 0));
+		textY += rowHeight;
 	}
 }

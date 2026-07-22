@@ -6,10 +6,10 @@ class SqliteTextUtill
 {
 public:
 	// 複数行のテキストを'|'区切りの1行テキストに変換する
-	static std::string JoinLines(const std::vector<std::string>& lines);
+	static std::string JoinRows(const std::vector<std::string>& rows);
 
 	// '|'区切りのテキストを複数行のテキストに変換する
-	static void SplitLines(const std::string& text, std::vector<std::string>& outLines);
+	static void SplitRows(const std::string& text, std::vector<std::string>& outRows);
 
 	// '|'区切りのテキストを複数行のテキストに変換する
 	static std::string EscapeSqlString(const std::string& text);

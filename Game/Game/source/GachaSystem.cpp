@@ -34,20 +34,20 @@ void GachaSystem::ProcessRoll(GachaContext& ctx)
 		ctx.gachaArmor.Roll();	// 装備ガチャの抽選
 
 		// ガチャ結果の装備名を取得して、保存待ち状態にする
-		if(ctx.gachaArmor.HasResult() && !ctx.gachaArmor.GetResultLines().empty())
+		if(ctx.gachaArmor.HasResult() && !ctx.gachaArmor.GetResultRows().empty())
 		{
 			// ガチャ結果の装備名を取得
-			const std::string& armorName = ctx.gachaArmor.GetResultLines().front();
+			const std::string& armorName = ctx.gachaArmor.GetResultRows().front();
 			const std::vector<std::string> Empty;
-			const auto& basicLines = ctx.gachaBasic.HasResult() ? ctx.gachaBasic.GetResultLines() : Empty;
-			const auto& statusLines = ctx.gacha.HasResult() ? ctx.gacha.GetResultLines() : Empty;
+			const auto& basicRows = ctx.gachaBasic.HasResult() ? ctx.gachaBasic.GetResultRows() : Empty;
+			const auto& statusRows = ctx.gacha.HasResult() ? ctx.gacha.GetResultRows() : Empty;
 
 			// ガチャ結果を保存待ち状態にする
 			ctx.pendingResult.hasPending = true;								// 保存待ち状態にする
 			ctx.pendingResult.part = SaveEquipment::GetPartFromName(armorName);	// 装備部位を取得して保存待ち状態にする
 			ctx.pendingResult.armorName = armorName;							// 装備名を保存待ち状態にする
-			ctx.pendingResult.basicStatusLines = basicLines;					// 基礎ステータスの行を保存待ち状態にする
-			ctx.pendingResult.statusLines = statusLines;						// 装備ステータスの行を保存待ち状態にする
+			ctx.pendingResult.basicStatusRows = basicRows;						// 基礎ステータスの行を保存待ち状態にする
+			ctx.pendingResult.statusRows = statusRows;							// 装備ステータスの行を保存待ち状態にする
 		}
 
 		account.coin -= 3000;		// ガチャコストを引く
@@ -87,8 +87,8 @@ void GachaSystem::ProcessPendingSelection(GachaContext& ctx)
 	{
 		// 装備を保存して最終ステータスを更新
 		ctx.saveEquipment.SaveResult(ctx.pendingResult.armorName,
-			ctx.pendingResult.basicStatusLines,
-			ctx.pendingResult.statusLines);
+			ctx.pendingResult.basicStatusRows,
+			ctx.pendingResult.statusRows);
 		ctx.saveEquipment.SaveToSqlite();
 
 		// 最終ステータスを更新

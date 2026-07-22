@@ -25,25 +25,25 @@ namespace
 }
 
 // 複数行のテキストを'|'区切りの1行テキストに変換する
-std::string SqliteTextUtill::JoinLines(const std::vector<std::string>& lines) 
+std::string SqliteTextUtill::JoinRows(const std::vector<std::string>& rows) 
 {
 	std::ostringstream os;
-	for(size_t i = 0; i < lines.size(); ++i) 
+	for(size_t i = 0; i < rows.size(); ++i) 
 	{
 		if (i > 0) { os << "|"; }
-		os << lines[i];
+		os << rows[i];
 	}
 	return os.str();
 }
 
 // '|'区切りのテキストを複数行のテキストに変換する
-void SqliteTextUtill::SplitLines(const std::string& text, std::vector<std::string>& outLines)
+void SqliteTextUtill::SplitRows(const std::string& text, std::vector<std::string>& outRows)
 {
-	outLines.clear();
+	outRows.clear();
 	if(text.empty()) { return; }
 	std::istringstream ss(text);
 	std::string token;
-	while(std::getline(ss, token, '|')) { outLines.push_back(token); }
+	while(std::getline(ss, token, '|')) { outRows.push_back(token); }
 }
 
 // SQLの文字列リテラルとしてtextをエスケープする（シングルクォートを2つにする）

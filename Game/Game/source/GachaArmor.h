@@ -11,5 +11,5 @@ public:
 protected:
 	// GachaBaseの純粋仮想関数を実装
 	bool LoadRows(std::vector<ArmorRow>& outRows, std::string* outError) override;
-	std::string MakeResultLine(const ArmorRow& row, std::mt19937& rng) override;
+	std::string MakeResultRow(const ArmorRow& row, std::mt19937& rng) override;
 };

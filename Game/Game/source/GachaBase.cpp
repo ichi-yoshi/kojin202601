@@ -19,12 +19,12 @@ template <typename TRow>
 bool GachaBase<TRow>::Roll(int count)
 {
 	// 結果をクリアする
-	_resultLines.clear();
+	_resultRows.clear();
 
 	// 行がない場合はエラー
 	if(_rows.empty())
 	{
-		_resultLines.push_back("SQLite empty");
+		_resultRows.push_back("SQLite empty");
 		_hasResult = true;
 		return false;
 	}
@@ -39,7 +39,7 @@ bool GachaBase<TRow>::Roll(int count)
 	for(int i = 0; i < count; ++i)
 	{
 		const auto& row = _rows[distRow(_rng)];
-		_resultLines.push_back(MakeResultLine(row, _rng));
+		_resultRows.push_back(MakeResultRow(row, _rng));
 	}
 
 	_hasResult = true;
@@ -49,7 +49,7 @@ bool GachaBase<TRow>::Roll(int count)
 template <typename TRow>
 void GachaBase<TRow>::ClearResult()
 {
-	_resultLines.clear();
+	_resultRows.clear();
 	_hasResult = false;
 }
 

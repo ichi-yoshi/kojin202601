@@ -10,7 +10,7 @@ bool Gacha::LoadRows(std::vector<StatusRow>& outRows, std::string* outError)
 	return LoadStatusSqlite(outRows, outError);
 }
 
-std::string Gacha::MakeResultLine(const StatusRow& row, std::mt19937& rng)
+std::string Gacha::MakeResultRow(const StatusRow& row, std::mt19937& rng)
 {
 	// ランダムに値を選択
 	double value = PickRandomValue(row, rng);

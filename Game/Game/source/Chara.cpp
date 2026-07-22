@@ -64,19 +64,19 @@ CharaAfterStatus Chara::CalculateAfterStatus(const CharaBase& base, const CharaS
 }
 
 // ステータスの行からステータスを作成する
-CharaStatus Chara::ParseStatusLines(const std::vector<std::string>& lines)
+CharaStatus Chara::ParseStatusRows(const std::vector<std::string>& rows)
 {
 	CharaStatus status;
 
 	// 各行を解析してステータスに反映
-	for(const auto& line : lines)
+	for(const auto& row : rows)
 	{
-		const auto pos = line.find(':');
+		const auto pos = row.find(':');
 		if(pos == std::string::npos) { continue; }
 
 		// ステータス名と値の文字列を分割
-		const std::string name = line.substr(0, pos);
-		const std::string valueText = line.substr(pos + 1);
+		const std::string name = row.substr(0, pos);
+		const std::string valueText = row.substr(pos + 1);
 
 		// 文字列を数値に変換してステータスに反映
 		try 

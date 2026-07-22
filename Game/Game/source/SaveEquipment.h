@@ -18,14 +18,14 @@ public:
 	{
 		bool hasResult = false;
 		std::string armorName;
-		std::vector<std::string> basicStatusLines;
-		std::vector<std::string> statusLines;
+		std::vector<std::string> basicStatusRows;
+		std::vector<std::string> statusRows;
 	};
 
 	// 結果の保存
 	void SaveResult(const std::string& armorName,
-		const std::vector<std::string>& basicStatusLines,
-		const std::vector<std::string>& statusLines);
+		const std::vector<std::string>& basicStatusRows,
+		const std::vector<std::string>& statusRows);
 
 	// 結果の取得
 	const PartResult& GetResult(EquipPart part) const;

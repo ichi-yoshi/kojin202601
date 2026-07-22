@@ -10,7 +10,7 @@ bool GachaBasicStatus::LoadRows(std::vector<BasicStatusRow>& outRows, std::strin
 	return LoadBasicStatusSqlite(outRows, outError);
 }
 
-std::string GachaBasicStatus::MakeResultLine(const BasicStatusRow& row, std::mt19937&)
+std::string GachaBasicStatus::MakeResultRow(const BasicStatusRow& row, std::mt19937&)
 {
 	// 結果の行を作成する
 	std::ostringstream os;

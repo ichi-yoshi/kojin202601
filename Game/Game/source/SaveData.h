@@ -25,7 +25,7 @@ public:
 
 	int GetPlayerLevel() const;
 
-	std::vector<std::string> ToLines() const;
+	std::vector<std::string> ToRows() const;
 private:
 	std::vector<AccountData> _accountData;
 
