@@ -3,6 +3,7 @@
 #include "CharaBase.h"
 #include "SaveEquipment.h"
 #include "SqliteSpeed.h"
+#include "SaveData.h"
 
 class CharaAfterStatus
 {
@@ -14,7 +15,7 @@ public:
 	bool InitializeSpeedTable(const std::string& dbPath, std::string* outError = nullptr);
 
 	// 装備から最終ステータスを更新する
-	void UpdateFrom(const CharaBase& base, const SaveEquipment& saveEquipment);
+	void UpdateFrom(const CharaBase& base, const SaveEquipment& saveEquipment, const SaveData& saveData);
 
 	// ステータスを行の文字列配列に変換する
 	std::vector<std::string> ToRows() const;
@@ -26,6 +27,7 @@ public:
 private:
 	CharaStatus _afterStatus;
 	SqliteSpeed _sqliteSpeed;
+
 
 private:
 	double _basicCoolTime = 1.0;	// 基礎クールタイム

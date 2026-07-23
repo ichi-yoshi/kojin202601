@@ -27,7 +27,7 @@ public:
 	// フェーズを変更する
 	void ChangePhase(BattlePhase nextPhase);
 
-	bool IsTimeUp() const { return _time <= 0.0; }
+	bool IsTimeUp() const { return _time <= _minTime; }
 
 private:
 	float _time;			// 現在の残り時間

@@ -122,6 +122,7 @@ namespace UIConfig
 		constexpr int    MaxAlphaByte = 255;			// 透明度の最大値（255）
 		constexpr double GaugeSpeedDivider = 1000.0;	// ゲージの速度を調整するための除数
 		constexpr float  HpPercentThreshold = 0.2f;		// HPバーの色を赤にする閾値（20%）
-		constexpr int    coinCost = 3000;				// ガチャのコスト
-    }
+		constexpr int    coinCost = 1000;				// ガチャのコスト
+		constexpr float  bonusStatus = 30.0f;			// レベルボーナスのステータス加算値
+    }	
 }

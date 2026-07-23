@@ -1,6 +1,10 @@
 ﻿#include "ModeGameBattle.h"
 #include "EvaluateFormula.h"
 #include "Resource.h"
+#include "MagicNumberConfig.h"
+
+// 名前空間の使用宣言
+using namespace UIConfig;
 
 bool ModeGameBattle::Initialize(const std::string& dbPath, std::string* outError)
 {
@@ -51,10 +55,11 @@ void ModeGameBattle::Reset(const SaveData& saveData, CharaAfterStatus& afterStat
 	}
 }
 	
-void ModeGameBattle::Process(MouseInput& mouse, CharaAfterStatus& afterStatus, SaveData& saveData, float deltaTime)
+void ModeGameBattle::Process(MouseInput& mouse, CharaAfterStatus& afterStatus, SaveData& saveData, CharaBase& Charabase, SaveEquipment& saveEquipment, float deltaTime)
 {
 	if(_enemy == nullptr) { return; }
 
+	// 敵のアニメーションを更新
 	_enemy->UpdateAnimation(deltaTime);
 
 	// ダメージフラッシュのタイマーを更新
@@ -75,7 +80,7 @@ void ModeGameBattle::Process(MouseInput& mouse, CharaAfterStatus& afterStatus, S
 	// リザルトフェーズに入った瞬間、一度だけSQLiteデータの更新を実行
 	if(_battleTimer.GetCurrentPhase() == BattleTimer::BattlePhase::Result && !_isResultProcessed) 
 	{
-		ProcessBattleResult(saveData);
+		ProcessBattleResult(saveData, afterStatus, Charabase, saveEquipment);
 		_isResultProcessed = true;
 	}
 
@@ -84,7 +89,7 @@ void ModeGameBattle::Process(MouseInput& mouse, CharaAfterStatus& afterStatus, S
 	// フェーズに応じた処理関数を呼び出す
 	if(_phaseUpdateFunc != nullptr)
 	{
-		_phaseUpdateFunc(mouse, afterStatus);
+		_phaseUpdateFunc(mouse, afterStatus, deltaTime);
 	}
 }
 
@@ -121,10 +126,10 @@ void ModeGameBattle::SetPhase(BattleTimer::BattlePhase nextPhase)
 	// フェーズに応じた処理関数を設定
 	static const std::unordered_map<BattleTimer::BattlePhase, PhaseFunc> PhaseMap = 
 	{
-		{ BattleTimer::BattlePhase::Defense, [this](MouseInput& m, CharaAfterStatus& s) { UpdateDefense(m, s); } },
-		{ BattleTimer::BattlePhase::Attack,  [this](MouseInput& m, CharaAfterStatus& s) { UpdateAttack(m, s); } },
-		{ BattleTimer::BattlePhase::Start,{ [this](MouseInput& m, CharaAfterStatus& s) { UpdateStart(m, s); } }},
-		{ BattleTimer::BattlePhase::Result, [this](MouseInput& m, CharaAfterStatus& s) { UpdateResult(m, s, saveData); } }
+		{ BattleTimer::BattlePhase::Defense, [this](MouseInput& m, CharaAfterStatus& s, float dt) { UpdateDefense(m, s, dt); } },
+		{ BattleTimer::BattlePhase::Attack,  [this](MouseInput& m, CharaAfterStatus& s, float dt) { UpdateAttack(m, s, dt); } },
+		{ BattleTimer::BattlePhase::Start, [this](MouseInput& m, CharaAfterStatus& s, float dt) { UpdateStart(m, s, dt); } },
+		{ BattleTimer::BattlePhase::Result, [this](MouseInput& m, CharaAfterStatus& s, float dt) { UpdateResult(m, s, saveData, dt); } }
 	};
 
 	auto it = PhaseMap.find(nextPhase);
@@ -132,7 +137,7 @@ void ModeGameBattle::SetPhase(BattleTimer::BattlePhase nextPhase)
 }
 
 // スタートフェーズの処理（必要に応じて実装）
-void ModeGameBattle::UpdateStart(MouseInput& mouse, CharaAfterStatus& afterStatus)
+void ModeGameBattle::UpdateStart(MouseInput& mouse, CharaAfterStatus& afterStatus, float deltaTime)
 {
 	// 現状は特に処理は行わず、時間が経過したらフェーズに移行する
 	if(_battleTimer.IsTimeUp())
@@ -142,24 +147,25 @@ void ModeGameBattle::UpdateStart(MouseInput& mouse, CharaAfterStatus& afterStatu
 }
 
 // 防御フェーズの個別処理
-void ModeGameBattle::UpdateDefense(MouseInput& mouse, CharaAfterStatus& afterStatus)
+void ModeGameBattle::UpdateDefense(MouseInput& mouse, CharaAfterStatus& afterStatus, float deltaTime)
 {
 	if(!_battleTimer.IsTimeUp())
 	{
 		// バトルタイマーの残り時間を監視して秒ごとにダメージを発生
 		double currentTimer = _battleTimer.GetTime();
-		_nextDamageTime += 1.0 / 60;
-		if(_nextDamageTime >= 5.0) 
+		_nextDamageTime += deltaTime;
+		if(_nextDamageTime >= EnemyDamageInterval)
 		{
 			// 敵の攻撃ダメージを計算して適用
 			double enemyDamage = _charaFormula.CalculateEnemyDamage(afterStatus, *_enemy);
 			_charaCurrentHP -= enemyDamage;
 			if(_charaCurrentHP < 0.0) { _charaCurrentHP = 0.0; }
 
-			_damageFlashTimer = 0.2;
+			// ダメージを受けたことを示すフラッシュタイマーをリセット
+			_damageFlashTimer = Param::FlashTime;
 
 			// 次の秒刻みの閾値に更新
-			_nextDamageTime -= 5.0;
+			_nextDamageTime -= EnemyDamageInterval;
 		}
 
 		// 円UIの更新と、成功したかどうかの判定
@@ -181,7 +187,7 @@ void ModeGameBattle::UpdateDefense(MouseInput& mouse, CharaAfterStatus& afterSta
 }
 
 // 攻撃フェーズの個別処理
-void ModeGameBattle::UpdateAttack(MouseInput& mouse, CharaAfterStatus& afterStatus)
+void ModeGameBattle::UpdateAttack(MouseInput& mouse, CharaAfterStatus& afterStatus, float deltaTime)
 {
 	if(!_battleTimer.IsTimeUp())
 	{
@@ -227,16 +233,16 @@ void ModeGameBattle::UpdateAttack(MouseInput& mouse, CharaAfterStatus& afterStat
 	}
 }
 
-void ModeGameBattle::UpdateResult(MouseInput& mouse, CharaAfterStatus& afterStatus, SaveData& saveData)
+void ModeGameBattle::UpdateResult(MouseInput& mouse, CharaAfterStatus& afterStatus, SaveData& saveData, float deltaTime)
 {
-	// リザルトの表示時間（5秒）が終了したら、自動的にバトルを終了して次の画面へ
+	// リザルトの表示時間が終了したら、自動的にバトルを終了して次の画面へ
 	if(_battleTimer.IsTimeUp())
 	{
 		_isBattleEnd = true;
 	}
 }
 
-void ModeGameBattle::ProcessBattleResult(SaveData& saveData)
+void ModeGameBattle::ProcessBattleResult(SaveData& saveData, CharaAfterStatus& afterStatus, CharaBase& Charabase, SaveEquipment& saveEquipment)
 {
 	// 現在のセーブデータを一度ローカル（一時的）にコピーして取得
 	auto constRows = saveData.GetRows();
@@ -254,13 +260,26 @@ void ModeGameBattle::ProcessBattleResult(SaveData& saveData)
 		account.enemylevel += 1;
 
 		// 経験値(EXP)を付与（例：敵のレベル×100 EXP）
-		int gainExp = (_enemy ? _enemy->GetLevel() : 1) * 100;
+		int gainExp = (_enemy ? _enemy->GetLevel() : 1) * ExpMultipler;
 		account.exp += gainExp;
 
-		// レベルアップ判定（必要経験値 = 現在レベル * 100 の簡易仕様例）
-		while(account.exp >= (account.level * 100))
+		// レベルアップ判定（必要経験値 = 現在レベル * 100 の簡易仕様）
+		while(account.exp >= (account.level * ExpMultipler))
 		{
-			account.exp -= (account.level * 100);
+			account.exp -= (account.level * ExpMultipler);
+			account.level += 1;
+		}
+	}
+	else 
+	{
+		// 経験値(EXP)を付与（例：敵のレベル×100 EXP）
+		int gainExp = (_enemy ? _enemy->GetLevel() : 1) * ExpMultipler;
+		account.exp += gainExp;
+
+		// レベルアップ判定（必要経験値 = 現在レベル * 100 の簡易仕様）
+		while(account.exp >= account.level)
+		{
+			account.exp -= account.level;
 			account.level += 1;
 		}
 	}
@@ -273,9 +292,16 @@ void ModeGameBattle::ProcessBattleResult(SaveData& saveData)
 	std::vector<SaveData::AccountData> updatedVector;
 	updatedVector.push_back(account); // 編集し終わったデータを格納
 
+	// SQLiteに保存
 	std::string errStr;
 	bool success = false;
 	success = saveData.UpdateAccountAndSave(account, &errStr);
+
+	// SQLiteの保存が成功した場合、キャラクターのステータスを更新する
+	if(success)
+	{
+		afterStatus.UpdateFrom(Charabase, saveEquipment, saveData);
+	}
 }
 
 void ModeGameBattle::Render(CharaAfterStatus& afterStatus)

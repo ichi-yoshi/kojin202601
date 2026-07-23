@@ -147,6 +147,7 @@ void BattleUI::Render(
     SetFontSize(Font::Small);  
 	int historyX = Layout::Battle::HistoryPos.x;
     int historyY = Layout::Battle::HistoryPos.y;
+
     DrawString(historyX, historyY, "--- 最終ダメージ履歴 ---", Color::Gray());
     historyY += Common::HistoryTitleSpacing;
 

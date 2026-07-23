@@ -1,4 +1,8 @@
 ﻿#include "Chara.h"
+#include "MagicNumberConfig.h"
+
+// 名前空間の使用宣言
+using namespace UIConfig;
 
 namespace Status
 {
@@ -38,11 +42,11 @@ namespace Status
 }
 	
 // 基礎 + 装備合計 で最終ステータスを作成
-CharaAfterStatus Chara::CalculateAfterStatus(const CharaBase& base, const CharaStatus& equipTotal)
+CharaAfterStatus Chara::CalculateAfterStatus(const CharaBase& base, const CharaStatus& equipTotal, const SaveData& saveData)
 {
 	CharaAfterStatus after;						
 	CharaStatus result = base.GetBaseStatus();	// 基礎ステータスをコピー
-
+	
 	// 装備ステータスを加算
 	Status::AddStatus(result, equipTotal);				
 
@@ -55,6 +59,27 @@ CharaAfterStatus Chara::CalculateAfterStatus(const CharaBase& base, const CharaS
 	result.hp *= hpRate;
 	result.attack *= attackRate;
 	result.defense *= defenseRate;
+
+	// 現在のセーブデータを一度ローカル（一時的）にコピーして取得
+	auto constRows = saveData.GetRows();
+
+	SaveData::AccountData account;
+	if(!constRows.empty())
+	{
+		account = constRows[0];
+	}
+
+	// プレイヤーレベルに応じたボーナスを加算
+	const int level = saveData.GetPlayerLevel();;
+
+	// レベルが1より大きい場合にボーナスを加算
+	if(level > 1)
+	{
+		const double levelBonus = Param::bonusStatus * level;
+		result.hp += levelBonus;
+		result.attack += levelBonus;
+		result.defense += levelBonus;
+	}
 
 	after.SetAfterStatus(result);
 	return after;

@@ -20,7 +20,8 @@ SaveEquipment::EquipPart SaveEquipment::GetPartFromName(const std::string& armor
 // 結果の保存
 void SaveEquipment::SaveResult(const std::string& armorName,
 	const std::vector<std::string>& basicStatusRows,
-	const std::vector<std::string>& statusRows)
+	const std::vector<std::string>& statusRows,
+	const std::vector<bool>& statusIsMaxVal)
 {
 	if (armorName.empty()) { return; }
 
@@ -32,6 +33,7 @@ void SaveEquipment::SaveResult(const std::string& armorName,
 	result.armorName = armorName;
 	result.basicStatusRows = basicStatusRows;
 	result.statusRows = statusRows;
+	result.statusIsMaxVal = statusIsMaxVal;
 }
 
 // 結果の取得
@@ -77,10 +79,26 @@ bool SaveEquipment::SaveToSqlite(std::string* outError) const
 		{
 			const auto& result = _results[i];
 
+			// ステータステキストとフラグを 「テキスト|1」 のように結合する
+			std::vector<std::string> combinedStatus;
+			for(size_t j = 0; j < result.statusRows.size(); ++j)
+			{
+				bool isMax = (j < result.statusIsMaxVal.size()) ? result.statusIsMaxVal[j] : false;
+				// isMax が true の時だけ末尾に [MAX] を付ける
+				if(isMax)
+				{
+					combinedStatus.push_back(result.statusRows[j] + "[MAX]");
+				}
+				else
+				{
+					combinedStatus.push_back(result.statusRows[j]);
+				}
+			}
+
 			// CP932 -> UTF-8 に変換する
 			std::string armorUtf8 = SqliteTextUtill::ToUtf8(result.armorName);
 			std::string basicUtf8 = SqliteTextUtill::ToUtf8(SqliteTextUtill::JoinRows(result.basicStatusRows));
-			std::string statusUtf8 = SqliteTextUtill::ToUtf8(SqliteTextUtill::JoinRows(result.statusRows));
+			std::string statusUtf8 = SqliteTextUtill::ToUtf8(SqliteTextUtill::JoinRows(combinedStatus));
 
 			// UTF-8 にした文字列をエスケープする
 			std::string armor = SqliteTextUtill::EscapeSqlString(armorUtf8);
@@ -137,7 +155,35 @@ int SaveEquipment::LoadCallback(void* param, int col_cnt, char** row_txt, char**
 
 	// 装備ステータスの行を分割して格納する
 	std::string statusSjis = SqliteTextUtill::FromUtf8(statusUtf8);
-	SqliteTextUtill::SplitRows(statusSjis, result.statusRows);
+	std::vector<std::string> rawLines;
+	SqliteTextUtill::SplitRows(statusSjis, rawLines);
+
+	// "テキスト|1" の形式からテキストとフラグに分離して復元する
+	result.statusRows.clear();
+	result.statusIsMaxVal.clear();
+
+	const std::string tag = "[MAX]";
+
+	// 各行を処理して、末尾に [MAX] が付いているかどうかを判定する
+	for(const auto& line : rawLines)
+	{
+		if(line.empty()) { continue; }
+
+		// 末尾が [MAX] で終わっているか確認
+		if(line.size() >= tag.size() && line.compare(line.size() - tag.size(), tag.size(), tag) == 0)
+		{
+			// [MAX] を取り除いた文字列を登録
+			result.statusRows.push_back(line.substr(0, line.size() - tag.size()));
+			result.statusIsMaxVal.push_back(true);
+		}
+		else
+		{
+			// [MAX] が付いていない通常行
+			result.statusRows.push_back(line);
+			result.statusIsMaxVal.push_back(false);
+		}
+	}
+
 	return 0;
 }
 

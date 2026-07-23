@@ -6,13 +6,15 @@
 #include "ButtonUI.h"
 #include "container.h"
 
+// ガチャ結果の保存待ち情報を表す構造体
 struct PendingGachaResult
 {
-	bool hasPending = false;
-	SaveEquipment::EquipPart part = SaveEquipment::EquipPart::Head;
-	std::string armorName;
-	std::vector<std::string> basicStatusRows;
-	std::vector<std::string> statusRows;
+	bool hasPending = false;										// ガチャ結果があるかどうか
+	SaveEquipment::EquipPart part = SaveEquipment::EquipPart::Head;	// 装備部位
+	std::string armorName;											// 装備名
+	std::vector<std::string> basicStatusRows;						// 基礎ステータスの行
+	std::vector<std::string> statusRows;							// 装備ステータスの行
+	std::vector<bool> statusIsMaxVal;								// 装備ステータスの値が最大値に近いかどうか
 };
 
 class GachaUI

@@ -39,9 +39,9 @@ void BattleTimer::ChangePhase(BattlePhase nextPhase)
 	static const std::unordered_map<BattlePhase, float> phaseTimes = 
 	{
 		{ BattlePhase::Attack, 10.0f },	// 攻撃フェーズ
-		{ BattlePhase::Defense, 40.0f },	// 防御フェーズ
+		{ BattlePhase::Defense, 40.0f },// 防御フェーズ
 		{ BattlePhase::Result, 5.0f },	// 結果フェーズ
-		{ BattlePhase::Start, 5.0f }		// 戦闘開始フェーズ
+		{ BattlePhase::Start, 5.0f }	// 戦闘開始フェーズ
 	};
 
 	// 現在のフェーズに対応する初期時間を取得する

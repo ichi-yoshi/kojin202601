@@ -2,6 +2,7 @@
 #include "container.h"
 #include "CharaBase.h"
 #include "CharaAfterStatus.h"
+#include "SaveData.h"
 
 namespace Status
 {
@@ -16,7 +17,7 @@ class Chara
 {
 public:
 	// 基礎 + 装備合計 で最終ステータスを作成
-	static CharaAfterStatus CalculateAfterStatus(const CharaBase& base, const CharaStatus& equipTotal);
+	static CharaAfterStatus CalculateAfterStatus(const CharaBase& base, const CharaStatus& equipTotal, const SaveData& saveData);
 
 	// ステータスの行からステータスを作成する
 	//"攻撃: 12.0" 形式の文字列配列を数値化

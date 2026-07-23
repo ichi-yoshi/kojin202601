@@ -52,6 +52,7 @@ void GachaSystem::ProcessRoll(GachaContext& ctx)
 			ctx.pendingResult.armorName = armorName;							// 装備名を保存待ち状態にする
 			ctx.pendingResult.basicStatusRows = basicRows;						// 基礎ステータスの行を保存待ち状態にする
 			ctx.pendingResult.statusRows = statusRows;							// 装備ステータスの行を保存待ち状態にする
+			ctx.pendingResult.statusIsMaxVal = ctx.gacha.GetIsMaxVal();			// 装備ステータスの最大値フラグを保存待ち状態にする
 		}
 
 		account.coin -= Param::coinCost;	// ガチャコストを引く
@@ -60,7 +61,7 @@ void GachaSystem::ProcessRoll(GachaContext& ctx)
 		std::vector<SaveData::AccountData> updatedVector;	
 		updatedVector.push_back(account); // 編集し終わったデータを格納
 		std::string errStr;
-		bool success = false;
+		bool success = false;	// データベースに保存するためのフラグ
 
 		// アカウントデータを更新して保存する
 		success = ctx.saveData.UpdateAccountAndSave(account, &errStr);
@@ -92,11 +93,12 @@ void GachaSystem::ProcessPendingSelection(GachaContext& ctx)
 		// 装備を保存して最終ステータスを更新
 		ctx.saveEquipment.SaveResult(ctx.pendingResult.armorName,
 			ctx.pendingResult.basicStatusRows,
-			ctx.pendingResult.statusRows);
+			ctx.pendingResult.statusRows,
+			ctx.pendingResult.statusIsMaxVal);
 		ctx.saveEquipment.SaveToSqlite();
 
 		// 最終ステータスを更新
-		ctx.afterStatus.UpdateFrom(ctx.charaBase, ctx.saveEquipment);
+		ctx.afterStatus.UpdateFrom(ctx.charaBase, ctx.saveEquipment, ctx.saveData);
 
 		// 最終ステータスを保存
 		ctx.saveCharaStatus.SetFromAfterStatus(ctx.afterStatus);

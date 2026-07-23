@@ -17,7 +17,7 @@ void CharaAfterStatus::SetAfterStatus(const CharaStatus& status)
 }
 
 // 装備から最終ステータスを更新する
-void CharaAfterStatus::UpdateFrom(const CharaBase& base, const SaveEquipment& saveEquipment)
+void CharaAfterStatus::UpdateFrom(const CharaBase& base, const SaveEquipment& saveEquipment, const SaveData& saveData)
 {
 	// 装備ステータスの合計を計算する
 	CharaStatus equipTotal{};
@@ -42,7 +42,7 @@ void CharaAfterStatus::UpdateFrom(const CharaBase& base, const SaveEquipment& sa
 	}
 
 	// 基礎ステータスと装備ステータスの合計から最終ステータスを計算する
-	const auto after = Chara::CalculateAfterStatus(base, equipTotal);
+	const auto after = Chara::CalculateAfterStatus(base, equipTotal, saveData);
 	_afterStatus = after.GetAfterStatus();
 
 	// 速度ステータスからボーナスタイムを取得する

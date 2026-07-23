@@ -63,6 +63,10 @@ bool ModeGame::SqliteInitialize()
 	}
 	sqlite3_close(dbh);
 
+	// 保存済みデータをロード（なければ無視）
+	_saveEquipment.LoadFromSqlite();	// 装備データのロード
+	_saveData.LoadFromSqlite();			// アカウントデータのロード
+
 	//ガチャデータの初期化
 	if(!_gacha.Initialize("", &error)) { return false; }
 	if(!_gachaBasic.Initialize("", &error)) { return false; }
@@ -77,12 +81,9 @@ bool ModeGame::SqliteInitialize()
 	if(!_battleSystem.Initialize("", &error)) { return false; }
 	if(!_afterStatus.InitializeSpeedTable("", &error)) { return false; }
 
-	// 保存済みデータをロード（なければ無視）
-	_saveEquipment.LoadFromSqlite();	// 装備データのロード
-	_saveData.LoadFromSqlite();			// アカウントデータのロード
-
+	
 	// 最終ステータス計算
-	_afterStatus.UpdateFrom(_charaBase, _saveEquipment);
+	_afterStatus.UpdateFrom(_charaBase, _saveEquipment, _saveData);
 
 	return true;
 }
@@ -145,7 +146,7 @@ bool ModeGame::Process()
 	else if(_gamePhase == GamePhase::Battle)// バトルフェーズ
 	{
 		// バトルシステムの処理
-		_battleSystem.Process(_mouse, _afterStatus, _saveData, deltaTime);
+		_battleSystem.Process(_mouse, _afterStatus, _saveData, _charaBase, _saveEquipment, deltaTime);
 
 		// 戦闘終了判定
 		if(_battleSystem.IsBattleEnd())
@@ -181,10 +182,10 @@ bool ModeGame::Process()
 	// Deleteキーで装備のセーブデータを削除
 	if (CheckHitKey(KEY_INPUT_DELETE)==1) 
 	{
-		_saveEquipment.ClearResults();							// 装備セーブデータの削除
-		_afterStatus.UpdateFrom(_charaBase, _saveEquipment);	// 最終ステータスの更新
-		_saveCharaStatus.SetFromAfterStatus(_afterStatus);		// キャラクターステータスの更新
-		_saveCharaStatus.SaveToSqlite();						// キャラクターステータスの保存
+		_saveEquipment.ClearResults();									// 装備セーブデータの削除
+		_afterStatus.UpdateFrom(_charaBase, _saveEquipment, _saveData);	// 最終ステータスの更新
+		_saveCharaStatus.SetFromAfterStatus(_afterStatus);				// キャラクターステータスの更新
+		_saveCharaStatus.SaveToSqlite();								// キャラクターステータスの保存
 	}
 	return true;
 }

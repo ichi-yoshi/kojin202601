@@ -16,16 +16,18 @@ public:
 
 	struct PartResult
 	{
-		bool hasResult = false;
-		std::string armorName;
-		std::vector<std::string> basicStatusRows;
-		std::vector<std::string> statusRows;
+		bool hasResult = false;						// 結果があるかどうか
+		std::string armorName;						// 装備名
+		std::vector<std::string> basicStatusRows;	// 基礎ステータスの行
+		std::vector<std::string> statusRows;		// 装備ステータスの行
+		std::vector<bool> statusIsMaxVal;			// 装備ステータスの値が最大値に近いかどうか
 	};
 
 	// 結果の保存
 	void SaveResult(const std::string& armorName,
 		const std::vector<std::string>& basicStatusRows,
-		const std::vector<std::string>& statusRows);
+		const std::vector<std::string>& statusRows,
+		const std::vector<bool>& statusIsMaxVal);
 
 	// 結果の取得
 	const PartResult& GetResult(EquipPart part) const;

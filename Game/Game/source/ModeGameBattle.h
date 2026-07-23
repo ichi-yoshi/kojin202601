@@ -11,6 +11,8 @@
 #include "SqliteCharaFormula.h"
 #include "BattleUI.h"
 #include "container.h"
+#include "Chara.h"
+#include "SaveEquipment.h"
 
 class ModeGameBattle
 {
@@ -19,7 +21,7 @@ public:
 	bool Initialize(const std::string& dbPath, std::string* outError = nullptr);
 
 	// 更新
-	void Process(MouseInput& mouse, CharaAfterStatus& afterStatus, SaveData& saveData, float deltaTime);
+	void Process(MouseInput& mouse, CharaAfterStatus& afterStatus, SaveData& saveData, CharaBase& Charabase, SaveEquipment& saveEquipment, float deltaTime);
 
 	// 描画
 	void Render(CharaAfterStatus& afterStatus);
@@ -32,15 +34,16 @@ public:
 
 private:
 	// 各フェーズの処理
-	void UpdateDefense(MouseInput& mouse, CharaAfterStatus& afterStatus);					// 防御フェーズの更新
-	void UpdateAttack(MouseInput& mouse, CharaAfterStatus& afterStatus);					// 攻撃フェーズの更新
-	void UpdateStart(MouseInput& mouse, CharaAfterStatus& afterStatus);						// 戦闘開始フェーズの更新
-	void UpdateResult(MouseInput& mouse, CharaAfterStatus& afterStatus, SaveData& saveData);// リザルトフェーズの更新
+	void UpdateDefense(MouseInput& mouse, CharaAfterStatus& afterStatus, float deltaTime);						// 防御フェーズの更新
+	void UpdateAttack(MouseInput& mouse, CharaAfterStatus& afterStatus, float deltaTime);						// 攻撃フェーズの更新
+	void UpdateStart(MouseInput& mouse, CharaAfterStatus& afterStatus, float deltaTime);						// 戦闘開始フェーズの更新
+	void UpdateResult(MouseInput& mouse, CharaAfterStatus& afterStatus, SaveData& saveData, float deltaTime);	// リザルトフェーズの更新
 
-	void ProcessBattleResult(SaveData& saveData);		// バトル結果の処理
+	void ProcessBattleResult(SaveData& saveData, CharaAfterStatus& afterStatus, CharaBase& Charabase, SaveEquipment& saveEquipment);		// バトル結果の処理
 	void SetPhase(BattleTimer::BattlePhase nextPhase);	// フェーズの切り替え
 
-	using PhaseFunc = std::function<void(MouseInput&, CharaAfterStatus&)>;	// フェーズごとの処理関数の型
+private:
+	using PhaseFunc = std::function<void(MouseInput&, CharaAfterStatus&, float)>;	// フェーズごとの処理関数の型
 
 	std::vector<double> _damageHistory;	// ダメージ履歴
 	std::string _logCriticalExpr;		// クリティカル計算式
@@ -61,6 +64,8 @@ private:
 	bool _isResultProcessed = false;    // リザルト処理が完了したかどうかのフラグ
 	double _maxDamageDealt = 0.0;		// 最大ダメージ
 
+	float EnemyDamageInterval = 5.0f;	// 敵がダメージを与える間隔（秒）
+	float ExpMultipler = 100.0f;		// 経験値の倍率（敵レベル×この値が経験値として加算される）
 private:
 	PhaseFunc _phaseUpdateFunc = nullptr;
 	BattleTimer _battleTimer;

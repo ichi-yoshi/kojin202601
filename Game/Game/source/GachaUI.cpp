@@ -132,9 +132,15 @@ void GachaUI::DrawGachaResult(const Gacha& gacha,
 	// サブステータスガチャの結果がある場合、結果行を描画
 	if(gacha.HasResult())
 	{
-		for(const auto& row : gacha.GetResultRows())
+		const auto& rows = gacha.GetResultRows();
+		const auto& flags = gacha.GetIsMaxVal();
+
+		for(size_t i = 0; i < rows.size(); ++i)
 		{
-			DrawString(x + subTextXOffset, y, row.c_str(), Color::Black());
+			bool isMax = (i < flags.size()) ? flags[i] : false;
+			unsigned int color = isMax ? Color::Gold() : Color::Black();
+
+			DrawString(x + subTextXOffset, y, rows[i].c_str(), color);
 			y += Common::RowHeight;
 		}
 	}
@@ -223,9 +229,13 @@ void GachaUI::DrawSavedEquipment(const SaveEquipment& saveEquipment) const
 		}
 
 		// 装備ステータスの行を描画
-		for(const auto& row : result.statusRows)
+		for(size_t j = 0; j < result.statusRows.size(); ++j)
 		{
-			DrawString(x + padding + indentX, textY, row.c_str(), Color::Black());
+			// 保存されているフラグから判定 (範囲外の場合は false)
+			bool isMax = (j < result.statusIsMaxVal.size()) ? result.statusIsMaxVal[j] : false;
+			unsigned int color = isMax ? Color::Gold() : Color::Black();
+
+			DrawString(x + padding + indentX, textY, result.statusRows[j].c_str(), color);
 			textY += RowHeight;
 		}
 	}
@@ -233,5 +243,5 @@ void GachaUI::DrawSavedEquipment(const SaveEquipment& saveEquipment) const
 
 void GachaUI::DrawGachaButton() const
 {
-	ButtonUI::DrawButton(_gachaButton, "錬成[R]1回-3000");
+	ButtonUI::DrawButton(_gachaButton, "錬成[R]1回-1000");
 }
