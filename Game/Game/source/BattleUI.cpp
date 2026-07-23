@@ -149,7 +149,7 @@ void BattleUI::Render(
     int historyY = Layout::Battle::HistoryPos.y;
 
     DrawString(historyX, historyY, "--- 最終ダメージ履歴 ---", Color::Gray());
-    historyY += Common::HistoryTitleSpacing;
+    historyY += Common::RowSpacing;
 
 	// ダメージ履歴を上から順に描画する
     for(size_t i = 0; i < damageHistory.size(); ++i)
@@ -164,7 +164,7 @@ void BattleUI::Render(
             DrawFormatString(historyX, historyY, 
                 Color::LightBlue(), " %.0f ダメージ!", damageHistory[i]);
         }
-        historyY += Common::HistoryRowSpacing;
+        historyY += Common::RowSpacing;
 
         if(historyY > Layout::Battle::HistoryMaxY) { break; }
     }
@@ -202,8 +202,8 @@ void BattleUI::Render(
     if(damageFlashTimer > 0.0)
     {
 		// フラッシュの透明度を計算し、0から最大値までの範囲に制限する
-        int alpha = static_cast<int>((damageFlashTimer / Param::FlashTime) * Param::FlashAlpha);
-        alpha = std::clamp(alpha, 0, Param::MaxAlphaByte);
+        int alpha = static_cast<int>((damageFlashTimer / Param::FlashTime) * Alpha::Semi);
+        alpha = std::clamp(alpha, 0, Alpha::Max);
 
         SetDrawBlendMode(DX_BLENDMODE_ALPHA, alpha);
 
@@ -211,6 +211,6 @@ void BattleUI::Render(
         GetDrawScreenSize(&screenW, &screenH);
         DrawBox(0, 0, screenW, screenH, Color::Red(), TRUE);
 
-        SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
+        SetDrawBlendMode(DX_BLENDMODE_NOBLEND, Alpha::Min);
     }
 }

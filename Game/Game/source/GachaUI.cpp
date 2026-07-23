@@ -12,7 +12,7 @@ int GachaUI::GetGachaResultBottomY(const Gacha& gacha,
 {
 	// ガチャ結果の描画開始位置と行間隔を取得
 	int y = Layout::Gacha::ResultBase.y;	// ガチャ結果の描画開始位置Y座標
-	int RowHeight = Common::RowHeight;		// 行の高さを取得
+	int RowSpacing = Common::RowSpacing;	// 行間隔を取得
 	int RowCount = 0;						// ガチャ結果の行数を初期化
 
 	// 装備ガチャの結果がある場合、行数を加算
@@ -36,7 +36,7 @@ int GachaUI::GetGachaResultBottomY(const Gacha& gacha,
 		RowCount += static_cast<int>(gacha.GetResultRows().size());
 	}
 
-	return y + RowCount * RowHeight;
+	return y + RowCount * RowSpacing;
 }
 
 // ガチャ結果の保存・破棄ボタンの位置とサイズを更新する
@@ -102,11 +102,11 @@ void GachaUI::DrawGachaResult(const Gacha& gacha,
 	// サブステータスガチャの結果がある場合、行数を加算
 	if(RowCount > 0)
 	{
-		int RowHeight = Layout::Gacha::SubTextXOffset;			// 行の高さを取得
+		int RowSpacing = Layout::Gacha::SubTextXOffset;			// 行間隔を取得
 		int padding = Common::DefaultPadding;					// ボックスの内側の余白を取得
 		int rowSpace = Common::RowSpacingExtra;					// 行間の追加スペースを取得
 		int boxW = Layout::Gacha::ResultBoxWidth;				// ボックスの幅を取得
-		int boxH = RowCount * RowHeight + padding * rowSpace;	// ボックスの高さを計算
+		int boxH = RowCount * RowSpacing + padding * rowSpace;	// ボックスの高さを計算
 		DrawBox(x - padding, y - padding,
 			x - padding + boxW,	y - padding + boxH, 
 			Color::BoxBg(), TRUE);
@@ -124,8 +124,8 @@ void GachaUI::DrawGachaResult(const Gacha& gacha,
 	{
 		for(const auto& row : gachaBasic.GetResultRows())
 		{
-			DrawString(x + subTextXOffset, y, row.c_str(), Color::Red());
-			y += Common::RowHeight;
+			DrawString(x + subTextXOffset, y, row.c_str(), Color::Blue());
+			y += Common::RowSpacing;
 		}
 	}
 
@@ -141,7 +141,7 @@ void GachaUI::DrawGachaResult(const Gacha& gacha,
 			unsigned int color = isMax ? Color::Gold() : Color::Black();
 
 			DrawString(x + subTextXOffset, y, rows[i].c_str(), color);
-			y += Common::RowHeight;
+			y += Common::RowSpacing;
 		}
 	}
 }
@@ -162,7 +162,7 @@ void GachaUI::DrawSavedEquipment(const SaveEquipment& saveEquipment) const
 	GetDrawScreenSize(&screenW, &screenH);
 
 	int fontSize = Font::Normal;
-	int RowHeight = fontSize + Common::RowSpacingExtra;
+	int RowSpacing = fontSize + Common::RowSpacingExtra;
 	int padding = Common::DefaultPadding;
 	int rowSpace = Common::RowSpacingExtra;
 	int boxW = Layout::Gacha::SavedAreaWidth;
@@ -189,11 +189,11 @@ void GachaUI::DrawSavedEquipment(const SaveEquipment& saveEquipment) const
 
 	if(totalRows <= 0) { return; }
 
-	int boxH = totalRows * RowHeight + padding * rowSpace;	// ボックスの高さを計算
-	int marginRight = Common::MarginRight;				// 右側の余白を取得
-	int x = screenW - boxW - marginRight;				// ボックスのX座標を計算
-	int y = marginRight;								// ボックスのY座標を計算
-	int indentX = Common::DefaultIndent;				// インデントのX座標を取得
+	int boxH = totalRows * RowSpacing + padding * rowSpace;	// ボックスの高さを計算
+	int marginRight = Common::MarginRight;					// 右側の余白を取得
+	int x = screenW - boxW - marginRight;					// ボックスのX座標を計算
+	int y = marginRight;									// ボックスのY座標を計算
+	int indentX = Common::DefaultIndent;					// インデントのX座標を取得
 
 	DrawBox(x, y, x + boxW, y + boxH, Color::BoxBg(), TRUE);
 
@@ -208,24 +208,24 @@ void GachaUI::DrawSavedEquipment(const SaveEquipment& saveEquipment) const
 		const auto& result = saveEquipment.GetResult(part);
 
 		DrawString(x + padding, textY, saveEquipment.GetPartLabel(part), Color::Black());
-		textY += RowHeight;
+		textY += RowSpacing;
 
 		// 結果がない場合は「未取得」と表示
 		if(!result.hasResult)
 		{
 			DrawString(x + padding + indentX, textY, "未取得", Color::TextGray());
-			textY += RowHeight;
+			textY += RowSpacing;
 			continue;
 		}
 
 		DrawString(x + padding + indentX, textY, result.armorName.c_str(), Color::Black());
-		textY += RowHeight;
+		textY += RowSpacing;
 
 		// 基礎ステータスの行を描画
 		for(const auto& row : result.basicStatusRows)
 		{
 			DrawString(x + padding + indentX, textY, row.c_str(), Color::Blue());
-			textY += RowHeight;
+			textY += RowSpacing;
 		}
 
 		// 装備ステータスの行を描画
@@ -236,7 +236,7 @@ void GachaUI::DrawSavedEquipment(const SaveEquipment& saveEquipment) const
 			unsigned int color = isMax ? Color::Gold() : Color::Black();
 
 			DrawString(x + padding + indentX, textY, result.statusRows[j].c_str(), color);
-			textY += RowHeight;
+			textY += RowSpacing;
 		}
 	}
 }

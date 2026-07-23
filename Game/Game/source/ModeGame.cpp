@@ -7,6 +7,10 @@
 #include "Chara.h"
 #include "Resource.h"
 #include "SqliteConfig.h"
+#include "MagicNumberConfig.h"
+
+// 名前空間の使用の宣言
+using namespace UIConfig;
 
 bool ModeGame::Initialize()
 {
@@ -35,7 +39,7 @@ bool ModeGame::Initialize()
 	// データベース初期化
 	SqliteInitialize();
 
-	deltaTime = 1.0f / 60.0f;
+	deltaTime = Param::time;
 
 	return true;
 }
@@ -209,21 +213,21 @@ bool ModeGame::Render()
 	}
 
 	//UI描画
-	if (_gamePhase == GamePhase::Gacha)
+	if(_gamePhase == GamePhase::Gacha)	// ガチャフェーズ
 	{
 		_gachaUI.Draw(_gacha, _gachaBasic, _gachaArmor, _saveEquipment, _pendingResult);
-		_statusUI.Draw(_afterStatus, _showCharaStatus);
+		_statusUI.Draw(_afterStatus, _showCharaStatus, _mouse);
 		_battleButtonUI.Draw();
 		_dbSelectorButtonUI.Draw();
 		_saveDataUI.Draw(_saveData, _showSaveData);
 		std::string dbMsg = "現在のDB: " + std::string(SqliteConfig::GetSqliteDbPath());
-		DrawString(10,10, dbMsg.c_str(), GetColor(100,100,100));
+		DrawString(Layout::DataBase::CurrentDB.x, Layout::DataBase::CurrentDB.y, dbMsg.c_str(), Color::DarkGray());
 	}
-	else if (_gamePhase == GamePhase::Battle)
+	else if(_gamePhase == GamePhase::Battle)	// バトルフェーズ
 	{
 		_battleSystem.Render(_afterStatus);
 	}
-	else if(_gamePhase == GamePhase::DbSelect)
+	else if(_gamePhase == GamePhase::DbSelect)	// データベース選択フェーズ
 	{
 		_dbSelector.Draw();
 	}
