@@ -25,7 +25,13 @@
     	動的数式パースエンジンの設計・実装
     	UIデザイン・レイアウト設計
     	3Dアセット（モデル・モーション）の組み込み・アニメーション制御 (モデルは過去の共同制作で使用したものを流用)
-
+    	
+		使用AI
+		GitHub Copilot,Gemini
+		
+		使用用途
+		技術面の相談、コードレビュー
+		
 ---
 
 ## 2. 動作環境・動作仕様
@@ -97,6 +103,8 @@
     	3Dアセット（空球、地面、ダンジョン、敵キャラクターのモデル）のファイルパスを定義するヘッダーファイル
     	[container.h](https://github.com/ichi-yoshi/kojin202601/blob/main/Game/Game/source/container.h)
     	共通インクルード用のヘッダーファイル
+    	[MagicNumberConfig.h](https://github.com/ichi-yoshi/kojin202601/blob/main/Game/Game/source/MagicNumberConfig.h)
+    	マジックナンバーをまとめたヘッダーファイル
 
 
 ### ⚔ バトルシステム関連
