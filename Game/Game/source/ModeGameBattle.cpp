@@ -308,8 +308,6 @@ void ModeGameBattle::Render(CharaAfterStatus& afterStatus)
 {
 	if(_enemy == nullptr) { return; }
 
-	_enemy->DrawModel();
-
 	_battleUI.Render(
 		afterStatus,
 		_enemy,

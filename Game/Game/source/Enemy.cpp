@@ -48,7 +48,7 @@ bool Enemy::LoadEnemy(SqliteEnemy& sqliteEnemy, const SaveData& saveData)
 	if(levelDiff < 0) levelDiff = 0;
 
 	// HPと攻撃力を計算する
-	_finalHP = baseRow.hp + (200 * levelDiff * baseRow.levelBonus);
+	_finalHP = baseRow.hp + (200 * levelDiff * baseRow.levelBonus);	  //200倍のボーナスを簡易追加
 	_finalAttack = baseRow.attack + (levelDiff * baseRow.levelBonus);
 
 	return true;

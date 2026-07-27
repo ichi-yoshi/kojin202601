@@ -21,6 +21,7 @@ void GachaSystem::ProcessRoll(GachaContext& ctx)
 	// データベースからアカウントデータをロードする
 	ctx.saveData.LoadFromSqlite();
 
+	// 現在のアカウントデータを取得する
 	auto constRows = ctx.saveData.GetRows();
 	SaveData::AccountData account{};
 	if(!constRows.empty())
