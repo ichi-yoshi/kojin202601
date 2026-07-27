@@ -50,17 +50,22 @@ void GachaUI::UpdatePendingButtons(const Gacha& gacha,
 	int x = Layout::Gacha::ResultBase.x;
 	int y = GetGachaResultBottomY(gacha, gachaBasic, gachaArmor) + Common::ButtonTopMargin;
 
-	// 保存ボタンの位置とサイズを設定
-	_saveButton.x = x;
-	_saveButton.y = y;
-	_saveButton.w = Common::StandardButton.w;
-	_saveButton.h = Common::StandardButton.h;
-
-	// 破棄ボタンの位置とサイズを設定
-	_keepButton.x = x;
-	_keepButton.y = y + _saveButton.h + Common::ButtonSpacing;
-	_keepButton.w = Common::StandardButton.w;
-	_keepButton.h = Common::StandardButton.h;
+	// ボタンの位置とサイズを設定
+	// 保存ボタン
+	{
+		_saveButton.x = x;
+		_saveButton.y = y;
+		_saveButton.w = Common::StandardButton.w;
+		_saveButton.h = Common::StandardButton.h;
+	}
+	
+	// 破棄ボタン
+	{
+		_keepButton.x = x;
+		_keepButton.y = y + _saveButton.h + Common::ButtonSpacing;
+		_keepButton.w = Common::StandardButton.w;
+		_keepButton.h = Common::StandardButton.h;
+	}
 }
 
 void GachaUI::Draw(const Gacha& gacha,
@@ -107,6 +112,7 @@ void GachaUI::DrawGachaResult(const Gacha& gacha,
 		int rowSpace = Common::RowSpacingExtra;					// 行間の追加スペースを取得
 		int boxW = Layout::Gacha::ResultBoxWidth;				// ボックスの幅を取得
 		int boxH = RowCount * RowSpacing + padding * rowSpace;	// ボックスの高さを計算
+
 		DrawBox(x - padding, y - padding,
 			x - padding + boxW,	y - padding + boxH, 
 			Color::BoxBg(), TRUE);
@@ -162,9 +168,9 @@ void GachaUI::DrawSavedEquipment(const SaveEquipment& saveEquipment) const
 	GetDrawScreenSize(&screenW, &screenH);
 
 	int fontSize = Font::Normal;
-	int RowSpacing = fontSize + Common::RowSpacingExtra;
-	int padding = Common::DefaultPadding;
 	int rowSpace = Common::RowSpacingExtra;
+	int RowHeight = fontSize + rowSpace;	// 行の高さを計算
+	int padding = Common::DefaultPadding;
 	int boxW = Layout::Gacha::SavedAreaWidth;
 	int totalRows = 0;
 
@@ -189,7 +195,7 @@ void GachaUI::DrawSavedEquipment(const SaveEquipment& saveEquipment) const
 
 	if(totalRows <= 0) { return; }
 
-	int boxH = totalRows * RowSpacing + padding * rowSpace;	// ボックスの高さを計算
+	int boxH = totalRows * RowHeight + padding * rowSpace;	// ボックスの高さを計算
 	int marginRight = Common::MarginRight;					// 右側の余白を取得
 	int x = screenW - boxW - marginRight;					// ボックスのX座標を計算
 	int y = marginRight;									// ボックスのY座標を計算
@@ -208,24 +214,24 @@ void GachaUI::DrawSavedEquipment(const SaveEquipment& saveEquipment) const
 		const auto& result = saveEquipment.GetResult(part);
 
 		DrawString(x + padding, textY, saveEquipment.GetPartLabel(part), Color::Black());
-		textY += RowSpacing;
+		textY += RowHeight;
 
 		// 結果がない場合は「未取得」と表示
 		if(!result.hasResult)
 		{
 			DrawString(x + padding + indentX, textY, "未取得", Color::TextGray());
-			textY += RowSpacing;
+			textY += RowHeight;
 			continue;
 		}
 
 		DrawString(x + padding + indentX, textY, result.armorName.c_str(), Color::Black());
-		textY += RowSpacing;
+		textY += RowHeight;
 
 		// 基礎ステータスの行を描画
 		for(const auto& row : result.basicStatusRows)
 		{
 			DrawString(x + padding + indentX, textY, row.c_str(), Color::Blue());
-			textY += RowSpacing;
+			textY += RowHeight;
 		}
 
 		// 装備ステータスの行を描画
@@ -236,7 +242,7 @@ void GachaUI::DrawSavedEquipment(const SaveEquipment& saveEquipment) const
 			unsigned int color = isMax ? Color::Gold() : Color::Black();
 
 			DrawString(x + padding + indentX, textY, result.statusRows[j].c_str(), color);
-			textY += RowSpacing;
+			textY += RowHeight;
 		}
 	}
 }

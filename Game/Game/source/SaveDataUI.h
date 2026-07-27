@@ -8,7 +8,7 @@ class SaveDataUI
 {
 public:
 	void Update(MouseInput& mouse);
-	void Draw(const SaveData& saveData,bool visible) const;
+	void Draw(const SaveData& saveData, bool visible) const;
 
 	// セーブデータボタンがクリックされたかどうかを取得
 	bool IsSaveDataClicked() const { return _isSaveDataClicked; }
@@ -26,6 +26,5 @@ private:
 
 private:
 	bool _isSaveDataClicked = false;	// セーブデータボタンがクリックされたかどうか
-	bool _prevKeyS = false;				// 前回のSキーの状態
 };
 

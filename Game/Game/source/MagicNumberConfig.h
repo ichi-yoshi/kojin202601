@@ -21,23 +21,23 @@ namespace UIConfig
 	// 色を取得するための関数をまとめた名前空間
     namespace Color
     {
-		inline unsigned int Yellow() { return GetColor(255, 255, 0); }      // 黄色
-		inline unsigned int Red() { return GetColor(255, 0, 0); }           // 赤色
-		inline unsigned int LightRed() { return GetColor(255, 50, 50); }    // 明るい赤色
-        inline unsigned int WeakRed() { return GetColor(255, 120, 120); }   // 弱い赤色
-		inline unsigned int Gold() { return GetColor(255, 215, 0); }        // 金色
-		inline unsigned int White() { return GetColor(255, 255, 255); }     // 白色
-		inline unsigned int Gray() { return GetColor(150, 150, 150); }      // 灰色
-		inline unsigned int DarkGray() { return GetColor(100, 100, 100); }  // 濃い灰色
-		inline unsigned int TextGray() { return GetColor(200, 200, 200); }  // テキスト用の灰色
-		inline unsigned int DimGray() { return GetColor(128, 128, 128); }   // 薄い灰色
-		inline unsigned int Green() { return GetColor(0, 255, 0); }         // 緑色
-        inline unsigned int Blue() { return GetColor(0, 0, 255); }          // 青色
-		inline unsigned int LightBlue() { return GetColor(120, 200, 255); } // 明るい青色		
-		inline unsigned int HPBlue() { return GetColor(50, 150, 255); }     // HPバー用の青色
-		inline unsigned int Black() { return GetColor(0, 0, 0); }           // 黒色
-		inline unsigned int BoxBg() { return GetColor(235, 235, 235); }     // ボックス背景色
-		inline unsigned int Dim() { return  GetColor(20, 20, 20); }         // 半透明暗色背景
+		inline unsigned int Yellow()	{ return GetColor(255, 255, 0); }    // 黄色
+		inline unsigned int Red()		{ return GetColor(255, 0, 0); }      // 赤色
+		inline unsigned int LightRed()	{ return GetColor(255, 50, 50); }    // 明るい赤色
+        inline unsigned int WeakRed()	{ return GetColor(255, 120, 120); }  // 弱い赤色
+		inline unsigned int Gold()		{ return GetColor(255, 215, 0); }    // 金色
+		inline unsigned int White()		{ return GetColor(255, 255, 255); }  // 白色
+		inline unsigned int Gray()		{ return GetColor(150, 150, 150); }  // 灰色
+		inline unsigned int DarkGray()	{ return GetColor(100, 100, 100); }  // 濃い灰色
+		inline unsigned int TextGray()	{ return GetColor(200, 200, 200); }  // テキスト用の灰色
+		inline unsigned int DimGray()	{ return GetColor(128, 128, 128); }  // 薄い灰色
+		inline unsigned int Green()		{ return GetColor(0, 255, 0); }      // 緑色
+        inline unsigned int Blue()		{ return GetColor(0, 0, 255); }      // 青色
+		inline unsigned int LightBlue()	{ return GetColor(120, 200, 255); }	 // 明るい青色		
+		inline unsigned int HPBlue()	{ return GetColor(50, 150, 255); }   // HPバー用の青色
+		inline unsigned int Black()		{ return GetColor(0, 0, 0); }        // 黒色
+		inline unsigned int BoxBg()		{ return GetColor(235, 235, 235); }  // ボックス背景色
+		inline unsigned int Dim()		{ return  GetColor(20, 20, 20); }    // 半透明暗色背景
     }
 
 	// UIの共通設定値をまとめた名前空間

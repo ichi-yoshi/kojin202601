@@ -37,7 +37,6 @@ void SaveDataUI::DrawSaveDataBox(const SaveData& saveData) const
 	int padding = Common::DefaultPadding;
 	int boxW = Layout::Battle::SaveDataWidth;
 	int boxH = static_cast<int>(rows.size()) * rowHeight + padding * rowSpace;
-
 	int x = Layout::Battle::SaveDataPos.x;
 	int y = Layout::Battle::SaveDataPos.y;
 
@@ -46,6 +45,7 @@ void SaveDataUI::DrawSaveDataBox(const SaveData& saveData) const
 	SetFontSize(fontSize);
 
 	int textY = y + padding;
+
 	for(const auto& row : rows)
 	{
 		DrawString(x + padding, textY, row.c_str(), Color::Black());

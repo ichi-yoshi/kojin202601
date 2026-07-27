@@ -55,6 +55,7 @@ void GaugeUI::Update(MouseInput& mouse)
 {
 	if(!_isMoving) { return; }
 
+	// Fキーの押下状態を取得してトリガー判定
 	bool currentKeyF = (CheckHitKey(KEY_INPUT_F) == 1);
 	bool isFTrigger = (currentKeyF && !_prevKeyF);
 

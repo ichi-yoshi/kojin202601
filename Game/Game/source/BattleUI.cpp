@@ -16,116 +16,23 @@ void BattleUI::Render(
     const std::vector<double>& damageHistory,
     double damageFlashTimer)
 {
+	// 敵が存在しない場合は描画を行わない
     if(enemy == nullptr) { return; }
-
-	// 敵のモデルを描画する
-    enemy->DrawModel();
-
-	int phaseMsgX = Layout::Battle::PhaseMsg.x;     // フェーズメッセージの表示位置X座標
-	int phaseMsgY = Layout::Battle::PhaseMsg.y;     // フェーズメッセージの表示位置Y座標
-	int phaseTimerY = Layout::Battle::PhaseTimer.y; // フェーズタイマーの表示位置Y座標
-	int resultMsgX = Layout::Battle::ResultMsg.x;   // 結果メッセージの表示位置X座標
-
-    // フェーズに応じて画面の文字やUIの描画を切り替える
-    if(battleTimer.GetCurrentPhase() == BattleTimer::BattlePhase::Defense) 
-    {
-        // 防御フェーズ
-        // 防御フェーズのメッセージを描画
-        SetFontSize(Font::Large);		
-        DrawString(phaseMsgX, phaseMsgY, 
-            "【 敵の防御ターン！ 丸を消して時間を進めろ！ 】",
-            Color::LightRed());
-
-		// 防御フェーズの残り時間を描画
-        DrawFormatString(phaseMsgX, phaseTimerY, 
-            Color::Red(), 
-            "攻撃フェーズまで: %.1f 秒",
-            battleTimer.GetTime());
-
-        circleUI.Draw();
-    }
-	else if(battleTimer.GetCurrentPhase() == BattleTimer::BattlePhase::Attack)  
-    {
-        // 攻撃フェーズ
-        // 攻撃フェーズのメッセージを描画
-        SetFontSize(Font::Large);	
-        DrawString(phaseMsgX, phaseMsgY, 
-            "【 自分の攻撃ターン！ ゲージを合わせてダメージを与えろ！ 】", 
-            Color::LightRed());
-
-		// 攻撃フェーズの残り時間を描画
-        DrawFormatString(phaseMsgX, phaseTimerY, 
-            Color::Red(), 
-            "防御フェーズまで: %.1f 秒", 
-            battleTimer.GetTime());
-
-        gaugeUI.Draw();
-    }
-	else if(battleTimer.GetCurrentPhase() == BattleTimer::BattlePhase::Start)  
-    {
-        // 戦闘開始前のカウントダウン
-		// 戦闘開始前のメッセージを描画
-        SetFontSize(Font::Large);
-        DrawFormatString(phaseMsgX, phaseTimerY, 
-            Color::Red(), 
-            "戦闘開始まで: %.1f 秒", 
-            battleTimer.GetTime());
-    }
-	else if(battleTimer.GetCurrentPhase() == BattleTimer::BattlePhase::Result)  
-    {
-        // 戦闘結果表示
-        // 勝敗に応じてメッセージを表示する
-        SetFontSize(Font::ExtraLarge);
-        if(enemyCurrentHP <= 0.0)
-        {
-            DrawString(resultMsgX, Layout::Battle::ResultTitleY, 
-                "【 勝利!!! 】", 
-                Color::Gold());
-        }
-        else
-        {
-            DrawString(resultMsgX, Layout::Battle::ResultTitleY, 
-                "【 敗北... 】", 
-                Color::Red());
-        }
-
-        SetFontSize(Font::Large);
-
-		// 最大ダメージを表示する
-        DrawFormatString(resultMsgX, Layout::Battle::ResultMaxDmgY, 
-            Color::White(), "最大ダメージ: %.0f ダメージ", 
-            maxDamageDealt);
-
-		// 残りHPボーナスを表示する
-        DrawFormatString(resultMsgX, Layout::Battle::ResultHpBonusY,
-            Color::White(), "残りHPボーナス: %.0f",
-            (std::max)(0.0, charaCurrentHP));
-
-		// 獲得コインを表示する
-        int finalGain = static_cast<int>((std::max)(0.0, charaCurrentHP) + maxDamageDealt);
-        DrawFormatString(resultMsgX, Layout::Battle::ResultCoinY, 
-            Color::White(), "獲得コイン: + %d !", 
-            finalGain);
-
-		// 次の画面への移動までの時間を表示する
-        SetFontSize(Font::Small);
-        DrawFormatString(resultMsgX, Layout::Battle::ResultNextSceneY, 
-            Color::Gray(), "間もなく次の画面へ移動します... (%.1f)",
-            battleTimer.GetTime());
-        return;
-    }
-
-	int enemyPosX = Layout::Battle::EnemyPos.x;             // 敵の情報表示の基準位置X座標
-	int enemyBarTop = Layout::Battle::EnemyBarTop;          // 敵のHPバーの上端Y座標
-	int enemyBarBottom = Layout::Battle::EnemyBarBottom;    // 敵のHPバーの下端Y座標
 
     // 敵が存在すれば、画面上部に敵の情報とHPバーを表示する
     if(enemy)
     {
+        // 敵のモデルを描画する
+        enemy->DrawModel();
+
+        int enemyPosX = Layout::Battle::EnemyPos.x;             // 敵の情報表示の基準位置X座標
+        int enemyBarTop = Layout::Battle::EnemyBarTop;          // 敵のHPバーの上端Y座標
+        int enemyBarBottom = Layout::Battle::EnemyBarBottom;    // 敵のHPバーの下端Y座標
+
         // 敵の名前とレベルを描画
         SetFontSize(Font::Medium);
-        DrawFormatString(enemyPosX, Layout::Battle::EnemyNameY, 
-            Color::TextGray(), "%s  (Lv.%d)", 
+        DrawFormatString(enemyPosX, Layout::Battle::EnemyNameY,
+            Color::TextGray(), "%s  (Lv.%d)",
             enemy->GetName().c_str(), enemy->GetLevel());
 
         // HPバーの枠を描画
@@ -143,41 +50,142 @@ void BattleUI::Render(
             Color::TextGray(), "HP: %.0f / %.0f", enemyCurrentHP, enemy->GetHP());
     }
 
-    // 右側：最終ダメージ履歴
-    SetFontSize(Font::Small);  
-	int historyX = Layout::Battle::HistoryPos.x;
-    int historyY = Layout::Battle::HistoryPos.y;
-
-    DrawString(historyX, historyY, "--- 最終ダメージ履歴 ---", Color::Gray());
-    historyY += Common::RowSpacing;
-
-	// ダメージ履歴を上から順に描画する
-    for(size_t i = 0; i < damageHistory.size(); ++i)
+	// バトルフェーズの描画
     {
-        if(i == damageHistory.size() - 1)
-        {
-            DrawFormatString(historyX, historyY, 
-                Color::White(), " %.0f ダメージ!", damageHistory[i]);
-        }
-        else
-        {
-            DrawFormatString(historyX, historyY, 
-                Color::LightBlue(), " %.0f ダメージ!", damageHistory[i]);
-        }
-        historyY += Common::RowSpacing;
+        int phaseMsgX = Layout::Battle::PhaseMsg.x;     // フェーズメッセージの表示位置X座標
+        int phaseMsgY = Layout::Battle::PhaseMsg.y;     // フェーズメッセージの表示位置Y座標
+        int phaseTimerY = Layout::Battle::PhaseTimer.y; // フェーズタイマーの表示位置Y座標
+        int resultMsgX = Layout::Battle::ResultMsg.x;   // 結果メッセージの表示位置X座標
 
-        if(historyY > Layout::Battle::HistoryMaxY) { break; }
+        // フェーズに応じて画面の文字やUIの描画を切り替える
+        if(battleTimer.GetCurrentPhase() == BattleTimer::BattlePhase::Defense)
+        {
+            // 防御フェーズ
+            // 防御フェーズのメッセージを描画
+            SetFontSize(Font::Large);
+            DrawString(phaseMsgX, phaseMsgY,
+                "【 敵の防御ターン！ 丸を消して時間を進めろ！ 】",
+                Color::LightRed());
+
+            // 防御フェーズの残り時間を描画
+            DrawFormatString(phaseMsgX, phaseTimerY,
+                Color::Red(),
+                "攻撃フェーズまで: %.1f 秒",
+                battleTimer.GetTime());
+
+            circleUI.Draw();
+        }
+        else if(battleTimer.GetCurrentPhase() == BattleTimer::BattlePhase::Attack)
+        {
+            // 攻撃フェーズ
+            // 攻撃フェーズのメッセージを描画
+            SetFontSize(Font::Large);
+            DrawString(phaseMsgX, phaseMsgY,
+                "【 自分の攻撃ターン！ ゲージを合わせてダメージを与えろ！ 】",
+                Color::LightRed());
+
+            // 攻撃フェーズの残り時間を描画
+            DrawFormatString(phaseMsgX, phaseTimerY,
+                Color::Red(),
+                "防御フェーズまで: %.1f 秒",
+                battleTimer.GetTime());
+
+            gaugeUI.Draw();
+        }
+        else if(battleTimer.GetCurrentPhase() == BattleTimer::BattlePhase::Start)
+        {
+            // 戦闘開始前のカウントダウン
+            // 戦闘開始前のメッセージを描画
+            SetFontSize(Font::Large);
+            DrawFormatString(phaseMsgX, phaseTimerY,
+                Color::Red(),
+                "戦闘開始まで: %.1f 秒",
+                battleTimer.GetTime());
+        }
+        else if(battleTimer.GetCurrentPhase() == BattleTimer::BattlePhase::Result)
+        {
+            // 戦闘結果表示
+            // 勝敗に応じてメッセージを表示する
+            SetFontSize(Font::ExtraLarge);
+            if(enemyCurrentHP <= 0.0)
+            {
+                DrawString(resultMsgX, Layout::Battle::ResultTitleY,
+                    "【 勝利!!! 】",
+                    Color::Gold());
+            }
+            else
+            {
+                DrawString(resultMsgX, Layout::Battle::ResultTitleY,
+                    "【 敗北... 】",
+                    Color::Red());
+            }
+
+            SetFontSize(Font::Large);
+
+            // 最大ダメージを表示する
+            DrawFormatString(resultMsgX, Layout::Battle::ResultMaxDmgY,
+                Color::White(), "最大ダメージ: %.0f ダメージ",
+                maxDamageDealt);
+
+            // 残りHPボーナスを表示する
+            DrawFormatString(resultMsgX, Layout::Battle::ResultHpBonusY,
+                Color::White(), "残りHPボーナス: %.0f",
+                (std::max)(0.0, charaCurrentHP));
+
+            // 獲得コインを表示する
+            int finalGain = static_cast<int>((std::max)(0.0, charaCurrentHP) + maxDamageDealt);
+            DrawFormatString(resultMsgX, Layout::Battle::ResultCoinY,
+                Color::White(), "獲得コイン: + %d !",
+                finalGain);
+
+            // 次の画面への移動までの時間を表示する
+            SetFontSize(Font::Small);
+            DrawFormatString(resultMsgX, Layout::Battle::ResultNextSceneY,
+                Color::Gray(), "間もなく次の画面へ移動します... (%.1f)",
+                battleTimer.GetTime());
+            return;
+        }
     }
 
-	int playerPosX = Layout::Battle::PlayerPos.x;           // プレイヤーの情報表示の基準位置X座標
-	int playerBarTop = Layout::Battle::PlayerBarTop;        // プレイヤーのHPバーの上端Y座標
-	int playerBarBottom = Layout::Battle::PlayerBarBottom;  // プレイヤーのHPバーの下端Y座標
+    // 右側：最終ダメージ履歴
+    {
+        SetFontSize(Font::Small);
+        int historyX = Layout::Battle::HistoryPos.x;
+        int historyY = Layout::Battle::HistoryPos.y;
+
+        DrawString(historyX, historyY, "--- 最終ダメージ履歴 ---", Color::Gray());
+        historyY += Common::RowSpacing;
+
+        // ダメージ履歴を上から順に描画する
+        for(size_t i = 0; i < damageHistory.size(); ++i)
+        {
+			// 最後のダメージ履歴は白色で強調表示する
+            if(i == damageHistory.size() - 1)
+            {
+                DrawFormatString(historyX, historyY,
+                    Color::White(), " %.0f ダメージ!", damageHistory[i]);
+            }
+            else
+            {
+                DrawFormatString(historyX, historyY,
+                    Color::LightBlue(), " %.0f ダメージ!", damageHistory[i]);
+            }
+            historyY += Common::RowSpacing;
+
+            if(historyY > Layout::Battle::HistoryMaxY) { break; }
+        }
+    }
 
     // プレイヤーのHPバーを描画する
     {
+        int playerPosX = Layout::Battle::PlayerPos.x;           // プレイヤーの情報表示の基準位置X座標
+        int playerBarTop = Layout::Battle::PlayerBarTop;        // プレイヤーのHPバーの上端Y座標
+        int playerBarBottom = Layout::Battle::PlayerBarBottom;  // プレイヤーのHPバーの下端Y座標
+
 		// プレイヤーの最大HPを取得する
         double maxHp = afterStatus.GetAfterStatus().hp;
 
+		// プレイヤーの名前を描画する
         SetFontSize(Font::Medium);
         DrawString(playerPosX, Layout::Battle::PlayerNameY, 
             "プレイヤー", Color::LightBlue());

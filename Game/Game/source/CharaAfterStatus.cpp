@@ -28,6 +28,7 @@ void CharaAfterStatus::UpdateFrom(const CharaBase& base, const SaveEquipment& sa
 	// 装備部位ごとにステータスを取得して合計する
 	for(int i = 0; i < static_cast<int>(SaveEquipment::EquipPart::_EOT_); ++i)
 	{
+		// 装備部位を取得する
 		const auto part = static_cast<SaveEquipment::EquipPart>(i);
 		const auto& result = saveEquipment.GetResult(part);
 		if(!result.hasResult) { continue; }

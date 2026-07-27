@@ -115,36 +115,40 @@ bool ModeGame::Process()
 	if(_gamePhase == GamePhase::Gacha)// ガチャフェーズ
 	{
 		// アイコンクリックの処理
-		_gachaSystem.Process(gachaCtx);
-		_battleButtonUI.Update(_mouse);
-		_statusUI.Update(_mouse);
-		_saveDataUI.Update(_mouse);
-		_dbSelectorButtonUI.Update(_mouse);
+		{
+			_gachaSystem.Process(gachaCtx);
+			_battleButtonUI.Update(_mouse);
+			_statusUI.Update(_mouse);
+			_saveDataUI.Update(_mouse);
+			_dbSelectorButtonUI.Update(_mouse);
+		}
 
 		//クリック判定
-		if (_statusUI.IsCharaClicked())
 		{
-			_showCharaStatus = !_showCharaStatus;
-		}
+			if(_statusUI.IsCharaClicked())
+			{
+				_showCharaStatus = !_showCharaStatus;
+			}
 
-		if(_battleButtonUI.IsBattleClicked())
-		{
-			// バトルフェーズへ遷移
-			_saveData.LoadFromSqlite();
-			_battleSystem.Reset(_saveData, _afterStatus);
-			_gamePhase = GamePhase::Battle;
-		}
+			if(_battleButtonUI.IsBattleClicked())
+			{
+				// バトルフェーズへ遷移
+				_saveData.LoadFromSqlite();
+				_battleSystem.Reset(_saveData, _afterStatus);
+				_gamePhase = GamePhase::Battle;
+			}
 
-		if(_saveDataUI.IsSaveDataClicked()) 
-		{
-			_showSaveData = !_showSaveData;
-		}
+			if(_saveDataUI.IsSaveDataClicked())
+			{
+				_showSaveData = !_showSaveData;
+			}
 
-		if(_dbSelectorButtonUI.IsDbSelectClicked())
-		{
-			// データベース選択フェーズへ遷移
-			_dbSelector.StartInput();
-			_gamePhase = GamePhase::DbSelect;
+			if(_dbSelectorButtonUI.IsDbSelectClicked())
+			{
+				// データベース選択フェーズへ遷移
+				_dbSelector.StartInput();
+				_gamePhase = GamePhase::DbSelect;
+			}
 		}
 	}
 	else if(_gamePhase == GamePhase::Battle)// バトルフェーズ
@@ -166,13 +170,16 @@ bool ModeGame::Process()
 	}
 	else if(_gamePhase == GamePhase::DbSelect) // データベース選択フェーズ
 	{
+		// データベース選択の更新
 		_dbSelector.Update();
+
+		// データベース選択が完了した場合、またはキャンセルされた場合の処理
 		if(_dbSelector.IsFinished())
 		{
 			std::string prefix = _dbSelector.GetDatabasePrefix();
 			if(!prefix.empty())
 			{
-				ChangeDatabase(prefix + ".sqlite3");
+				ChangeDatabase(prefix + ".sqlite3");	// データベースの変更
 			}
 			_gamePhase = GamePhase::Gacha;
 		}
