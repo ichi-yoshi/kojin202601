@@ -30,14 +30,19 @@ struct GachaContext
 class GachaSystem
 {
 public:
-	void Process(GachaContext& ctx);
+	void Update(GachaContext& ctx);
+
 private:
-	//SaveData saveData;
-	int gachaCount;
-	int gachaCost;
 	// ガチャの抽選処理
-	void ProcessRoll(GachaContext& ctx);
+	void UpdateRoll(GachaContext& ctx);
 
 	// ガチャ結果の保存・破棄処理
-	void ProcessPendingSelection(GachaContext& ctx);
+	void UpdatePendingSelection(GachaContext& ctx);
+
+	// ガチャ結果のクリア処理
+	void GachaClearResult(GachaContext& ctx);
+
+private:
+	int gachaCount;	// ガチャの回数
+	int gachaCost;	// ガチャのコスト
 };

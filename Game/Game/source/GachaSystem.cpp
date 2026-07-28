@@ -5,14 +5,14 @@
 using namespace UIConfig;
 
 // ガチャシステムの処理
-void GachaSystem::Process(GachaContext& ctx)
+void GachaSystem::Update(GachaContext& ctx)
 {
-	ProcessRoll(ctx);				// ガチャの抽選処理
-	ProcessPendingSelection(ctx);	// ガチャ結果の保存・破棄処理
+	UpdateRoll(ctx);				// ガチャの抽選処理
+	UpdatePendingSelection(ctx);	// ガチャ結果の保存・破棄処理
 }
 
 // ガチャの抽選処理
-void GachaSystem::ProcessRoll(GachaContext& ctx)
+void GachaSystem::UpdateRoll(GachaContext& ctx)
 {
 	// ガチャボタンのクリック判定
 	const auto& btn = ctx.gachaUI.GetGachaButtonRect();
@@ -70,7 +70,7 @@ void GachaSystem::ProcessRoll(GachaContext& ctx)
 }
 
 // ガチャ結果の保存・破棄処理
-void GachaSystem::ProcessPendingSelection(GachaContext& ctx)
+void GachaSystem::UpdatePendingSelection(GachaContext& ctx)
 {
 	// ガチャ結果の保存・破棄ボタンのクリック判定
 	if(!ctx.pendingResult.hasPending) { return; }
@@ -106,17 +106,20 @@ void GachaSystem::ProcessPendingSelection(GachaContext& ctx)
 		ctx.saveCharaStatus.SaveToSqlite();
 
 		// ガチャ結果をクリア
-		ctx.gacha.ClearResult();
-		ctx.gachaBasic.ClearResult();
-		ctx.gachaArmor.ClearResult();
-		ctx.pendingResult = PendingGachaResult{};	// クリア後は保存待ち状態を解除
+		GachaClearResult(ctx);
 	}
 	else if(keepClicked)
 	{
-		// ガチャ結果をクリア
-		ctx.gacha.ClearResult();
-		ctx.gachaBasic.ClearResult();
-		ctx.gachaArmor.ClearResult();
-		ctx.pendingResult = PendingGachaResult{};	// クリア後は保存待ち状態を解除
+		// ガチャ結果を破棄してクリア
+		GachaClearResult(ctx);
 	}
+}
+
+void GachaSystem::GachaClearResult(GachaContext& ctx)
+{
+	// ガチャ結果をクリア
+	ctx.gacha.ClearResult();
+	ctx.gachaBasic.ClearResult();
+	ctx.gachaArmor.ClearResult();
+	ctx.pendingResult = PendingGachaResult{};	// クリア後は保存待ち状態を解除
 }

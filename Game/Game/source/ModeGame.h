@@ -38,6 +38,8 @@ public:
 	// データベースの変更
 	bool ChangeDatabase(const std::string& newDbPath);
 
+	void ClickButton();
+
 protected:
 	float deltaTime;
 
@@ -46,7 +48,7 @@ protected:
 	{
 		Gacha,
 		Battle,
-		DbSelect,
+		DBSelect,
 		_EOT_
 	};
 	GamePhase _gamePhase= GamePhase::Gacha;

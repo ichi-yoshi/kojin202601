@@ -114,42 +114,8 @@ bool ModeGame::Process()
 	// ゲームフェーズごとの処理
 	if(_gamePhase == GamePhase::Gacha)// ガチャフェーズ
 	{
-		// アイコンクリックの処理
-		{
-			_gachaSystem.Process(gachaCtx);
-			_battleButtonUI.Update(_mouse);
-			_statusUI.Update(_mouse);
-			_saveDataUI.Update(_mouse);
-			_dbSelectorButtonUI.Update(_mouse);
-		}
-
-		//クリック判定
-		{
-			if(_statusUI.IsCharaClicked())
-			{
-				_showCharaStatus = !_showCharaStatus;
-			}
-
-			if(_battleButtonUI.IsBattleClicked())
-			{
-				// バトルフェーズへ遷移
-				_saveData.LoadFromSqlite();
-				_battleSystem.Reset(_saveData, _afterStatus);
-				_gamePhase = GamePhase::Battle;
-			}
-
-			if(_saveDataUI.IsSaveDataClicked())
-			{
-				_showSaveData = !_showSaveData;
-			}
-
-			if(_dbSelectorButtonUI.IsDbSelectClicked())
-			{
-				// データベース選択フェーズへ遷移
-				_dbSelector.StartInput();
-				_gamePhase = GamePhase::DbSelect;
-			}
-		}
+		// ボタンのクリック処理
+		ClickButton();	
 	}
 	else if(_gamePhase == GamePhase::Battle)// バトルフェーズ
 	{
@@ -168,7 +134,7 @@ bool ModeGame::Process()
 			_gamePhase = GamePhase::Gacha;
 		}
 	}
-	else if(_gamePhase == GamePhase::DbSelect) // データベース選択フェーズ
+	else if(_gamePhase == GamePhase::DBSelect) // データベース選択フェーズ
 	{
 		// データベース選択の更新
 		_dbSelector.Update();
@@ -227,6 +193,8 @@ bool ModeGame::Render()
 		_battleButtonUI.Draw();
 		_dbSelectorButtonUI.Draw();
 		_saveDataUI.Draw(_saveData, _showSaveData);
+
+		// 現在のデータベース名を表示
 		std::string dbMsg = "現在のDB: " + std::string(SqliteConfig::GetSqliteDbPath());
 		DrawString(Layout::DataBase::CurrentDB.x, Layout::DataBase::CurrentDB.y, dbMsg.c_str(), Color::DarkGray());
 	}
@@ -234,9 +202,49 @@ bool ModeGame::Render()
 	{
 		_battleSystem.Render(_afterStatus);
 	}
-	else if(_gamePhase == GamePhase::DbSelect)	// データベース選択フェーズ
+	else if(_gamePhase == GamePhase::DBSelect)	// データベース選択フェーズ
 	{
 		_dbSelector.Draw();
 	}
 	return true;
+}
+
+void ModeGame::ClickButton() 
+{
+	// アイコンクリックの処理
+	{
+		_gachaSystem.Update(gachaCtx);
+		_battleButtonUI.Update(_mouse);
+		_statusUI.Update(_mouse);
+		_saveDataUI.Update(_mouse);
+		_dbSelectorButtonUI.Update(_mouse);
+	}
+	
+	//クリック判定
+	{
+		if(_statusUI.IsCharaClicked())
+		{
+			_showCharaStatus = !_showCharaStatus;
+		}
+
+		if(_battleButtonUI.IsBattleClicked())
+		{
+			// バトルフェーズへ遷移
+			_saveData.LoadFromSqlite();
+			_battleSystem.Reset(_saveData, _afterStatus);
+			_gamePhase = GamePhase::Battle;
+		}
+
+		if(_saveDataUI.IsSaveDataClicked())
+		{
+			_showSaveData = !_showSaveData;
+		}
+
+		if(_dbSelectorButtonUI.IsDbSelectClicked())
+		{
+			// データベース選択フェーズへ遷移
+			_dbSelector.StartInput();
+			_gamePhase = GamePhase::DBSelect;
+		}
+	}
 }

@@ -32,7 +32,7 @@ void BattleUI::Render(
         // 敵の名前とレベルを描画
         SetFontSize(Font::Medium);
         DrawFormatString(enemyPosX, Layout::Battle::EnemyNameY,
-            Color::TextGray(), "%s  (Lv.%d)",
+            Color::Black(), "%s  (Lv.%d)",
             enemy->GetName().c_str(), enemy->GetLevel());
 
         // HPバーの枠を描画
@@ -47,7 +47,7 @@ void BattleUI::Render(
 
         // HPの数値テキスト表示
         DrawFormatString(enemyPosX, Layout::Battle::EnemyHpTextY,
-            Color::TextGray(), "HP: %.0f / %.0f", enemyCurrentHP, enemy->GetHP());
+            Color::White(), "HP: %.0f / %.0f", enemyCurrentHP, enemy->GetHP());
     }
 
 	// バトルフェーズの描画

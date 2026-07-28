@@ -210,6 +210,7 @@ void ModeGameBattle::UpdateAttack(MouseInput& mouse, CharaAfterStatus& afterStat
 				// この中で SQLiteの読み込み、確率抽選、ゲージ補正がすべて完結します。
 				double damage = _charaFormula.CalculateFinalDamage(afterStatus, *_enemy, isSuccess);
 
+				// ダメージの最大値を更新
 				if(damage > _maxDamageDealt)
 				{
 					_maxDamageDealt = damage;
@@ -273,13 +274,13 @@ void ModeGameBattle::ProcessBattleResult(SaveData& saveData, CharaAfterStatus& a
 	else 
 	{
 		// 経験値(EXP)を付与（例：敵のレベル×100 EXP）
-		int gainExp = (_enemy ? _enemy->GetLevel() : 1) * ExpMultipler;
+		int gainExp = (_enemy ? _enemy->GetLevel() : 1);
 		account.exp += gainExp;
 
 		// レベルアップ判定（必要経験値 = 現在レベル * 100 の簡易仕様）
-		while(account.exp >= account.level)
+		while(account.exp >= (account.level * ExpMultipler))
 		{
-			account.exp -= account.level;
+			account.exp -= (account.level * ExpMultipler);
 			account.level += 1;
 		}
 	}

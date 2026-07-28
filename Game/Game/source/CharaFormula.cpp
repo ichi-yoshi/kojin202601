@@ -51,7 +51,7 @@ double CharaFormula::GetLiveLuckMultiplier(const CharaAfterStatus& afterstatus)
 	// キャラクターの運値を取得
 	double charaLuck = afterstatus.GetAfterStatus().luck;
 
-	// ご指定の数式で『発動確率(%)』を算出する (例: 114.0 -> 5.7%)
+	// 指定の数式で『発動確率(%)』を算出する (例: 114.0 -> 5.7%)
 	double luckProbability = (charaLuck / 10.0) / 2.0;
 
 	// 100% を超えないように上限キャップ
